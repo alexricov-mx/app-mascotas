@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Punto de venta · Huella</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:'Public Sans',system-ui,sans-serif;}
+a{text-decoration:none;}
+</style>
+</helmet>
+<div style="width:1440px;height:980px;box-sizing:border-box;display:flex;background:{{bg}};color:{{text}};overflow:hidden;">
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid {{border}};">
+
+    <div style="height:68px;flex-shrink:0;display:flex;align-items:center;gap:18px;padding:0 28px;border-bottom:1px solid {{border}};background:{{surface}};">
+      <a href="Main.dc.html" style="display:flex;align-items:center;gap:8px;color:{{muted}};font-size:12.5px;font-weight:600;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7"/></svg>
+        Salir
+      </a>
+      <div style="width:1px;height:22px;background:{{border}};"></div>
+      <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:16px;color:{{text}};">Punto de venta</div>
+      <div style="flex:1;position:relative;max-width:420px;margin-left:20px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input placeholder="Buscar producto o promoción" style="width:100%;box-sizing:border-box;font-family:inherit;font-size:13px;padding:9px 14px 9px 36px;border-radius:9px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};">
+      </div>
+      <a href="VentasAuditoria.dc.html" style="margin-left:auto;display:flex;align-items:center;gap:7px;color:{{text}};font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:8px;border:1px solid {{border}};">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 20v-7M10.5 20V6M16.5 20v-10"/><path d="M3 20.5h18"/></svg>
+        Auditoría de ventas
+      </a>
+    </div>
+
+    <div style="display:flex;gap:8px;padding:16px 28px 0;flex-shrink:0;">
+      <span style="padding:8px 15px;border-radius:999px;background:{{accentButton}};color:{{accentContrast}};font-size:12.5px;font-weight:600;">Todos</span>
+      <span style="padding:8px 15px;border-radius:999px;background:{{surfaceAlt}};color:{{text}};font-size:12.5px;font-weight:500;border:1px solid {{border}};">Alimento</span>
+      <span style="padding:8px 15px;border-radius:999px;background:{{surfaceAlt}};color:{{text}};font-size:12.5px;font-weight:500;border:1px solid {{border}};">Salud</span>
+      <span style="padding:8px 15px;border-radius:999px;background:{{surfaceAlt}};color:{{text}};font-size:12.5px;font-weight:500;border:1px solid {{border}};">Higiene</span>
+      <span style="padding:8px 15px;border-radius:999px;background:{{surfaceAlt}};color:{{text}};font-size:12.5px;font-weight:500;border:1px solid {{border}};">Accesorios</span>
+      <span style="padding:8px 15px;border-radius:999px;background:{{accentSoft}};color:{{accent}};font-size:12.5px;font-weight:600;">★ Promociones</span>
+    </div>
+
+    <div style="flex:1;overflow:auto;padding:20px 28px 28px;">
+      <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;">
+
+        <div style="background:{{accentSoft}};border:1.5px solid {{accent}};border-radius:16px;overflow:hidden;cursor:pointer;">
+          <div style="height:120px;background:linear-gradient(160deg, {{accentButton}}, {{accent}});display:flex;align-items:center;justify-content:center;position:relative;">
+            <span style="position:absolute;top:9px;left:9px;background:{{accentButton}};color:#fff;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.02em;">PROMO</span>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.5 12.5 20.5a1.5 1.5 0 0 1-2.1 0l-6.9-6.9a1.5 1.5 0 0 1 0-2.1L11.5 3.5H19a1.5 1.5 0 0 1 1.5 1.5v7.5Z"/><circle cx="15.5" cy="8.5" r="1.3"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Kit Cachorro</div>
+            <div style="font-size:11px;color:{{muted}};margin:3px 0 8px;">Vacuna + desparasitante</div>
+            <div style="font-size:15px;font-weight:700;color:{{accent}};">$550.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;overflow:hidden;cursor:pointer;">
+          <div style="height:120px;background:{{surfaceAlt}};display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.5c0-3.5 1.8-6 4-8 .6 1.4 1.7 2.3 2.8 1.2 1-1 .6-2.7-.3-3.9C13 5.8 15 8.3 15 11c1.5-.7 2-2.2 2-3.5 2 2 3 5 3 8 0 4.4-3.6 7.5-8 7.5s-8-3.1-8-7.5Z"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Alimento Premium Adulto 15kg</div>
+            <div style="font-size:11px;color:{{muted}};margin:3px 0 8px;">18 pzas disponibles</div>
+            <div style="font-size:15px;font-weight:700;color:{{text}};">$1,250.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;overflow:hidden;cursor:pointer;position:relative;">
+          <div style="position:absolute;top:9px;right:9px;background:{{warnBg}};color:{{warnText}};font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:999px;z-index:1;">STOCK BAJO</div>
+          <div style="height:120px;background:{{surfaceAlt}};display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v3M6 4h5l1.5 3H6M6 7v13h11V10a3 3 0 0 0-3-3H6Z"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Shampoo Antipulgas 500ml</div>
+            <div style="font-size:11px;color:{{warnText}};margin:3px 0 8px;font-weight:600;">Quedan 4 pzas</div>
+            <div style="font-size:15px;font-weight:700;color:{{text}};">$185.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;overflow:hidden;position:relative;opacity:0.55;">
+          <div style="position:absolute;inset:0;background:{{bg}};opacity:0.35;z-index:1;"></div>
+          <div style="position:absolute;top:9px;right:9px;background:{{dangerBg}};color:{{dangerText}};font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:999px;z-index:2;">AGOTADO</div>
+          <div style="height:120px;background:{{surfaceAlt}};display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="10" width="17" height="9" rx="2"/><path d="M7 10V8a5 5 0 0 1 10 0v2"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Colchoneta Ortopédica M</div>
+            <div style="font-size:11px;color:{{dangerText}};margin:3px 0 8px;font-weight:600;">Sin existencia</div>
+            <div style="font-size:15px;font-weight:700;color:{{text}};">$650.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;overflow:hidden;cursor:pointer;">
+          <div style="height:120px;background:{{surfaceAlt}};display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5 12 4l8.5 4.5-8.5 4.5-8.5-4.5Z"/><path d="M3.5 8.5V16l8.5 4.5 8.5-4.5V8.5"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Correa Reflectante</div>
+            <div style="font-size:11px;color:{{muted}};margin:3px 0 8px;">25 pzas disponibles</div>
+            <div style="font-size:15px;font-weight:700;color:{{text}};">$220.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;overflow:hidden;cursor:pointer;position:relative;">
+          <div style="position:absolute;top:9px;right:9px;background:{{warnBg}};color:{{warnText}};font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:999px;z-index:1;">STOCK BAJO</div>
+          <div style="height:120px;background:{{surfaceAlt}};display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 4v3h6V4M9 12h6M9 15.5h4"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Bravecto Antipulgas 1 tab</div>
+            <div style="font-size:11px;color:{{warnText}};margin:3px 0 8px;font-weight:600;">Quedan 2 pzas</div>
+            <div style="font-size:15px;font-weight:700;color:{{text}};">$480.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;overflow:hidden;cursor:pointer;">
+          <div style="height:120px;background:{{surfaceAlt}};display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8" ry="6"/><path d="M6 9.5c1-1.5 2.5-1.5 3 0M15 9.5c1-1.5 2.5-1.5 3 0"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Arena Sanitaria 4kg</div>
+            <div style="font-size:11px;color:{{muted}};margin:3px 0 8px;">30 pzas disponibles</div>
+            <div style="font-size:15px;font-weight:700;color:{{text}};">$145.00</div>
+          </div>
+        </div>
+
+        <div style="background:{{accentSoft}};border:1.5px solid {{accent}};border-radius:16px;overflow:hidden;cursor:pointer;">
+          <div style="height:120px;background:linear-gradient(160deg, {{accentButton}}, {{accent}});display:flex;align-items:center;justify-content:center;position:relative;">
+            <span style="position:absolute;top:9px;left:9px;background:{{accentButton}};color:#fff;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.02em;">PROMO</span>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4.5h12l-1.2 15.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 4.5Z"/><path d="M4 4.5h16"/></svg>
+          </div>
+          <div style="padding:12px 14px 14px;">
+            <div style="font-size:13px;font-weight:700;color:{{text}};">Baño + Corte de uñas</div>
+            <div style="font-size:11px;color:{{muted}};margin:3px 0 8px;">Shampoo + estética</div>
+            <div style="font-size:15px;font-weight:700;color:{{accent}};">$380.00</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div style="width:420px;flex-shrink:0;display:flex;flex-direction:column;background:{{surface}};">
+
+    <div style="padding:22px 24px 16px;border-bottom:1px solid {{border}};">
+      <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:16px;color:{{text}};">Venta actual</div>
+      <div style="font-size:11.5px;color:{{muted}};margin-top:2px;">Ticket #00482 · Caja 1</div>
+    </div>
+
+    <div style="flex:1;overflow:auto;padding:16px 24px;display:flex;flex-direction:column;gap:12px;">
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:48px;height:48px;border-radius:10px;background:{{accentSoft}};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.5 12.5 20.5a1.5 1.5 0 0 1-2.1 0l-6.9-6.9a1.5 1.5 0 0 1 0-2.1L11.5 3.5H19a1.5 1.5 0 0 1 1.5 1.5v7.5Z"/><circle cx="15.5" cy="8.5" r="1.3"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:{{text}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Kit Cachorro <span style="color:{{accent}};font-weight:500;">· promo</span></div>
+          <div style="font-size:11.5px;color:{{muted}};">$550.00 c/u</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;">
+          <button style="width:24px;height:24px;border-radius:6px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};font-size:13px;cursor:pointer;">−</button>
+          <span style="font-size:13px;font-weight:600;width:14px;text-align:center;">1</span>
+          <button style="width:24px;height:24px;border-radius:6px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};font-size:13px;cursor:pointer;">+</button>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:{{text}};width:64px;text-align:right;">$550.00</span>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:48px;height:48px;border-radius:10px;background:{{surfaceAlt}};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.5c0-3.5 1.8-6 4-8 .6 1.4 1.7 2.3 2.8 1.2 1-1 .6-2.7-.3-3.9C13 5.8 15 8.3 15 11c1.5-.7 2-2.2 2-3.5 2 2 3 5 3 8 0 4.4-3.6 7.5-8 7.5s-8-3.1-8-7.5Z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:{{text}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Alimento Premium Adulto 15kg</div>
+          <div style="font-size:11.5px;color:{{muted}};">$1,250.00 c/u</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;">
+          <button style="width:24px;height:24px;border-radius:6px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};font-size:13px;cursor:pointer;">−</button>
+          <span style="font-size:13px;font-weight:600;width:14px;text-align:center;">1</span>
+          <button style="width:24px;height:24px;border-radius:6px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};font-size:13px;cursor:pointer;">+</button>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:{{text}};width:64px;text-align:right;">$1,250.00</span>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:48px;height:48px;border-radius:10px;background:{{surfaceAlt}};flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 4v3h6V4M9 12h6M9 15.5h4"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:{{text}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Bravecto Antipulgas 1 tab</div>
+          <div style="font-size:11.5px;color:{{muted}};">$480.00 c/u</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;">
+          <button style="width:24px;height:24px;border-radius:6px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};font-size:13px;cursor:pointer;">−</button>
+          <span style="font-size:13px;font-weight:600;width:14px;text-align:center;">2</span>
+          <button style="width:24px;height:24px;border-radius:6px;border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};font-size:13px;cursor:pointer;">+</button>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:{{text}};width:64px;text-align:right;">$960.00</span>
+      </div>
+
+    </div>
+
+    <div style="padding:18px 24px;border-top:1px solid {{border}};display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;">
+        <span style="color:{{muted}};">Subtotal</span>
+        <span style="color:{{text}};">$2,760.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;">
+        <span style="color:{{muted}};">IVA (16%)</span>
+        <span style="color:{{text}};">$441.60</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:6px;border-top:1px solid {{divider}};">
+        <span style="font-size:14px;font-weight:600;color:{{text}};">Total</span>
+        <span style="font-size:24px;font-weight:700;color:{{text}};font-family:'Bricolage Grotesque',system-ui,sans-serif;">$3,201.60</span>
+      </div>
+      <a href="POSCobro.dc.html" style="margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;background:{{accentButton}};color:{{accentContrast}};font-size:14.5px;font-weight:700;padding:15px;border-radius:11px;">
+        Cobrar
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true,"section":"Tema"},"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark ? {
+      bg:'#0B0E13', surface:'#12161C', surfaceAlt:'#171C23', border:'#232A33', divider:'#1E252D',
+      text:'#F2F5F8', muted:'#8D97A2',
+      accent:'#2F7CF6', accentButton:'#2468D1', accentContrast:'#FFFFFF', accentSoft:'#16233A',
+      sidebarBg:'#06080B', sidebarBorder:'#232A33', sidebarStrongText:'#FFFFFF',
+      sidebarActiveBg:'#151C24', sidebarActiveText:'#FFFFFF', sidebarText:'#9AA5B0', sidebarMuted:'#69707A',
+      avatarBg:'#16233A', avatarText:'#FFFFFF',
+      successBg:'#12301F', successText:'#7BD9A8',
+      warnBg:'#3A2A12', warnText:'#E8B36B',
+      dangerBg:'#3A1712', dangerText:'#E8897A',
+      chartBar:'#2F7CF6', chartBarStrong:'#5FA8F2'
+    } : {
+      bg:'#F1F2F4', surface:'#FFFFFF', surfaceAlt:'#F7F8F9', border:'#DCE0E4', divider:'#EAEDEF',
+      text:'#1E2530', muted:'#67717B',
+      accent:'#3B6EA5', accentButton:'#3B6EA5', accentContrast:'#FFFFFF', accentSoft:'#E7EEF4',
+      sidebarBg:'#F7F8F9', sidebarBorder:'#DCE0E4', sidebarStrongText:'#1E2530',
+      sidebarActiveBg:'#E7EEF4', sidebarActiveText:'#2C5480', sidebarText:'#4A535C', sidebarMuted:'#8B97A2',
+      avatarBg:'#E7EEF4', avatarText:'#2C5480',
+      successBg:'#DCEFE7', successText:'#0B5347',
+      warnBg:'#FBEBD7', warnText:'#8A4B0C',
+      dangerBg:'#F7E0DC', dangerText:'#8C2C22',
+      chartBar:'#3B6EA5', chartBarStrong:'#2C5480'
+    };
+    return { dark, ...t };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cobrar · Huella</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:'Public Sans',system-ui,sans-serif;}
+a{text-decoration:none;}
+</style>
+</helmet>
+<div style="width:1440px;height:980px;box-sizing:border-box;display:flex;background:{{bg}};color:{{text}};overflow:hidden;">
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid {{border}};">
+
+    <div style="height:68px;flex-shrink:0;display:flex;align-items:center;gap:18px;padding:0 28px;border-bottom:1px solid {{border}};background:{{surface}};">
+      <a href="POS.dc.html" style="display:flex;align-items:center;gap:8px;color:{{muted}};font-size:12.5px;font-weight:600;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7"/></svg>
+        Volver a la venta
+      </a>
+      <div style="width:1px;height:22px;background:{{border}};"></div>
+      <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:16px;color:{{text}};">Cobrar · Ticket #00482</div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;gap:32px;">
+
+      <div style="text-align:center;">
+        <div style="font-size:13px;color:{{muted}};font-weight:600;">Total a cobrar</div>
+        <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:56px;font-weight:700;color:{{text}};letter-spacing:-0.01em;">$3,201.60</div>
+      </div>
+
+      <div style="width:100%;max-width:520px;display:flex;flex-direction:column;gap:18px;">
+
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:12.5px;font-weight:600;color:{{muted}};">Método de pago</span>
+          <div style="display:flex;gap:10px;">
+            <span style="flex:1;text-align:center;padding:12px;border-radius:10px;background:{{accentButton}};color:{{accentContrast}};font-size:13px;font-weight:600;">Efectivo</span>
+            <span style="flex:1;text-align:center;padding:12px;border-radius:10px;border:1px solid {{border}};color:{{text}};font-size:13px;font-weight:500;">Tarjeta</span>
+            <span style="flex:1;text-align:center;padding:12px;border-radius:10px;border:1px solid {{border}};color:{{text}};font-size:13px;font-weight:500;">Transferencia</span>
+          </div>
+        </label>
+
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-size:12.5px;font-weight:600;color:{{muted}};">¿Con cuánto paga el cliente?</span>
+          <input type="text" value="$3,500.00" style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:26px;font-weight:700;padding:14px 18px;border-radius:12px;border:1.5px solid {{accent}};background:{{surface}};color:{{text}};">
+        </label>
+
+        <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:9px;">
+          <span style="text-align:center;padding:10px;border-radius:9px;border:1px solid {{border}};color:{{text}};font-size:12.5px;font-weight:600;">Exacto</span>
+          <span style="text-align:center;padding:10px;border-radius:9px;border:1px solid {{border}};color:{{text}};font-size:12.5px;font-weight:600;">$3,300</span>
+          <span style="text-align:center;padding:10px;border-radius:9px;border:1px solid {{border}};background:{{accentSoft}};color:{{accent}};font-size:12.5px;font-weight:700;">$3,500</span>
+          <span style="text-align:center;padding:10px;border-radius:9px;border:1px solid {{border}};color:{{text}};font-size:12.5px;font-weight:600;">$4,000</span>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;background:{{successBg}};border-radius:14px;padding:20px 24px;margin-top:6px;">
+          <span style="font-size:14.5px;font-weight:600;color:{{successText}};">Cambio a entregar</span>
+          <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:30px;font-weight:700;color:{{successText}};">$298.40</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:420px;flex-shrink:0;display:flex;flex-direction:column;background:{{surface}};">
+
+    <div style="padding:22px 24px 16px;border-bottom:1px solid {{border}};">
+      <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:16px;color:{{text}};">Resumen del ticket</div>
+      <div style="font-size:11.5px;color:{{muted}};margin-top:2px;">3 artículos · Ticket #00482</div>
+    </div>
+
+    <div style="flex:1;overflow:auto;padding:16px 24px;display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;">
+        <span style="color:{{text}};">1× Kit Cachorro <span style="color:{{accent}};">(promo)</span></span>
+        <span style="color:{{text}};font-weight:600;">$550.00</span>
+      </div>
+      <div style="font-size:11px;color:{{muted}};margin-top:-8px;padding-left:12px;">↳ descuenta 1 Vacuna Óctuple + 1 Desparasitante</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;">
+        <span style="color:{{text}};">1× Alimento Premium Adulto 15kg</span>
+        <span style="color:{{text}};font-weight:600;">$1,250.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;">
+        <span style="color:{{text}};">2× Bravecto Antipulgas 1 tab</span>
+        <span style="color:{{text}};font-weight:600;">$960.00</span>
+      </div>
+
+      <div style="margin-top:8px;background:{{surfaceAlt}};border:1px dashed {{border}};border-radius:11px;padding:14px 16px;">
+        <div style="font-size:11.5px;font-weight:600;color:{{muted}};margin-bottom:6px;">Se descontará del inventario</div>
+        <div style="font-size:12px;color:{{text}};line-height:1.7;">
+          Vacuna Óctuple Canina −1 · Desparasitante interno −1 · Alimento Premium Adulto 15kg −1 · Bravecto Antipulgas 1 tab −2
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px 24px;border-top:1px solid {{border}};display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:14px;font-weight:600;color:{{text}};">Total</span>
+        <span style="font-size:22px;font-weight:700;color:{{text}};font-family:'Bricolage Grotesque',system-ui,sans-serif;">$3,201.60</span>
+      </div>
+      <a href="VentasAuditoria.dc.html" style="margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;background:{{accentButton}};color:{{accentContrast}};font-size:14.5px;font-weight:700;padding:15px;border-radius:11px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Confirmar cobro
+      </a>
+      <a href="POS.dc.html" style="text-align:center;font-size:12.5px;font-weight:600;color:{{muted}};padding:8px;">Cancelar</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true,"section":"Tema"},"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark ? {
+      bg:'#0B0E13', surface:'#12161C', surfaceAlt:'#171C23', border:'#232A33', divider:'#1E252D',
+      text:'#F2F5F8', muted:'#8D97A2',
+      accent:'#2F7CF6', accentButton:'#2468D1', accentContrast:'#FFFFFF', accentSoft:'#16233A',
+      sidebarBg:'#06080B', sidebarBorder:'#232A33', sidebarStrongText:'#FFFFFF',
+      sidebarActiveBg:'#151C24', sidebarActiveText:'#FFFFFF', sidebarText:'#9AA5B0', sidebarMuted:'#69707A',
+      avatarBg:'#16233A', avatarText:'#FFFFFF',
+      successBg:'#12301F', successText:'#7BD9A8',
+      warnBg:'#3A2A12', warnText:'#E8B36B',
+      dangerBg:'#3A1712', dangerText:'#E8897A',
+      chartBar:'#2F7CF6', chartBarStrong:'#5FA8F2'
+    } : {
+      bg:'#F1F2F4', surface:'#FFFFFF', surfaceAlt:'#F7F8F9', border:'#DCE0E4', divider:'#EAEDEF',
+      text:'#1E2530', muted:'#67717B',
+      accent:'#3B6EA5', accentButton:'#3B6EA5', accentContrast:'#FFFFFF', accentSoft:'#E7EEF4',
+      sidebarBg:'#F7F8F9', sidebarBorder:'#DCE0E4', sidebarStrongText:'#1E2530',
+      sidebarActiveBg:'#E7EEF4', sidebarActiveText:'#2C5480', sidebarText:'#4A535C', sidebarMuted:'#8B97A2',
+      avatarBg:'#E7EEF4', avatarText:'#2C5480',
+      successBg:'#DCEFE7', successText:'#0B5347',
+      warnBg:'#FBEBD7', warnText:'#8A4B0C',
+      dangerBg:'#F7E0DC', dangerText:'#8C2C22',
+      chartBar:'#3B6EA5', chartBarStrong:'#2C5480'
+    };
+    return { dark, ...t };
+  }
+}
+</script>
+</body>
+</html>

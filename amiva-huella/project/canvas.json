@@ -1,0 +1,263 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Documentos.dc.html": {
+      "h": 940,
+      "is_interactive": true,
+      "title": "Documentos",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Ficha integral",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "OpcionA.dc.html": {
+      "h": 640,
+      "title": "Opción A — Gris claro total",
+      "w": 440,
+      "x": 0,
+      "y": 1400
+    },
+    "OpcionB.dc.html": {
+      "h": 640,
+      "title": "Opción B — Pizarra oscuro",
+      "w": 440,
+      "x": 520,
+      "y": 1400
+    },
+    "OpcionC.dc.html": {
+      "h": 640,
+      "title": "Opción C — Claro con barra oscura",
+      "w": 440,
+      "x": 1040,
+      "y": 1400
+    },
+    "OpcionD.dc.html": {
+      "h": 640,
+      "title": "Opción D — Carbón azul, alto contraste",
+      "w": 440,
+      "x": 1560,
+      "y": 1400
+    },
+    "Prevencion.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "Prevención",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "SignosVitales.dc.html": {
+      "h": 1040,
+      "is_interactive": true,
+      "title": "Signos vitales",
+      "w": 1440,
+      "x": 6080,
+      "y": 0
+    },
+    "Timeline.dc.html": {
+      "h": 1120,
+      "is_interactive": true,
+      "title": "Línea de tiempo",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Agenda.dc.html": {
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Agenda",
+      "w": 1440,
+      "x": 0,
+      "y": 2400
+    },
+    "NuevaCita1.dc.html": {
+      "h": 920,
+      "is_interactive": true,
+      "title": "Nueva cita — Paso 1",
+      "w": 1440,
+      "x": 1520,
+      "y": 2400
+    },
+    "NuevaCita2.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Nueva cita — Paso 2",
+      "w": 1440,
+      "x": 3040,
+      "y": 2400
+    },
+    "NuevaCita3.dc.html": {
+      "h": 860,
+      "is_interactive": true,
+      "title": "Nueva cita — Paso 3",
+      "w": 1440,
+      "x": 4560,
+      "y": 2400
+    },
+    "Landing.dc.html": {
+      "h": 2700,
+      "is_interactive": true,
+      "title": "Landing — amiva.pet",
+      "w": 1440,
+      "x": 0,
+      "y": 3680
+    },
+    "Registro1.dc.html": {
+      "h": 920,
+      "is_interactive": true,
+      "title": "Registro — Paso 1",
+      "w": 1440,
+      "x": 1520,
+      "y": 3680
+    },
+    "Registro2.dc.html": {
+      "h": 1120,
+      "is_interactive": true,
+      "title": "Registro — Paso 2",
+      "w": 1440,
+      "x": 3040,
+      "y": 3680
+    },
+    "Inventario.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Inventario — Catálogo",
+      "w": 1440,
+      "x": 0,
+      "y": 6660
+    },
+    "NuevoProducto.dc.html": {
+      "h": 920,
+      "is_interactive": true,
+      "title": "Inventario — Nuevo producto",
+      "w": 1440,
+      "x": 1520,
+      "y": 6660
+    },
+    "Promociones.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Inventario — Promociones",
+      "w": 1440,
+      "x": 3040,
+      "y": 6660
+    },
+    "NuevaPromocion.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Nueva promoción",
+      "w": 1440,
+      "x": 4560,
+      "y": 6660
+    },
+    "POS.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Punto de venta",
+      "w": 1440,
+      "x": 6080,
+      "y": 6660
+    },
+    "POSCobro.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Punto de venta — Cobrar",
+      "w": 1440,
+      "x": 7600,
+      "y": 6660
+    },
+    "VentasAuditoria.dc.html": {
+      "h": 980,
+      "is_interactive": true,
+      "title": "Auditoría de ventas",
+      "w": 1440,
+      "x": 9120,
+      "y": 6660
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-22T22:43:19Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "note1": {
+      "kind": "title1",
+      "maxW": 7000,
+      "text": "Expediente clínico — Panel veterinaria (web/tablet)",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "note2": {
+      "kind": "title1",
+      "maxW": 2000,
+      "text": "Opciones de color — escalas de gris y azul (sin verde)",
+      "w": 240,
+      "x": 0,
+      "y": 1160
+    },
+    "note3": {
+      "kind": "title1",
+      "maxW": 6440,
+      "text": "Agenda y citas — Flujo de reservación",
+      "w": 240,
+      "x": 0,
+      "y": 2177
+    },
+    "note4": {
+      "kind": "title1",
+      "maxW": 4500,
+      "text": "Registro de negocio — Portal amiva.pet",
+      "w": 240,
+      "x": 0,
+      "y": 3440
+    },
+    "note5": {
+      "kind": "title1",
+      "maxW": 10000,
+      "text": "Comercio, inventario y punto de venta",
+      "w": 240,
+      "x": 0,
+      "y": 6420
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Prevencion.dc.html",
+    "Timeline.dc.html",
+    "Documentos.dc.html",
+    "SignosVitales.dc.html",
+    "OpcionA.dc.html",
+    "OpcionB.dc.html",
+    "OpcionC.dc.html",
+    "OpcionD.dc.html",
+    "Agenda.dc.html",
+    "NuevaCita1.dc.html",
+    "NuevaCita2.dc.html",
+    "NuevaCita3.dc.html",
+    "Landing.dc.html",
+    "Registro1.dc.html",
+    "Registro2.dc.html",
+    "Inventario.dc.html",
+    "NuevoProducto.dc.html",
+    "Promociones.dc.html",
+    "NuevaPromocion.dc.html",
+    "POS.dc.html",
+    "POSCobro.dc.html",
+    "VentasAuditoria.dc.html"
+  ],
+  "pages": [],
+  "title": "Huella — Expediente clínico (veterinaria)"
+}

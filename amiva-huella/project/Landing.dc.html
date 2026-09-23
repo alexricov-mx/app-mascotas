@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>amiva.pet — Software para negocios de mascotas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:'Public Sans',system-ui,sans-serif;}
+a{text-decoration:none;}
+ul{margin:0;padding:0;list-style:none;}
+</style>
+</helmet>
+<div style="width:1440px;box-sizing:border-box;background:{{bg}};color:{{text}};">
+
+  <div style="height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid {{border}};background:{{surface}};">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="1.6"/><circle cx="12" cy="5.5" r="1.6"/><circle cx="16" cy="8" r="1.6"/><circle cx="18" cy="12" r="1.5"/><path d="M12 20.5c-2.8 0-5-1.5-5-3.7 0-1.8 1.6-3 2.9-3.9.9-.6 1.4-1.1 2.1-1.1s1.2.5 2.1 1.1c1.3.9 2.9 2.1 2.9 3.9 0 2.2-2.2 3.7-5 3.7Z"/></svg>
+      <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:19px;letter-spacing:-0.01em;color:{{text}};">amiva.pet</span>
+    </div>
+    <nav style="display:flex;align-items:center;gap:36px;">
+      <a href="#producto" style="font-size:13.5px;font-weight:500;color:{{muted}};">Producto</a>
+      <a href="#planes" style="font-size:13.5px;font-weight:500;color:{{muted}};">Planes</a>
+      <a href="#clientes" style="font-size:13.5px;font-weight:500;color:{{muted}};">Para clientes</a>
+    </nav>
+    <a href="Registro1.dc.html" style="background:{{accentButton}};color:{{accentContrast}};font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:9px;">Registra tu negocio</a>
+  </div>
+
+  <div style="padding:96px 56px 88px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px;">
+    <span style="background:{{accentSoft}};color:{{accent}};font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;">Software para negocios de mascotas</span>
+    <h1 style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:46px;line-height:1.15;letter-spacing:-0.015em;margin:0;max-width:760px;color:{{text}};">Todo lo que tu veterinaria o negocio de mascotas necesita, en un solo lugar</h1>
+    <p style="font-size:16.5px;line-height:1.6;color:{{muted}};max-width:620px;margin:0;">Expedientes clínicos, agenda de citas, inventario y ventas — además de una app para que tus clientes agenden servicios, sigan el expediente de sus mascotas y encuentren sucursales afiliadas cerca de ellos.</p>
+    <div style="display:flex;gap:12px;margin-top:6px;">
+      <a href="Registro1.dc.html" style="background:{{accentButton}};color:{{accentContrast}};font-size:14.5px;font-weight:600;padding:13px 24px;border-radius:10px;">Registra tu negocio</a>
+      <a href="#planes" style="background:{{surface}};border:1px solid {{border}};color:{{text}};font-size:14.5px;font-weight:600;padding:13px 24px;border-radius:10px;">Ver planes</a>
+    </div>
+    <div style="display:flex;gap:14px;margin-top:34px;">
+      <div style="display:flex;align-items:center;gap:9px;background:{{surface}};border:1px solid {{border}};border-radius:11px;padding:12px 18px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
+        <span style="font-size:12.5px;font-weight:600;color:{{text}};">Panel web</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:{{surface}};border:1px solid {{border}};border-radius:11px;padding:12px 18px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></svg>
+        <span style="font-size:12.5px;font-weight:600;color:{{text}};">Tablet en sucursal</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:{{surface}};border:1px solid {{border}};border-radius:11px;padding:12px 18px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>
+        <span style="font-size:12.5px;font-weight:600;color:{{text}};">App para clientes</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="producto" style="padding:88px 56px;background:{{surface}};border-top:1px solid {{border}};border-bottom:1px solid {{border}};">
+    <div style="text-align:center;max-width:600px;margin:0 auto 48px;">
+      <h2 style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:28px;color:{{text}};margin:0 0 10px;letter-spacing:-0.01em;">Un sistema, todas tus operaciones</h2>
+      <p style="font-size:14.5px;color:{{muted}};margin:0;line-height:1.6;">Desde el expediente de cada mascota hasta el punto de venta de tu sucursal.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+      <div style="background:{{bg}};border:1px solid {{border}};border-radius:14px;padding:24px 22px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="1.6"/><circle cx="12" cy="5.5" r="1.6"/><circle cx="16" cy="8" r="1.6"/><circle cx="18" cy="12" r="1.5"/><path d="M12 20.5c-2.8 0-5-1.5-5-3.7 0-1.8 1.6-3 2.9-3.9.9-.6 1.4-1.1 2.1-1.1s1.2.5 2.1 1.1c1.3.9 2.9 2.1 2.9 3.9 0 2.2-2.2 3.7-5 3.7Z"/></svg>
+        </div>
+        <div style="font-size:14.5px;font-weight:700;color:{{text}};margin-bottom:6px;">Expediente clínico digital</div>
+        <div style="font-size:12.5px;color:{{muted}};line-height:1.55;">Carnet de vacunas, historial de eventos, documentos y signos vitales de cada mascota, siempre a la mano.</div>
+      </div>
+      <div style="background:{{bg}};border:1px solid {{border}};border-radius:14px;padding:24px 22px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v4M16 3.5v4"/></svg>
+        </div>
+        <div style="font-size:14.5px;font-weight:700;color:{{text}};margin-bottom:6px;">Agenda y reservas</div>
+        <div style="font-size:12.5px;color:{{muted}};line-height:1.55;">Tus clientes agendan servicios desde la app; tu equipo gestiona la agenda por sucursal desde el panel.</div>
+      </div>
+      <div style="background:{{bg}};border:1px solid {{border}};border-radius:14px;padding:24px 22px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5a1.5 1.5 0 0 1-1.5 1.3H8.5A1.5 1.5 0 0 1 7 20.5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        </div>
+        <div style="font-size:14.5px;font-weight:700;color:{{text}};margin-bottom:6px;">Comercio e inventario</div>
+        <div style="font-size:12.5px;color:{{muted}};line-height:1.55;">Punto de venta conectado a tu inventario, proveedores y compras.</div>
+      </div>
+      <div style="background:{{bg}};border:1px solid {{border}};border-radius:14px;padding:24px 22px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
+        </div>
+        <div style="font-size:14.5px;font-weight:700;color:{{text}};margin-bottom:6px;">Descubrimiento</div>
+        <div style="font-size:12.5px;color:{{muted}};line-height:1.55;">Tus clientes encuentran sucursales afiliadas cercanas y dejan reseñas por cada servicio.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="clientes" style="padding:88px 56px;display:grid;grid-template-columns:1fr 380px;gap:56px;align-items:center;">
+    <div>
+      <h2 style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:28px;color:{{text}};margin:0 0 14px;letter-spacing:-0.01em;">Tus clientes, siempre conectados</h2>
+      <p style="font-size:14.5px;color:{{muted}};line-height:1.65;margin:0 0 20px;max-width:480px;">Con la app de amiva.pet, los dueños de mascotas se asocian a tus sucursales y consumen tus servicios sin llamadas ni WhatsApp.</p>
+      <ul style="display:flex;flex-direction:column;gap:14px;">
+        <li style="display:flex;align-items:center;gap:12px;">
+          <span style="width:26px;height:26px;border-radius:999px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span style="font-size:13.5px;color:{{text}};">Ven el expediente clínico de sus mascotas</span>
+        </li>
+        <li style="display:flex;align-items:center;gap:12px;">
+          <span style="width:26px;height:26px;border-radius:999px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span style="font-size:13.5px;color:{{text}};">Agendan servicios en sucursales afiliadas</span>
+        </li>
+        <li style="display:flex;align-items:center;gap:12px;">
+          <span style="width:26px;height:26px;border-radius:999px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span style="font-size:13.5px;color:{{text}};">Buscan veterinarias cercanas en el mapa</span>
+        </li>
+      </ul>
+    </div>
+    <div style="background:{{surface}};border:1px solid {{border}};border-radius:28px;padding:16px;box-sizing:border-box;">
+      <div style="background:{{bg}};border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:8px;background:{{surface}};border:1px solid {{border}};border-radius:999px;padding:9px 14px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
+          <span style="font-size:11.5px;color:{{muted}};">Buscar sucursales cercanas</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:{{surface}};border:1px solid {{border}};border-radius:12px;padding:12px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg></div>
+          <div><div style="font-size:12px;font-weight:600;color:{{text}};">Veterinaria San Ángel</div><div style="font-size:10.5px;color:{{muted}};">1.2 km · 4.8 ★</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:{{surface}};border:1px solid {{border}};border-radius:12px;padding:12px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg></div>
+          <div><div style="font-size:12px;font-weight:600;color:{{text}};">Pet Spa Cholula</div><div style="font-size:10.5px;color:{{muted}};">2.6 km · 4.6 ★</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="planes" style="padding:88px 56px;background:{{surface}};border-top:1px solid {{border}};">
+    <div style="text-align:center;max-width:560px;margin:0 auto 44px;">
+      <h2 style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:28px;color:{{text}};margin:0 0 10px;letter-spacing:-0.01em;">Elige el plan para tu negocio</h2>
+      <p style="font-size:14.5px;color:{{muted}};margin:0;line-height:1.6;">Cambia de plan cuando lo necesites, sin perder tu información.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch;max-width:1220px;margin:0 auto;">
+
+      <div style="background:{{bg}};border:1px solid {{border}};border-radius:16px;padding:28px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:16.5px;font-weight:700;color:{{text}};">Básico</div>
+        <div style="font-size:12px;color:{{muted}};margin-top:6px;line-height:1.5;">Para empresas con una sucursal.</div>
+        <div style="height:1px;background:{{divider}};margin:20px 0;"></div>
+        <ul style="display:flex;flex-direction:column;gap:11px;flex:1;">
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Clientes y mascotas</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Ficha integral y expediente básico</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Vacunas y documentos</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Agenda, servicios y citas</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Recordatorios básicos</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Reportes esenciales</span></li>
+        </ul>
+        <a href="Registro1.dc.html" style="margin-top:22px;text-align:center;background:{{surface}};border:1px solid {{border}};color:{{text}};font-size:13.5px;font-weight:600;padding:11px;border-radius:9px;">Registrar mi negocio</a>
+      </div>
+
+      <div style="background:{{bg}};border:1.5px solid {{accent}};border-radius:16px;padding:28px 26px;display:flex;flex-direction:column;position:relative;">
+        <span style="position:absolute;top:-12px;left:26px;background:{{accentButton}};color:{{accentContrast}};font-size:10.5px;font-weight:700;padding:4px 11px;border-radius:999px;letter-spacing:0.02em;">MÁS ELEGIDO</span>
+        <div style="font-size:16.5px;font-weight:700;color:{{text}};margin-top:4px;">Extendido</div>
+        <div style="font-size:12px;color:{{muted}};margin-top:6px;line-height:1.5;">Para empresas con más sucursales — hasta 5 incluidas; cada sucursal adicional tiene costo extra.</div>
+        <div style="height:1px;background:{{divider}};margin:20px 0;"></div>
+        <ul style="display:flex;flex-direction:column;gap:11px;flex:1;">
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;font-weight:600;color:{{text}};">Todo lo del plan Básico</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Múltiples usuarios y roles</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Múltiples sucursales</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Expediente clínico avanzado</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Automatizaciones y campañas básicas</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Métricas avanzadas y mayor almacenamiento</span></li>
+        </ul>
+        <a href="Registro1.dc.html" style="margin-top:22px;text-align:center;background:{{accentButton}};color:{{accentContrast}};font-size:13.5px;font-weight:600;padding:11px;border-radius:9px;">Registrar mi negocio</a>
+      </div>
+
+      <div style="background:{{bg}};border:1px solid {{border}};border-radius:16px;padding:28px 26px;display:flex;flex-direction:column;">
+        <div style="font-size:16.5px;font-weight:700;color:{{text}};">Tienda Digital</div>
+        <div style="font-size:12px;color:{{muted}};margin-top:6px;line-height:1.5;">Para empresas que quieren manejar su inventario y tienda virtual dentro de la plataforma.</div>
+        <div style="height:1px;background:{{divider}};margin:20px 0;"></div>
+        <ul style="display:flex;flex-direction:column;gap:11px;flex:1;">
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;font-weight:600;color:{{text}};">Todo lo del plan Extendido</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Ecommerce</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Inventario, proveedores y compras</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Promociones y permisos avanzados</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Reportes operativos</span></li>
+          <li style="display:flex;gap:9px;align-items:flex-start;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="font-size:12.5px;color:{{text}};">Soporte prioritario</span></li>
+        </ul>
+        <a href="Registro1.dc.html" style="margin-top:22px;text-align:center;background:{{surface}};border:1px solid {{border}};color:{{text}};font-size:13.5px;font-weight:600;padding:11px;border-radius:9px;">Registrar mi negocio</a>
+      </div>
+    </div>
+
+    <div style="max-width:1220px;margin:22px auto 0;background:{{accentSoft}};border:1.5px dashed {{accent}};border-radius:16px;padding:22px 30px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <div>
+        <div style="font-size:14.5px;font-weight:700;color:{{text}};">¿Aún no decides? Prueba el plan Básico gratis</div>
+        <div style="font-size:12.5px;color:{{muted}};margin-top:3px;">10 días de acceso completo, sin tarjeta requerida.</div>
+      </div>
+      <a href="Registro1.dc.html" style="background:{{accentButton}};color:{{accentContrast}};font-size:13.5px;font-weight:600;padding:12px 20px;border-radius:9px;white-space:nowrap;">Comenzar prueba gratis</a>
+    </div>
+  </div>
+
+  <div style="padding:44px 56px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:9px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="1.6"/><circle cx="12" cy="5.5" r="1.6"/><circle cx="16" cy="8" r="1.6"/><circle cx="18" cy="12" r="1.5"/><path d="M12 20.5c-2.8 0-5-1.5-5-3.7 0-1.8 1.6-3 2.9-3.9.9-.6 1.4-1.1 2.1-1.1s1.2.5 2.1 1.1c1.3.9 2.9 2.1 2.9 3.9 0 2.2-2.2 3.7-5 3.7Z"/></svg>
+      <span style="font-size:12.5px;color:{{muted}};">© 2026 amiva.pet</span>
+    </div>
+    <div style="display:flex;gap:22px;">
+      <span style="font-size:12px;color:{{muted}};">Términos</span>
+      <span style="font-size:12px;color:{{muted}};">Privacidad</span>
+      <span style="font-size:12px;color:{{muted}};">Contacto</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true,"section":"Tema"},"$preview":{"width":1440,"height":2700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark ? {
+      bg:'#0B0E13', surface:'#12161C', surfaceAlt:'#171C23', border:'#232A33', divider:'#1E252D',
+      text:'#F2F5F8', muted:'#8D97A2',
+      accent:'#2F7CF6', accentButton:'#2468D1', accentContrast:'#FFFFFF', accentSoft:'#16233A',
+      sidebarBg:'#06080B', sidebarBorder:'#232A33', sidebarStrongText:'#FFFFFF',
+      sidebarActiveBg:'#151C24', sidebarActiveText:'#FFFFFF', sidebarText:'#9AA5B0', sidebarMuted:'#69707A',
+      avatarBg:'#16233A', avatarText:'#FFFFFF',
+      successBg:'#12301F', successText:'#7BD9A8',
+      warnBg:'#3A2A12', warnText:'#E8B36B',
+      dangerBg:'#3A1712', dangerText:'#E8897A',
+      chartBar:'#2F7CF6', chartBarStrong:'#5FA8F2'
+    } : {
+      bg:'#F1F2F4', surface:'#FFFFFF', surfaceAlt:'#F7F8F9', border:'#DCE0E4', divider:'#EAEDEF',
+      text:'#1E2530', muted:'#67717B',
+      accent:'#3B6EA5', accentButton:'#3B6EA5', accentContrast:'#FFFFFF', accentSoft:'#E7EEF4',
+      sidebarBg:'#F7F8F9', sidebarBorder:'#DCE0E4', sidebarStrongText:'#1E2530',
+      sidebarActiveBg:'#E7EEF4', sidebarActiveText:'#2C5480', sidebarText:'#4A535C', sidebarMuted:'#8B97A2',
+      avatarBg:'#E7EEF4', avatarText:'#2C5480',
+      successBg:'#DCEFE7', successText:'#0B5347',
+      warnBg:'#FBEBD7', warnText:'#8A4B0C',
+      dangerBg:'#F7E0DC', dangerText:'#8C2C22',
+      chartBar:'#3B6EA5', chartBarStrong:'#2C5480'
+    };
+    return { dark, ...t };
+  }
+}
+</script>
+</body>
+</html>

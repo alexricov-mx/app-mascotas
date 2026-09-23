@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Registro de negocio · amiva.pet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:'Public Sans',system-ui,sans-serif;}
+a{text-decoration:none;}
+input,select{font-family:inherit;}
+</style>
+</helmet>
+<div style="width:1440px;height:1120px;box-sizing:border-box;background:{{bg}};color:{{text}};overflow:hidden;">
+
+  <div style="height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid {{border}};background:{{surface}};">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="1.6"/><circle cx="12" cy="5.5" r="1.6"/><circle cx="16" cy="8" r="1.6"/><circle cx="18" cy="12" r="1.5"/><path d="M12 20.5c-2.8 0-5-1.5-5-3.7 0-1.8 1.6-3 2.9-3.9.9-.6 1.4-1.1 2.1-1.1s1.2.5 2.1 1.1c1.3.9 2.9 2.1 2.9 3.9 0 2.2-2.2 3.7-5 3.7Z"/></svg>
+      <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:17.5px;letter-spacing:-0.01em;color:{{text}};">amiva.pet</span>
+    </div>
+    <a href="Landing.dc.html" style="font-size:13px;font-weight:600;color:{{muted}};">← Volver al inicio</a>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:26px 24px 0;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="width:26px;height:26px;border-radius:999px;background:{{accentButton}};color:{{accentContrast}};display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span style="font-size:12.5px;font-weight:600;color:{{text}};">Datos generales</span>
+    </div>
+    <div style="width:56px;height:1.5px;background:{{accentButton}};"></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="width:26px;height:26px;border-radius:999px;background:{{accentButton}};color:{{accentContrast}};font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;">2</span>
+      <span style="font-size:12.5px;font-weight:600;color:{{text}};">Sucursales</span>
+    </div>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:26px 24px 0;display:grid;grid-template-columns:1.35fr 1fr;gap:24px;">
+
+    <div style="background:{{surface}};border:1px solid {{border}};border-radius:16px;padding:28px 30px;box-sizing:border-box;">
+      <div style="font-size:14.5px;font-weight:700;color:{{text}};margin-bottom:18px;">Agregar sucursal</div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+        <label style="font-size:12.5px;font-weight:600;color:{{text}};">Nombre de la sucursal</label>
+        <input type="text" placeholder="Ej. Sucursal Centro" style="border:1px solid {{border}};background:{{bg}};color:{{text}};border-radius:9px;padding:10px 13px;font-size:13.5px;box-sizing:border-box;">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+        <label style="font-size:12.5px;font-weight:600;color:{{text}};">Calle y número</label>
+        <input type="text" placeholder="Calle 5 Poniente 123" style="border:1px solid {{border}};background:{{bg}};color:{{text}};border-radius:9px;padding:10px 13px;font-size:13.5px;box-sizing:border-box;">
+      </div>
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12.5px;font-weight:600;color:{{text}};">Colonia</label>
+          <input type="text" placeholder="Centro" style="border:1px solid {{border}};background:{{bg}};color:{{text}};border-radius:9px;padding:10px 13px;font-size:13.5px;box-sizing:border-box;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12.5px;font-weight:600;color:{{text}};">Ciudad</label>
+          <input type="text" placeholder="Cholula" style="border:1px solid {{border}};background:{{bg}};color:{{text}};border-radius:9px;padding:10px 13px;font-size:13.5px;box-sizing:border-box;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12.5px;font-weight:600;color:{{text}};">C.P.</label>
+          <input type="text" placeholder="72760" style="border:1px solid {{border}};background:{{bg}};color:{{text}};border-radius:9px;padding:10px 13px;font-size:13.5px;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div style="font-size:12.5px;font-weight:600;color:{{text}};margin-bottom:8px;">Ubicación en el mapa</div>
+      <div style="display:flex;align-items:center;gap:8px;background:{{bg}};border:1px solid {{border}};border-radius:9px;padding:9px 13px;margin-bottom:10px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
+        <span style="font-size:12.5px;color:{{muted}};">Buscar dirección</span>
+      </div>
+
+      <div style="position:relative;height:200px;border-radius:12px;overflow:hidden;background:{{surfaceAlt}};border:1px solid {{border}};margin-bottom:12px;">
+        <svg width="100%" height="100%" viewBox="0 0 560 200" preserveAspectRatio="none" style="position:absolute;inset:0;">
+          <rect width="560" height="200" fill="{{surfaceAlt}}"/>
+          <path d="M0 40 H560 M0 95 H560 M0 150 H560" stroke="{{border}}" stroke-width="2"/>
+          <path d="M90 0 V200 M280 0 V200 M460 0 V200" stroke="{{border}}" stroke-width="2"/>
+          <path d="M0 68 H560" stroke="{{border}}" stroke-width="7" opacity="0.6"/>
+          <path d="M180 0 V200" stroke="{{border}}" stroke-width="7" opacity="0.6"/>
+        </svg>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="{{accent}}" stroke="{{accent}}" stroke-width="1.4" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3" fill="{{bg}}" stroke="{{accent}}"/></svg>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:11.5px;font-weight:600;color:{{muted}};">Latitud</label>
+          <input type="text" readonly value="19.0413" style="border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};border-radius:9px;padding:9px 13px;font-size:13px;box-sizing:border-box;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:11.5px;font-weight:600;color:{{muted}};">Longitud</label>
+          <input type="text" readonly value="-98.3054" style="border:1px solid {{border}};background:{{surfaceAlt}};color:{{text}};border-radius:9px;padding:9px 13px;font-size:13px;box-sizing:border-box;">
+        </div>
+      </div>
+      <a href="Registro2.dc.html" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:{{accent}};margin-bottom:20px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+        Usar mi ubicación actual
+      </a>
+
+      <a href="Registro2.dc.html" style="display:flex;align-items:center;justify-content:center;gap:7px;background:{{surface}};border:1px dashed {{accent}};color:{{accent}};font-size:13px;font-weight:600;padding:11px;border-radius:9px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Agregar sucursal
+      </a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:14.5px;font-weight:700;color:{{text}};">Sucursales registradas (1)</div>
+
+      <div style="background:{{surface}};border:1px solid {{border}};border-radius:14px;padding:16px 18px;display:flex;gap:14px;">
+        <div style="width:38px;height:38px;border-radius:10px;background:{{accentSoft}};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13.5px;font-weight:700;color:{{text}};">Sucursal Centro</div>
+          <div style="font-size:12px;color:{{muted}};margin-top:3px;line-height:1.5;">Calle 5 Poniente 123, Centro, Cholula, Puebla, C.P. 72760</div>
+          <div style="display:flex;gap:14px;margin-top:9px;">
+            <span style="font-size:12px;font-weight:600;color:{{accent}};">Editar</span>
+            <span style="font-size:12px;font-weight:600;color:{{dangerText}};">Eliminar</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:{{surfaceAlt}};border:1px dashed {{border}};border-radius:14px;padding:16px 18px;">
+        <div style="font-size:12.5px;color:{{muted}};line-height:1.55;">Puedes agregar más sucursales ahora o después desde el panel.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:26px 24px 0;display:flex;justify-content:space-between;">
+    <a href="Registro1.dc.html" style="padding:12px 22px;font-size:13.5px;font-weight:600;color:{{muted}};">Atrás</a>
+    <button style="background:{{accentButton}};color:{{accentContrast}};border:none;font-family:inherit;font-size:13.5px;font-weight:600;padding:12px 26px;border-radius:9px;cursor:pointer;">Finalizar registro</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true,"section":"Tema"},"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark ? {
+      bg:'#0B0E13', surface:'#12161C', surfaceAlt:'#171C23', border:'#232A33', divider:'#1E252D',
+      text:'#F2F5F8', muted:'#8D97A2',
+      accent:'#2F7CF6', accentButton:'#2468D1', accentContrast:'#FFFFFF', accentSoft:'#16233A',
+      sidebarBg:'#06080B', sidebarBorder:'#232A33', sidebarStrongText:'#FFFFFF',
+      sidebarActiveBg:'#151C24', sidebarActiveText:'#FFFFFF', sidebarText:'#9AA5B0', sidebarMuted:'#69707A',
+      avatarBg:'#16233A', avatarText:'#FFFFFF',
+      successBg:'#12301F', successText:'#7BD9A8',
+      warnBg:'#3A2A12', warnText:'#E8B36B',
+      dangerBg:'#3A1712', dangerText:'#E8897A',
+      chartBar:'#2F7CF6', chartBarStrong:'#5FA8F2'
+    } : {
+      bg:'#F1F2F4', surface:'#FFFFFF', surfaceAlt:'#F7F8F9', border:'#DCE0E4', divider:'#EAEDEF',
+      text:'#1E2530', muted:'#67717B',
+      accent:'#3B6EA5', accentButton:'#3B6EA5', accentContrast:'#FFFFFF', accentSoft:'#E7EEF4',
+      sidebarBg:'#F7F8F9', sidebarBorder:'#DCE0E4', sidebarStrongText:'#1E2530',
+      sidebarActiveBg:'#E7EEF4', sidebarActiveText:'#2C5480', sidebarText:'#4A535C', sidebarMuted:'#8B97A2',
+      avatarBg:'#E7EEF4', avatarText:'#2C5480',
+      successBg:'#DCEFE7', successText:'#0B5347',
+      warnBg:'#FBEBD7', warnText:'#8A4B0C',
+      dangerBg:'#F7E0DC', dangerText:'#8C2C22',
+      chartBar:'#3B6EA5', chartBarStrong:'#2C5480'
+    };
+    return { dark, ...t };
+  }
+}
+</script>
+</body>
+</html>
