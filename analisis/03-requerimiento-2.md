@@ -3,7 +3,7 @@
 **Nombre del producto:** provisional (AppMascotas)  
 **Versión:** 2.2  
 **Fecha:** 2026-09-22  
-**Estado:** documento consolidado con las respuestas recibidas. Los asuntos todavía abiertos se encuentran en `04-pendientes-22092026.md`.
+**Estado:** documento consolidado con las respuestas recibidas. Los asuntos todavía abiertos se encuentran en `docs/04-pendientes.md`.
 
 ## 0. Criterios del documento
 

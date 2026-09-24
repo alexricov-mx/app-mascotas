@@ -36,8 +36,8 @@ El API es el único componente que se conecta a PostgreSQL y a Object Storage. N
 El orden de autoridad documental es:
 
 1. Decisiones aprobadas por el responsable del producto.
-2. `requerimiento.md`, versión vigente del requerimiento consolidado.
-3. Documento de pendientes vigente.
+2. `docs/02-requerimiento.md`, versión vigente del requerimiento consolidado.
+3. Documento de pendientes vigente (`docs/04-pendientes.md`).
 4. Documentos de requerimiento de cada feature.
 5. Análisis técnico y planes de trabajo.
 6. Código y comentarios de implementación.

@@ -1,11 +1,11 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.0  
-**Fecha:** 2026-09-22  
+**Versión:** 3.6  
+**Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
-Este documento reemplaza como referencia de trabajo a `01-requerimiento.md`, `02-respuesta-21092026.md` y `03-requerimiento-2.md`. Los documentos anteriores se conservan como historial. `App-Ventas` no se modifica; se usa como referencia funcional para el punto de venta, inventario y promociones.
+Este documento reemplaza como referencia de trabajo a `analisis/01-requerimiento.md`, `analisis/02-respuesta-21092026.md` y `analisis/03-requerimiento-2.md`. Los documentos anteriores se conservan como historial. `App-Ventas` no se modifica; se usa como referencia funcional para el punto de venta, inventario y promociones.
 
 ## 1. Producto
 
@@ -21,6 +21,7 @@ El núcleo debe poder reutilizarse posteriormente en otros tipos de negocio. El 
 | Portal operativo del negocio | `app.amiva.pet` | Personal y administradores del negocio | Flutter Web; mismo proyecto que la app para tablet |
 | App del dueño | App móvil iOS y Android | Dueños, familiares y cuidadores | Flutter |
 | API común | Servicio interno de todos los clientes | Sistema | ASP.NET Core .NET 10 |
+| Página pública | `amiva.pet` | Visitantes y negocios invitados | Por definir |
 
 Los negocios acceden a `app.amiva.pet` mediante usuario y contraseña entregados o habilitados por la administración de la plataforma. El administrador de negocio opera sus sucursales desde esa misma solución Flutter, en navegador o tablet.
 
@@ -71,7 +72,7 @@ Una empresa puede tener varias sucursales y un solo registro empresarial por RFC
 
 El usuario final descarga la app móvil, se registra mediante un proveedor de identidad y proporciona correo electrónico. Se envía un enlace de verificación; la cuenta se activa al verificarlo.
 
-Se contemplan Google, Microsoft, Facebook, X y Apple en iOS, sujetos a la configuración y validación técnica final del proveedor de identidad.
+En el MVP el usuario final se registra con Google, Facebook o Apple. Microsoft y X quedan para una versión posterior. El servicio de identidad es Keycloak (sección 15), que integra estos proveedores y también el acceso con usuario y contraseña de `app.amiva.pet` y `admin.amiva.pet`.
 
 El usuario agrega sus mascotas, busca sucursales en el mapa y solicita vincularse con ellas.
 
@@ -83,7 +84,23 @@ Datos: nombre, fotografía, especie, raza, sexo, estado reproductivo, fecha de n
 
 Especies iniciales: perro, gato, ave, roedor, reptil y otro.
 
-Cada usuario final tiene dos mascotas base. Las adicionales tienen un cargo configurable, pero en el MVP no se cobra dentro de la app: la sucursal registra el evento y cobra en efectivo por sus propios medios; el cargo se incorpora al periodo de facturación del negocio con la plataforma. Las mascotas obtenidas por referidos son adicionales al límite base y pueden ganarse hasta cinco por cuenta. Las mascotas adicionales pagadas no tienen ese límite.
+Cada usuario final tiene espacios para mascotas de tres tipos. Cada mascota activa ocupa un espacio de un solo tipo:
+
+| Tipo | Límite inicial | Cómo se obtiene |
+|---|---|---|
+| Base | 2 | Al registrarse. |
+| Por beneficio | Hasta 5 por cuenta | Por referidos de usuarios finales (sección 11). |
+| Pagado | Sin límite | Cargo registrado en sucursal. |
+
+Los tres límites son parámetros configurables desde `admin.amiva.pet`; el límite de espacios pagados puede dejarse sin tope o fijarse.
+
+Al registrar una mascota se ocupa primero un espacio base, después uno por beneficio y al final uno pagado. El usuario consulta en la app cuántos espacios de cada tipo tiene, cuántos ocupa y cuántos le quedan.
+
+Los espacios pagados tienen un cargo configurable, pero en el MVP no se cobra dentro de la app: la sucursal registra el evento y cobra en efectivo por sus propios medios; el cargo se incorpora al periodo de facturación del negocio con la plataforma.
+
+Un espacio se libera de inmediato cuando su mascota se marca como fallecida o se transfiere a otro propietario. El espacio liberado conserva su tipo y puede ocuparlo una nueva mascota sin volver a pagarlo ni volver a ganarlo.
+
+Para aceptar una transferencia, el nuevo propietario necesita un espacio libre de cualquier tipo. Si no lo tiene, la app se lo indica y le ofrece invitar usuarios o adquirir un espacio pagado en una sucursal; la solicitud de transferencia sigue vigente mientras tanto.
 
 El límite de mascotas por negocio es configurable desde `admin.amiva.pet`.
 
@@ -109,6 +126,26 @@ Las veterinarias registran consultas, motivo, diagnóstico, tratamiento, medicam
 
 Los documentos pueden agregarse, actualizarse y eliminarse. La eliminación es lógica, se audita y solo puede ejecutarla el negocio que subió el documento.
 
+Tipos y tamaños aceptados en el MVP (parámetros configurables desde `admin.amiva.pet`):
+
+| Tipo de archivo | Tamaño máximo |
+|---|---:|
+| Fotografías de mascotas | 10 MB |
+| Recetas, tickets y notas | 15 MB |
+| Estudios clínicos | 25 MB |
+| Documentos firmados | 25 MB |
+| Exportaciones generadas por el sistema | 50 MB |
+
+Se aceptan `JPEG`, `PNG`, `WEBP` y `PDF`. Se rechazan ejecutables, archivos comprimidos y formatos editables.
+
+Transferencia de archivos:
+
+- La carga y la descarga pasan siempre por el API, por *streaming*, sin cargar el archivo completo en memoria.
+- El API valida el tipo por el contenido real del archivo, no solo por la extensión.
+- Si el tamaño declarado supera el límite, el archivo se rechaza antes de leerlo completo.
+- Cada fotografía genera una miniatura para listas y línea de tiempo.
+- Antes de entregar un archivo, el API valida los permisos de quien lo pide.
+
 Al fallecer una mascota, cambia a estado fallecida. Después de un mes se ocultan datos, fotos, expediente e historial para el usuario, pero la información se conserva. El usuario puede registrar una nueva mascota.
 
 Si una mascota no tiene actividad ni consumo durante cinco años, se eliminan sus datos, historial, expediente y fotografías conforme a los parámetros de la plataforma.
@@ -116,6 +153,27 @@ Si una mascota no tiene actividad ni consumo durante cinco años, se eliminan su
 Cuando un negocio deja de pagar, después del periodo de resguardo se eliminan físicamente inventario, citas históricas, usuarios operadores, ventas y compras. Los registros necesarios para reportes e historial clínico se conservan mediante borrado lógico.
 
 La eliminación solicitada por un usuario es lógica e inmediata para impedirle el acceso, sujeta a obligaciones legales y conservación aplicable.
+
+### 7.1 Productos proporcionados por el dueño
+
+Al registrar una vacuna, desparasitante o medicamento aplicado, el veterinario indica el origen del producto:
+
+| | Del inventario de la sucursal | Proporcionado por el dueño |
+|---|---|---|
+| Qué se captura | Producto del catálogo y cantidad | Nombre comercial, laboratorio, lote y fecha de caducidad |
+| Inventario | Genera la salida automáticamente | No genera ningún movimiento |
+| Qué se cobra | Producto y servicio de aplicación | Solo el servicio de aplicación |
+| Carnet y línea de tiempo | Registro normal | Registro con la etiqueta "Proporcionado por el dueño", lote y caducidad |
+
+Reglas para el producto del dueño:
+
+- Aceptarlo es una **política del negocio**: aplica igual a todas sus sucursales. La configura el administrador de negocio y está activada por defecto.
+- En vacunas, el lote y la caducidad son obligatorios. En desparasitantes y medicamentos se capturan si el empaque los trae.
+- No se permite registrar la aplicación si la fecha de caducidad ya pasó.
+- El veterinario confirma la revisión del producto: empaque sellado, caducidad vigente y conservación declarada por el dueño.
+- El dueño firma en papel una responsiva. El formato lo administra la plataforma y el negocio lo imprime; la responsiva firmada se sube como documento (foto o PDF) y queda ligada al registro. Es obligatoria para guardar la aplicación.
+- El recordatorio de siguiente dosis se programa igual que con producto propio.
+- Si el veterinario no acepta el producto, simplemente no registra la aplicación.
 
 ## 8. Agenda y citas
 
@@ -137,13 +195,28 @@ El catálogo contiene nombre, descripción, duración, disponibilidad, sucursal,
 
 El precio y la duración se definen por defecto a nivel de negocio y cada sucursal puede ajustarlos. Los servicios pueden tener precio publicado o no listado.
 
+Los servicios de aplicación (vacunas, desparasitantes, medicamentos) pueden tener la variante "Aplicación con producto del dueño", con su propio precio, para cobrar solo la aplicación.
+
 No habrá flujo de cotización en la app. Cuando se acuerde un precio especial, el usuario y el profesional lo acuerdan fuera de ese flujo y el profesional registra el servicio y su costo. El precio queda en el evento y, cuando corresponda, en la venta.
 
 ## 10. Inventario, promociones y punto de venta
 
 El MVP incorpora inventario, promociones y ventas en sitio. La experiencia funcional del POS se basa en `App-Ventas`; el prototipo `amiva-huella` se usa únicamente como referencia para adaptar la presentación a web y tablet.
 
-El inventario se administra por sucursal. Las existencias solo cambian mediante movimientos: entradas, salidas, ajustes, consumo interno, merma, caducidad, ventas y cancelaciones. Se manejan stock mínimo y alertas.
+El inventario se administra por sucursal. Las existencias solo cambian mediante movimientos: entradas, salidas, ajustes por conteo físico, aplicación clínica, consumo interno, merma, caducidad, ventas y cancelaciones. No se permite existencia negativa. El stock mínimo y sus alertas se definen por sucursal.
+
+Reglas de inventario:
+
+- Cada producto tiene su unidad de medida (pieza, mililitro, gramo, dosis, etc.); las cantidades son enteras, sin fracciones.
+- El precio de venta incluye IVA.
+- El dinero se maneja en pesos MXN con decimales: precios, totales, pagos y cambio con dos decimales; el costo unitario con cuatro, para productos que se manejan en unidades pequeñas (por ejemplo, mililitros).
+- El costo se calcula con costo promedio ponderado.
+- Las vacunas, desparasitantes y medicamentos aplicados en consulta descuentan inventario automáticamente al registrarse. Si el producto lo proporciona el dueño, no se mueve inventario (sección 7.1).
+- El consumo interno puede ligarse opcionalmente a una cita o servicio.
+- Los traspasos entre sucursales llegan en R3, con el ecommerce.
+- Las órdenes de compra (R4) tienen los estados `borrador`, `en proceso` y `concluida`, con autorización del administrador y recepción parcial. Un borrador que no se usa se elimina; no hay estado `cancelada`.
+
+El detalle de la operación está en `docs/05-inventario.md`.
 
 Los productos tienen cantidad, imagen, precio, descripción breve y estado visible u oculto. Las promociones se componen de productos del inventario y descuentan sus componentes al venderse. La venta debe conservar el detalle y precio acordados; una cancelación devuelve los componentes mediante movimientos.
 
@@ -159,13 +232,41 @@ No hay límite de usuarios por plan. No se lleva contador de almacenamiento, per
 
 Impago: dos días de gracia, cinco días en solo lectura, después sin acceso y seis meses de resguardo antes de la eliminación definida en este documento.
 
-### Referidos de negocios
+Los referidos de usuarios finales y de negocios forman parte del MVP.
 
-El negocio referido se afilia como mínimo al plan Básico y lo mantiene pagado dos meses consecutivos. El negocio que refiere obtiene un mes gratuito de su plan actual por cada referido elegible, sin límite. Los meses se acumulan, no caducan y se consumen antes de generar nuevos cargos.
+### Invitación mediante QR y enlace
+
+Cada usuario final y cada negocio tiene un enlace de invitación personal, que también se muestra como código QR. Se puede enviar por correo, copiar como imagen o copiar como enlace.
+
+- **App del dueño:** sección "Invitar y obtener beneficios".
+- **`app.amiva.pet`:** sección "Invitar otras veterinarias y estéticas".
+
+La pantalla de registro de la app siempre incluye el campo "Código de quien te invitó". Si la persona abre la app desde el enlace, el campo llega lleno; si instaló la app desde la tienda, puede escribirlo o pegarlo. A quien se registra solo se le muestra el nombre visible de quien lo invitó, sin correo ni otros datos.
+
+Una cuenta solo puede tener un referidor, se asigna al registrarse y no cambia después. No se permiten auto-referidos ni duplicados.
 
 ### Referidos de usuarios finales
 
-El usuario referido completa su afiliación y concluye diez servicios pagados. El usuario que refiere obtiene una mascota adicional gratuita, hasta cinco recompensas por cuenta. Se usan enlaces de referido; no se permiten auto-referidos ni duplicados.
+El enlace abre la app en la pantalla de registro con el código de quien invita; si la app no está instalada, abre App Store o Google Play.
+
+El seguimiento empieza cuando el usuario referido activa su cuenta. Cuando acumula diez servicios pagados, el usuario que refiere obtiene un espacio por beneficio (sección 5), hasta el límite configurado, inicialmente cinco.
+
+Cuentan como servicio pagado, en cualquier negocio:
+
+- Una cita completada.
+- Un evento de venta en POS asociado al usuario, no cancelado. Una venta cuenta como uno sin importar cuántos productos incluya.
+
+Una venta ligada a una cita cuenta junto con esa cita como un solo servicio.
+
+### Referidos de negocios
+
+Los negocios no se autorregistran. El enlace abre en `amiva.pet` una página de "Quiero afiliarme" con un formulario de contacto que conserva quién invitó. El administrador de plataforma da de alta el negocio desde `admin.amiva.pet` con el referido ya ligado.
+
+El negocio referido se afilia como mínimo al plan Básico y lo mantiene pagado dos meses consecutivos. El negocio que refiere obtiene un mes gratuito de su plan actual por cada referido elegible, sin límite. Los meses se acumulan, no caducan y se consumen antes de generar nuevos cargos.
+
+### Evaluación de beneficios
+
+Un proceso automático nocturno revisa las condiciones de los referidos pendientes y otorga los beneficios. Cada otorgamiento se audita y se notifica al beneficiario.
 
 ## 12. Notificaciones, reseñas y campañas
 
@@ -173,17 +274,34 @@ El MVP usa correo, push y notificaciones internas. WhatsApp queda fuera. No hay 
 
 El dueño puede apagar todas las notificaciones o configurar cada tipo. Se registran errores de envío, sin mensajes atrasados ni registro de apertura o entrega.
 
-Las reseñas se solicitan por correo. El operador de sucursal y la administración de plataforma pueden revisarlas; la publicación requiere acción del administrador de plataforma. La retención es configurable. El derecho de respuesta del negocio queda pendiente.
+Las reseñas se solicitan por correo. El operador de sucursal y la administración de plataforma pueden revisarlas; la publicación requiere acción del administrador de plataforma. La retención es configurable.
 
-Las sucursales pueden crear campañas para correo, banners y push. La audiencia puede seleccionarse por sucursal y atributos de mascota. La vigencia, frecuencia y prioridad son configurables. La plataforma puede ocultar campañas inadecuadas.
+El negocio puede publicar una sola respuesta pública por reseña, vinculada a ella y sin editar la reseña original. La respuesta pasa por la misma moderación y el administrador de plataforma puede ocultarla o retirarla por incumplimiento.
+
+Los negocios pueden crear campañas para correo, banners y push. La vigencia, frecuencia y prioridad son configurables. La plataforma puede ocultar campañas inadecuadas.
+
+Alcance de una campaña:
+
+- **De negocio:** aplica a todas las sucursales del negocio.
+- **De sucursal:** aplica solo a una sucursal.
+
+Una campaña se puede copiar manualmente a otra sucursal. La copia es independiente: se crea como borrador y se edita y publica por separado.
+
+Segmentación de la audiencia:
+
+- Se permite por especie, raza, sexo, edad, sucursal y servicios previos.
+- No se permite segmentar directamente por diagnóstico, alergias, padecimientos, medicamentos, estado reproductivo ni notas clínicas.
+- Los atributos clínicos solo se usan para recordatorios asistenciales autorizados previamente por el dueño, nunca para promociones comerciales.
+- Se registra quién creó, aprobó, publicó, modificó, copió u ocultó cada campaña.
+- El sistema advierte al administrador cuando la audiencia puede inferirse a partir de datos sensibles.
 
 ## 13. Auditoría y legal
 
 Se auditan vinculaciones, consentimientos, transferencias, autorizaciones, accesos clínicos, registros, documentos, datos sensibles, precios, servicios, variantes, suscripciones, inventario, suspensiones, contactos verificados, cancelaciones y citas no atendidas.
 
-Desde `admin.amiva.pet` se administran versiones de aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos y documentos legales. Cada aceptación conserva la versión mostrada y su bitácora.
+Desde `admin.amiva.pet` se administran versiones de aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos, responsiva por producto proporcionado por el dueño y documentos legales. Cada aceptación conserva la versión mostrada y su bitácora.
 
-Antes del lanzamiento se requiere validación legal especializada sobre propiedad de la información, aviso de privacidad, derechos ARCO, conservación, eliminación, responsabilidades, tratamiento de datos y pagos.
+`admin.amiva.pet` tiene una sección para configurar cada uno de estos documentos, de modo que el desarrollo no depende del texto final. Antes de iniciar la operación se requiere la revisión de un abogado sobre propiedad de la información, aviso de privacidad, derechos ARCO, conservación, eliminación, responsabilidades, tratamiento de datos y pagos. Esa revisión no bloquea el desarrollo, pero sí la salida a producción.
 
 ## 14. Requisitos no funcionales
 
@@ -203,6 +321,24 @@ PostgreSQL con PostGIS se instala dentro del VPS en un contenedor. El backend es
 
 El API es el único componente autorizado para conectarse a PostgreSQL y Object Storage. Todos los clientes se comunican exclusivamente con el API mediante HTTPS. Los identificadores internos tienen prefijo y UUID.
 
+El API se organiza con **arquitectura de cortes verticales (VSA, *Vertical Slice Architecture*) por feature**. Cada feature o caso de uso contiene todo lo que necesita: endpoint, validación, reglas y acceso a datos. Las features se agrupan en módulos por dominio dentro del monolito.
+
+La identidad la resuelve **Keycloak** en un contenedor. Integra Google, Facebook y Apple para el usuario final, y usuario y contraseña para el negocio y la plataforma. El API valida los tokens que emite Keycloak.
+
+### 15.1 Ambientes
+
+| Ambiente | Base de datos | Estado |
+|---|---|---|
+| Desarrollo | PostgreSQL 18 + PostGIS y Keycloak en Podman, en el equipo del desarrollador. Base `amiva-dev`, definida en `infra/dev/compose.yaml`. | Disponible |
+| Staging | Por configurar. Dominio, base y apps de prueba propios. | Pendiente |
+| Producción | PostgreSQL + PostGIS y Keycloak en contenedores dentro del VPS de OVH, en Canadá. | Pendiente |
+
+La topología de despliegue sigue la recomendada por OVH para el VPS. Los datos de la cuenta, el VPS, Object Storage, dominio y staging se reúnen en `infra/ovh/ficha-configuracion.md`.
+
+### 15.2 Enlaces de invitación
+
+Las invitaciones usan enlaces universales (iOS) y App Links (Android) sobre el dominio `amiva.pet`. La ruta de invitación de usuario abre la app; la de negocio siempre abre la página web. El detalle está en `docs/estudio/01-enlaces-universales.md`.
+
 ## 16. Repositorios
 
 - `app-mascotas-usuario`: app móvil del dueño.
@@ -213,27 +349,21 @@ El API es el único componente autorizado para conectarse a PostgreSQL y Object 
 ## 17. Releases
 
 - **R0:** fundaciones, identidad, negocios, sucursales, usuarios, roles, multi-tenant, auditoría, planes, `admin.amiva.pet` y `app.amiva.pet`.
-- **R1 MVP:** clientes, mascotas, ficha, expediente básico, vacunas, documentos, signos vitales, agenda, citas, servicios, variantes, capacidad, inventario, promociones, ventas en sitio, POS, línea de tiempo, mapa, notificaciones y administración de plataforma.
+- **R1 MVP:** clientes, mascotas, ficha, expediente básico, vacunas, documentos, signos vitales, agenda, citas, servicios, variantes, capacidad, inventario, promociones, ventas en sitio, POS, línea de tiempo, mapa, notificaciones, administración de plataforma, espacios de mascotas por tipo, referidos de usuarios finales y de negocios, y página pública de afiliación.
 - **R2:** lista de espera, reseñas, favoritos, filtros avanzados, ranking, SMS y búsqueda rápida.
-- **R3:** ecommerce, carrito, pedidos, pagos integrados, comisión y evolución del inventario.
+- **R3:** ecommerce, carrito, pedidos, pagos integrados, comisión, traspasos entre sucursales y evolución del inventario.
 - **R4:** lotes, caducidades, proveedores y órdenes de compra.
 - **R5:** campañas avanzadas, automatizaciones, métricas y recompensas.
 - **R6:** marketplace B2B, laboratorios, facturación electrónica y hospitalización.
 
 ## 18. Entidades conceptuales iniciales
 
-Usuario, IdentidadExterna, Tenant, Negocio, Sucursal, UsuarioTenant, Rol, Permiso, Mascota, UsuarioMascota, Vinculacion, Consentimiento, Cliente, Profesional, Servicio, Variante, PrecioSucursal, Cita, EventoMascota, RegistroClinico, Vacuna, Documento, Notificacion, Auditoria, Plan, Entitlement, Suscripcion, Parametro, Producto, MovimientoInventario, Promocion, Venta, VentaDetalle, Pago, Referido y OrdenCompra.
+Usuario, IdentidadExterna, Tenant, Negocio, Sucursal, UsuarioTenant, Rol, Permiso, Mascota, UsuarioMascota, Vinculacion, Consentimiento, Cliente, Profesional, Servicio, Variante, PrecioSucursal, Cita, EventoMascota, RegistroClinico, Vacuna, Documento, Notificacion, Auditoria, Plan, Entitlement, Suscripcion, Parametro, Producto, MovimientoInventario, Promocion, Venta, VentaDetalle, Pago, EspacioMascota, Referido, BeneficioReferido, SolicitudAfiliacion y OrdenCompra.
 
 ## 19. Pendientes vigentes
 
-- Derecho de respuesta en reseñas.
-- Límites finales de archivos y tipos aceptados.
-- Reglas para campañas dirigidas a atributos sensibles.
-- Modelo detallado de proveedores y órdenes de compra.
-- Validación legal especializada.
-- Configuración concreta del VPS, contenedores, Nginx, Cloudflare y certificados.
-- Límites y estrategia de transferencia de archivos a través del API.
-- Proveedor y configuración final de identidad externa.
+- Revisión legal de los documentos; no bloquea el desarrollo, sí el inicio de la operación.
+- Datos de infraestructura de OVH (VPS, Object Storage, dominio y staging), por llenar en `infra/ovh/ficha-configuracion.md`.
 
 Estos pendientes no deben resolverse por suposición durante el diseño del modelo de datos. Cuando afecten una regla o entidad, se registran como decisión pendiente antes de construir.
 
@@ -247,3 +377,9 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 2.1 | 2026-09-22 | Separación de clientes y portales. |
 | 2.2 | 2026-09-22 | PostgreSQL/PostGIS en VPS, Vue 3 + Vite, API como único acceso a datos y UUID con prefijos. |
 | 3.0 | 2026-09-22 | Cierre del requerimiento: dominios `admin.amiva.pet` y `app.amiva.pet`, alta de negocios por administración, POS basado en App-Ventas y prototipos como referencia visual. |
+| 3.1 | 2026-09-24 | Referidos en el MVP con QR y enlace, página pública de afiliación, evaluación nocturna de beneficios, conteo de servicios pagados y espacios de mascotas por tipo que se liberan por fallecimiento o transferencia, y espacio libre requerido para aceptar una transferencia. |
+| 3.2 | 2026-09-24 | Respuesta pública del negocio a reseñas, tipos y tamaños de archivos, campañas de negocio o sucursal con reglas de segmentación, documentos legales configurables sin bloquear el desarrollo, proveedores de identidad Google, Facebook y Apple, enlaces universales y ambientes de desarrollo, staging y producción. |
+| 3.3 | 2026-09-24 | Transferencia de archivos por streaming a través del API, API con arquitectura de cortes verticales por feature, Keycloak como servicio de identidad y ficha de configuración de OVH. |
+| 3.4 | 2026-09-24 | Reglas de inventario aprobadas: unidades de medida sin fracciones, precio con IVA, costo promedio ponderado, descuento automático en aplicaciones clínicas, stock mínimo por sucursal, traspasos en R3 y órdenes de compra sin estado cancelada. |
+| 3.5 | 2026-09-24 | Dinero con decimales: dos para precios y totales, cuatro para el costo unitario. |
+| 3.6 | 2026-09-24 | Vacunas, desparasitantes y medicamentos proporcionados por el dueño: política por negocio, lote y caducidad, responsiva firmada que se sube como documento, sin movimiento de inventario y variante de servicio para cobrar solo la aplicación. |
