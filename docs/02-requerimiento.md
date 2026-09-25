@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.8  
+**Versión:** 3.9  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -74,11 +74,11 @@ El usuario final descarga la app móvil, se registra mediante un proveedor de id
 
 En el MVP el usuario final se registra con Google, Facebook o Apple. Microsoft y X quedan para una versión posterior. El servicio de identidad es Keycloak (sección 15), que integra estos proveedores y también el acceso con usuario y contraseña de `app.amiva.pet` y `admin.amiva.pet`.
 
-El usuario agrega sus mascotas, busca sucursales en el mapa y solicita vincularse con ellas.
+El usuario agrega sus mascotas, busca sucursales en el mapa y solicita vincularse con ellas. Si un negocio ya lo había registrado como cliente provisional, activa su mascota con la invitación que recibió (sección 6.1).
 
 ## 5. Mascotas, propiedad y límites
 
-Una mascota tiene un propietario principal y cero o más usuarios autorizados. No existen propietarios secundarios. La transferencia requiere que el propietario actual la inicie y que el nuevo propietario la acepte; se conserva la historia. Al transferirse, se retiran las autorizaciones anteriores.
+Una mascota tiene un propietario principal y cero o más usuarios autorizados. No existen propietarios secundarios. La excepción es la mascota provisional, que registra un negocio para un cliente que todavía no usa la app y no tiene propietario hasta que el dueño la activa (sección 6.1). La transferencia requiere que el propietario actual la inicie y que el nuevo propietario la acepte; se conserva la historia. Al transferirse, se retiran las autorizaciones anteriores.
 
 El propietario autoriza a otra persona compartiendo una invitación (enlace o QR) o con el correo de una cuenta existente; la otra persona acepta desde su app. El propietario puede retirar la autorización y el autorizado puede renunciar en cualquier momento. Una mascota autorizada no ocupa espacio del autorizado.
 
@@ -122,6 +122,11 @@ Para aceptar una transferencia, el nuevo propietario necesita un espacio libre d
 
 El usuario selecciona una sucursal desde la app y ve una pantalla de consentimiento y vinculación con acciones de aceptar o cancelar. El negocio obtiene acceso únicamente después de la aceptación.
 
+- La vinculación es con el negocio: se inicia desde una sucursal, pero todas sus sucursales atienden al dueño.
+- El dueño elige qué mascotas comparte con cada negocio; por defecto, la mascota con la que llega. Puede agregar o quitar mascotas después.
+- Alergias, condiciones especiales y medicamentos activos se comparten siempre en el nivel 1, por seguridad de la mascota.
+- Al transferirse una mascota, deja de estar compartida con los negocios del propietario anterior; esos negocios solo recuperan el acceso si el nuevo propietario se vincula con ellos.
+
 Se registra el texto mostrado, su versión, usuario, negocio, sucursal, fecha, resultado y bitácora del evento. El texto se administra desde `admin.amiva.pet`.
 
 Un negocio vinculado puede consultar:
@@ -130,9 +135,31 @@ Un negocio vinculado puede consultar:
 - **Nivel 2:** vacunas, desparasitación, tratamientos preventivos y certificados.
 - **Información generada por el propio negocio.**
 
-Nunca puede consultar el nivel 3 generado por otro negocio. Al desvincularse, el negocio pierde el acceso a la información del usuario y deja de navegar los registros de esa relación.
+Nunca puede consultar el nivel 3 generado por otro negocio. Al desvincularse, el negocio pierde el acceso a la información del usuario y deja de navegar los registros de esa relación, incluidos los que él mismo generó; los conserva y los recupera si el dueño se vuelve a vincular.
 
 El dueño consulta vacunas, alergias, padecimientos, recetas, consultas, servicios, citas, documentos y la línea de tiempo con el nombre del negocio que generó cada evento. Las notas internas, costos, márgenes y observaciones comerciales son privadas del negocio.
+
+Cuando la plataforma publica una nueva versión de un texto legal, las aceptaciones anteriores siguen siendo válidas; si la marca como obligatoria, la app pide aceptarla la siguiente vez que el usuario entra.
+
+### 6.1 Clientes sin app
+
+Un negocio puede atender a un cliente que todavía no usa la app:
+
+1. El personal registra un **cliente provisional** (nombre, teléfono y correo) y sus **mascotas provisionales** (datos básicos).
+2. Ese cliente y esas mascotas existen solo dentro del negocio: ningún otro negocio los ve, ni siquiera el nivel 2.
+3. El negocio opera con ellos normalmente: citas, expediente, vacunas, documentos y ventas.
+4. El sistema envía al cliente una **invitación de activación** por correo. También se puede mostrar como QR en la sucursal.
+5. Cuando el dueño instala la app, se registra o inicia sesión y acepta la invitación, acepta el consentimiento de vinculación y confirma los datos. La mascota pasa a ser suya, ocupa uno de sus espacios y queda vinculada con ese negocio. Todo el historial se conserva.
+6. Si el dueño ya tenía esa mascota registrada en la app, elige fusionarlas: el historial del negocio pasa a la mascota que ya tenía.
+
+Reglas:
+
+- Sin correo no se puede enviar la invitación por correo, pero sí mostrar el QR en la sucursal.
+- Para activar se necesita un espacio libre, igual que al recibir una transferencia.
+- La invitación vence a los 30 días (parámetro) y el negocio puede reenviarla. La mascota provisional se conserva aunque nunca se active, sujeta a las reglas de conservación.
+- Un cliente provisional recibe recordatorios solo por correo y no recibe campañas.
+- Los servicios anteriores a la activación no cuentan para referidos.
+- Cada negocio que atiende a la misma persona sin app tiene su propio cliente provisional; al activar cada invitación, todo termina en la misma cuenta y, si el dueño lo elige, en la misma mascota.
 
 ## 7. Expediente y documentos
 
@@ -191,7 +218,7 @@ Reglas para el producto del dueño:
 
 ## 8. Agenda y citas
 
-Toda cita corresponde a una mascota y requiere aprobación del negocio. Flujo: mascota, servicio, fecha y horario. El negocio acepta o rechaza con mensaje, inicia el servicio y puede marcarla como no atendida.
+Toda cita corresponde a una mascota. La que solicita el dueño requiere aprobación del negocio. El negocio también puede registrar citas en nombre de un cliente, vinculado o provisional (por ejemplo, por teléfono o en mostrador); esas nacen confirmadas. Flujo: mascota, servicio, fecha y horario. El negocio acepta o rechaza con mensaje, inicia el servicio y puede marcarla como no atendida.
 
 Estados: solicitada, confirmada, en proceso, completada, rechazada, cancelada y no atendida.
 
@@ -303,7 +330,7 @@ Un proceso automático nocturno revisa las condiciones de los referidos pendient
 
 ## 12. Notificaciones, reseñas y campañas
 
-El MVP usa correo, push y notificaciones internas; estas últimas se ven en el buzón de la app (sección 5). WhatsApp queda fuera. No hay chat directo negocio-dueño en el MVP.
+El MVP usa correo, push y notificaciones internas; estas últimas se ven en el buzón de la app (sección 5). Los clientes provisionales solo reciben correo. WhatsApp queda fuera. No hay chat directo negocio-dueño en el MVP.
 
 El dueño puede apagar todas las notificaciones o configurar cada tipo. Se registran errores de envío, sin mensajes atrasados ni registro de apertura o entrega.
 
@@ -325,6 +352,7 @@ El negocio puede tener en su pantalla de campañas todas las que quiera configur
 Segmentación de la audiencia:
 
 - Se permite por especie, raza, sexo, edad, sucursal y servicios previos.
+- Solo se dirigen a dueños vinculados; los clientes provisionales no reciben campañas.
 - No se permite segmentar directamente por diagnóstico, alergias, padecimientos, medicamentos, estado reproductivo ni notas clínicas.
 - Los atributos clínicos solo se usan para recordatorios asistenciales autorizados previamente por el dueño, nunca para promociones comerciales.
 - Se registra quién creó, aprobó, publicó, modificó, copió u ocultó cada campaña.
@@ -384,7 +412,7 @@ Las invitaciones usan enlaces universales (iOS) y App Links (Android) sobre el d
 ## 17. Releases
 
 - **R0:** fundaciones, identidad, negocios, sucursales, usuarios, roles, multi-tenant, auditoría, planes, `admin.amiva.pet` y `app.amiva.pet`.
-- **R1 MVP:** clientes, mascotas, ficha, expediente básico, vacunas, documentos, signos vitales, agenda, citas, servicios, variantes, capacidad, inventario, promociones, ventas en sitio, POS, línea de tiempo, mapa, notificaciones, administración de plataforma, espacios de mascotas por tipo, referidos de usuarios finales y de negocios, y página pública de afiliación.
+- **R1 MVP:** clientes (incluidos clientes y mascotas provisionales con invitación de activación), mascotas, ficha, expediente básico, vacunas, documentos, signos vitales, agenda, citas, servicios, variantes, capacidad, inventario, promociones, ventas en sitio, POS, línea de tiempo, mapa, notificaciones, administración de plataforma, espacios de mascotas por tipo, referidos de usuarios finales y de negocios, y página pública de afiliación.
 - **R2:** lista de espera, reseñas, favoritos, filtros avanzados, ranking, SMS y búsqueda rápida.
 - **R3:** ecommerce, carrito, pedidos, pagos integrados, comisión, traspasos entre sucursales y evolución del inventario.
 - **R4:** lotes, caducidades, proveedores y órdenes de compra.
@@ -392,6 +420,8 @@ Las invitaciones usan enlaces universales (iOS) y App Links (Android) sobre el d
 - **R6:** marketplace B2B, laboratorios, facturación electrónica y hospitalización.
 
 ## 18. Entidades conceptuales iniciales
+
+Esta lista fue el punto de partida. El modelo vigente, con los cambios que surgieron al modelar, está en `docs/06-modelo-conceptual.md`.
 
 Usuario, IdentidadExterna, Tenant, Negocio, Sucursal, UsuarioTenant, Rol, Permiso, Mascota, UsuarioMascota, Vinculacion, Consentimiento, Cliente, Profesional, Servicio, Variante, PrecioSucursal, Cita, EventoMascota, RegistroClinico, Vacuna, Documento, Notificacion, Auditoria, Plan, Entitlement, Suscripcion, Parametro, Producto, MovimientoInventario, Promocion, Venta, VentaDetalle, Pago, EspacioMascota, Referido, BeneficioReferido, SolicitudAfiliacion y OrdenCompra.
 
@@ -420,3 +450,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.6 | 2026-09-24 | Vacunas, desparasitantes y medicamentos proporcionados por el dueño: política por negocio, lote y caducidad, responsiva firmada que se sube como documento, sin movimiento de inventario y variante de servicio para cobrar solo la aplicación. |
 | 3.7 | 2026-09-24 | Planes Básico y Extendido con sucursales y campañas configurables, periodos mensuales, IVA incluido, mes a favor solo sobre el plan, sucursales sin prorrateo, prueba vencida como impago, parámetros solo de plataforma, límite de campañas activas (no de configuradas) y retiro del límite de mascotas por negocio. |
 | 3.8 | 2026-09-24 | Usuarios autorizados (permisos, invitación y retiro), buzón de solicitudes y avisos en la app, vencimiento de solicitudes, microchip único, fallecimiento registrado también por el dueño, último peso en la ficha y veterinario habitual. |
+| 3.9 | 2026-09-24 | Reglas de vinculación (por negocio, mascotas elegidas, datos de seguridad, retiro y transferencia), nuevas versiones de textos legales, clientes y mascotas provisionales con invitación de activación y fusión, y citas registradas por el negocio. |

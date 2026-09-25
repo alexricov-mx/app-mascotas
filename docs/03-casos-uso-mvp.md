@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.7  
+**Versión:** 1.8  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.8  
+**Fuente:** `docs/02-requerimiento.md` versión 3.9  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -31,7 +31,8 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 - Ningún cliente accede directamente a PostgreSQL/PostGIS ni a Object Storage.
 - Las operaciones críticas se auditan.
 - El dueño solo ve la información que le corresponde y la línea de tiempo de sus mascotas.
-- Un negocio solo accede después de una vinculación aceptada.
+- Un negocio solo accede a un dueño y sus mascotas después de una vinculación aceptada, salvo a sus propios clientes y mascotas provisionales (UC-47).
+- Todo lo que el negocio registra (citas, expediente, vacunas, documentos, ventas) puede hacerse sobre una mascota provisional.
 - Los identificadores internos usan prefijo y UUID.
 - Las operaciones multi-entidad que deban ser atómicas se ejecutan en una transacción.
 - Los registros clínicos pasados no se modifican; una corrección genera un nuevo registro.
@@ -47,7 +48,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 1. El usuario elige un proveedor de identidad: Google, Facebook o Apple.
 2. Proporciona o confirma su correo.
-3. Opcionalmente captura el código de quien lo invitó. Si abrió la app desde un enlace de invitación (UC-38), el campo llega lleno y se muestra el nombre visible de quien invita.
+3. Opcionalmente captura el código de quien lo invitó. Si llegó por una invitación de activación de un negocio, al terminar el registro continúa en UC-48. Si abrió la app desde un enlace de invitación (UC-38), el campo llega lleno y se muestra el nombre visible de quien invita.
 4. El sistema crea la identidad interna asociada al proveedor.
 5. El sistema envía el enlace de verificación.
 6. El usuario verifica el correo.
@@ -107,21 +108,21 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 **Actor principal:** ACT-01.  
 **Actor secundario:** ACT-06 o personal autorizado del negocio.  
-**Flujo:** el usuario tiene cuenta, selecciona la sucursal, acepta la vinculación y completa o confirma los datos necesarios.
+**Flujo:** el usuario ya tiene cuenta y está en la sucursal; selecciona la sucursal en la app, acepta la vinculación (UC-08), elige o registra la mascota y completa o confirma los datos necesarios. Si el dueño no usa la app, aplica UC-47.
 
 **Resultado:** relación usuario-mascota-negocio vigente y auditable.
 
 ### UC-08 — Aceptar o cancelar vinculación
 
 **Actor principal:** ACT-01.  
-**Flujo:** el usuario revisa el texto y versión del consentimiento, elige aceptar o cancelar y el sistema registra el resultado.
+**Flujo:** el usuario revisa el texto y versión del consentimiento, elige qué mascotas comparte (por defecto, la mascota con la que llega), acepta o cancela, y el sistema registra la aceptación con su versión.
 
-**Resultado:** si acepta, el negocio obtiene nivel 1, nivel 2 y sus propios registros; si cancela, no obtiene acceso.
+**Resultado:** si acepta, la vinculación es con todo el negocio y este obtiene, de las mascotas compartidas, nivel 1 (incluye siempre alergias, condiciones especiales y medicamentos activos), nivel 2 y sus propios registros; si cancela, no obtiene acceso. El dueño puede agregar o quitar mascotas compartidas después.
 
 ### UC-09 — Retirar vinculación
 
 **Actor principal:** ACT-01.  
-**Resultado:** el negocio deja de navegar los datos de la relación. El evento de retiro queda auditado.
+**Resultado:** el negocio deja de navegar los datos de la relación, incluidos los registros que él mismo generó, que conserva por obligación. Si el dueño se vuelve a vincular, recupera el acceso. El evento de retiro queda auditado.
 
 ### UC-10 — Consultar ficha y línea de tiempo
 
@@ -138,7 +139,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 2. La solicitud llega al buzón del nuevo propietario (UC-46), que la revisa. El sistema valida que tenga un espacio libre de cualquier tipo.
 3. Si no lo tiene, la app se lo indica y le ofrece invitar usuarios (UC-38) o adquirir un espacio pagado en una sucursal (UC-37). La solicitud sigue vigente.
 4. El nuevo propietario acepta y el sistema asigna la mascota a su espacio libre, con el mismo orden de UC-06.
-5. El sistema registra solicitud, aceptación y fechas, y retira las autorizaciones anteriores.
+5. El sistema registra solicitud, aceptación y fechas, retira las autorizaciones anteriores y deja de compartir la mascota con los negocios del propietario anterior.
 
 Si no se responde en 7 días (parámetro), la solicitud vence. El propietario puede cancelarla antes.
 
@@ -178,6 +179,42 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 - **Avisos:** notificaciones internas informativas, como cambios de cita, recordatorios y beneficios de referidos.
 
 **Resultado:** solicitudes respondidas o canceladas y avisos marcados como leídos. Cada solicitud nueva también llega por push si el usuario lo tiene activado.
+
+### UC-47 — Registrar cliente y mascota provisionales
+
+**Actor principal:** ACT-03 o ACT-06.  
+**Superficie:** `app.amiva.pet` / tablet.
+
+**Flujo:**
+
+1. El personal busca si la persona ya es cliente del negocio.
+2. Si no, registra un cliente provisional: nombre, teléfono y correo.
+3. Registra una o más mascotas provisionales con sus datos básicos.
+4. El sistema envía la invitación de activación al correo del cliente, si lo tiene, y permite mostrarla como QR en la sucursal.
+5. Desde ese momento el negocio puede agendar, registrar expediente y vender sobre esas mascotas.
+
+El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
+
+**Resultado:** cliente y mascotas provisionales visibles solo para este negocio.  
+**Errores:** datos incompletos o permiso insuficiente.
+
+### UC-48 — Activar mascota provisional
+
+**Actor principal:** ACT-01.  
+**Precondiciones:** el dueño recibió una invitación de activación (correo o QR).
+
+**Flujo:**
+
+1. El dueño abre la invitación; si no tiene la app, la instala.
+2. Se registra (UC-01) o inicia sesión.
+3. Ve el negocio que lo invita y las mascotas provisionales.
+4. Acepta el consentimiento de vinculación (UC-08).
+5. Por cada mascota, elige: activarla como nueva o fusionarla con una mascota que ya tiene registrada.
+6. Confirma o corrige los datos.
+7. El sistema asigna la mascota a un espacio libre (orden de UC-06), crea la vinculación con el negocio y conserva todo el historial. En una fusión, el historial del negocio pasa a la mascota existente.
+
+**Resultado:** mascotas del dueño, vinculadas con el negocio, con su historial completo; el cliente provisional queda ligado a la cuenta del dueño.  
+**Errores:** invitación vencida o cancelada, sin espacios disponibles (la app ofrece las mismas opciones que en UC-06), o microchip que ya tiene otra mascota activa (se sugiere la fusión).
 
 ### UC-13 — Agregar, consultar y eliminar documento
 
@@ -241,6 +278,13 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 
 **Resultado:** cita en estado solicitada; negocio notificado.
 
+### UC-49 — Agendar cita desde el negocio
+
+**Actor principal:** ACT-03 o ACT-06.  
+**Flujo:** el personal elige cliente (vinculado o provisional), mascota, servicio, fecha y horario, dentro de la capacidad configurada.
+
+**Resultado:** cita confirmada. Si el cliente está vinculado, la ve en su app y recibe aviso; si es provisional, recibe aviso por correo.
+
 ### UC-21 — Aceptar o rechazar cita
 
 **Actor principal:** ACT-03 o ACT-05 autorizado.  
@@ -288,7 +332,7 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 **Actor principal:** ACT-03 o ACT-05 autorizado.  
 **Flujo:**
 
-1. Opcionalmente identifica al usuario final vinculado y, si aplica, la cita relacionada.
+1. Opcionalmente identifica al cliente (vinculado o provisional) y, si aplica, la cita relacionada.
 2. Selecciona productos y promociones con imágenes grandes.
 3. Ajusta cantidades dentro de existencias disponibles.
 4. Consulta total.
@@ -327,7 +371,7 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 ### UC-30 — Administrar textos y consentimientos
 
 **Actor principal:** ACT-07.  
-**Resultado:** texto activo y versiones históricas disponibles para nuevas aceptaciones y auditoría. Hay una sección por documento legal: aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos y responsiva por producto proporcionado por el dueño. El formato de la responsiva se puede descargar e imprimir desde `app.amiva.pet`. El desarrollo usa textos provisionales; los definitivos, revisados por un abogado, se cargan antes de iniciar la operación.
+**Resultado:** texto activo y versiones históricas disponibles para nuevas aceptaciones y auditoría. Al publicar una versión, el administrador indica si es obligatoria; si lo es, la app pide aceptarla la siguiente vez que el usuario entra, y las aceptaciones anteriores siguen siendo válidas. Hay una sección por documento legal: aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos y responsiva por producto proporcionado por el dueño. El formato de la responsiva se puede descargar e imprimir desde `app.amiva.pet`. El desarrollo usa textos provisionales; los definitivos, revisados por un abogado, se cargan antes de iniciar la operación.
 
 ### UC-31 — Administrar reseñas
 
@@ -342,7 +386,7 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 
 1. El administrador elige el alcance: todo el negocio o una sucursal.
 2. Define canal, contenido, vigencia, frecuencia y prioridad.
-3. Define la audiencia con los atributos permitidos: especie, raza, sexo, edad, sucursal y servicios previos.
+3. Define la audiencia con los atributos permitidos: especie, raza, sexo, edad, sucursal y servicios previos. Solo se incluyen dueños vinculados; los clientes provisionales quedan fuera.
 4. El sistema advierte si la audiencia puede inferirse a partir de datos sensibles.
 5. Publica la campaña.
 
@@ -355,7 +399,7 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 ### UC-33 — Enviar recordatorios
 
 **Actor:** ACT-08.  
-**Resultado:** recordatorios de vacunas una semana antes y citas dos horas antes cuando corresponda. Los errores se registran y no se envían mensajes atrasados.
+**Resultado:** recordatorios de vacunas una semana antes y citas dos horas antes cuando corresponda; a los clientes provisionales, solo por correo. Los errores se registran y no se envían mensajes atrasados.
 
 ### UC-34 — Aplicar ciclo de suscripción
 

@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.4  
+**Versión:** 0.6  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.8 y `docs/03-casos-uso-mvp.md` versión 1.7 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.9 y `docs/03-casos-uso-mvp.md` versión 1.8 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -23,9 +23,9 @@ Convenciones del documento:
 | 1 | Identidad y acceso | UC-01 a UC-05, UC-44 | Núcleo | **Aprobado** (2026-09-24) |
 | 2 | Suscripciones, planes y parámetros | UC-05, UC-29, UC-34 | Núcleo | **Aprobado** (2026-09-24) |
 | 3 | Mascotas, propiedad y espacios | UC-06, UC-11, UC-12, UC-37, UC-39, UC-45, UC-46 | Vertical | **Aprobado** (2026-09-24) |
-| 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30 | Núcleo + vertical | Pendiente |
+| 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30, UC-47 a UC-49 | Núcleo + vertical | **Aprobado** (2026-09-24) |
 | 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | Pendiente |
-| 6 | Servicios, agenda y citas | UC-18 a UC-23 | Núcleo | Pendiente |
+| 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49 | Núcleo | Pendiente |
 | 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43 | Núcleo | Pendiente |
 | 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | Pendiente |
 | 9 | Notificaciones, reseñas, campañas y auditoría | UC-31 a UC-33 | Núcleo | Pendiente |
@@ -255,6 +255,7 @@ Al vencer un periodo, el proceso nocturno:
 | Mascotas | Días para ocultar una mascota fallecida | 30 |
 | Mascotas | Años sin actividad para eliminar una mascota | 5 |
 | Mascotas | Días de vigencia de una solicitud de transferencia o autorización | 7 |
+| Mascotas | Días de vigencia de una invitación de activación | 30 |
 | Referidos | Servicios pagados para el beneficio de usuario | 10 |
 | Referidos | Meses consecutivos pagados del negocio referido | 2 |
 | Agenda | Minutos antes para cancelar o reprogramar | 30 |
@@ -301,13 +302,13 @@ Los parámetros marcados "por definir" se configuran más adelante desde `admin.
 - Cuántas mascotas puede tener cada usuario (espacios base, por beneficio y pagados) y cómo se liberan.
 - Qué pasa cuando una mascota fallece.
 
-La mascota **pertenece al dueño, no al negocio**: existe una sola vez en toda la plataforma y la ven los negocios con los que el dueño se vincula (bloque 4). Lo que cada negocio registra de ella es del negocio (bloque 5).
+La mascota **pertenece al dueño, no al negocio**: existe una sola vez en toda la plataforma y la ven los negocios con los que el dueño se vincula (bloque 4). Lo que cada negocio registra de ella es del negocio (bloque 5). La única excepción es la **mascota provisional**, que un negocio registra para un cliente sin app y que solo existe dentro de ese negocio hasta que el dueño la activa (bloque 4, sección 6.6).
 
 ### 5.2 Entidades
 
 | Entidad | Capa | Qué es | Reglas principales |
 |---|---|---|---|
-| **Mascota** | Vertical | El animal. Entidad central de la plataforma. | Datos de la sección 5 del requerimiento: nombre, fotografía, especie, raza, sexo, estado reproductivo, fecha de nacimiento (la edad se calcula), color, características físicas, señas particulares, microchip, alergias, condiciones especiales, medicamentos activos, dieta y veterinario habitual. Estados en 5.5. Guarda el tipo de espacio que ocupa con su propietario actual. |
+| **Mascota** | Vertical | El animal. Entidad central de la plataforma. | Datos de la sección 5 del requerimiento: nombre, fotografía, especie, raza, sexo, estado reproductivo, fecha de nacimiento (la edad se calcula), color, características físicas, señas particulares, microchip, alergias, condiciones especiales, medicamentos activos, dieta y veterinario habitual. Estados en 5.5. Si es provisional, guarda el negocio que la registró. Guarda el tipo de espacio que ocupa con su propietario actual. |
 | **Especie** | Vertical | Catálogo: perro, gato, ave, roedor, reptil, otro. | Lo administra la plataforma. |
 | **Raza** | Vertical | Catálogo de razas por especie. | Lo administra la plataforma. Siempre existe la opción "Otra" o "Mestizo" con texto libre. |
 | **Propiedad** | Vertical | Quién es el propietario principal de una mascota y desde cuándo. | Siempre hay exactamente un propietario vigente. Al transferir, la propiedad anterior se cierra con fecha y se abre una nueva; nunca se borra. |
@@ -353,6 +354,10 @@ La entidad `EspacioMascota` de la sección 18 del requerimiento queda como este 
 ```mermaid
 stateDiagram-v2
     [*] --> Activa : registro (UC-06) o vinculación (UC-07)
+    [*] --> Provisional : el negocio la registra (UC-47)
+    Provisional --> Activa : el dueño la activa (UC-48)
+    Provisional --> Fusionada : el dueño la fusiona con una que ya tenía (UC-48)
+    Fusionada --> [*]
     Activa --> Activa : transferencia aceptada (cambia de propietario)
     Activa --> Fallecida : se registra el fallecimiento (UC-12)
     Fallecida --> Oculta : pasan 30 días (UC-35)
@@ -361,6 +366,8 @@ stateDiagram-v2
     Eliminada --> [*]
 ```
 
+- **Provisional:** solo la ve el negocio que la registró; no tiene propietario ni ocupa espacios.
+- **Fusionada:** su historial pasó a otra mascota; se conserva solo como referencia.
 - **Fallecida:** el dueño y los negocios vinculados todavía la ven; ya no se agendan citas ni se transfiere.
 - **Oculta:** el dueño ya no la ve; la información se conserva conforme a las reglas de conservación.
 - **Eliminada:** se aplican las reglas de eliminación de la sección 7 del requerimiento.
@@ -408,3 +415,132 @@ El buzón **no es una entidad nueva**: muestra las `TransferenciaPropiedad` y `A
 | 6 | Las solicitudes de transferencia y autorización vencen a los 7 días (parámetro) y se pueden cancelar antes. |
 | 7 | La ficha muestra el último peso; el historial vive en el expediente. |
 | 8 | El veterinario habitual se elige entre negocios vinculados o se captura como texto libre. |
+
+---
+
+## 6. Bloque 4 — Vinculación, privacidad y consentimientos
+
+### 6.1 Qué resuelve
+
+- Cómo un negocio obtiene acceso a un dueño y a sus mascotas, y cómo lo pierde.
+- Qué información ve cada negocio de una mascota, según quién la generó.
+- Qué aceptó cada persona, en qué versión del texto y cuándo.
+
+Es el bloque que protege la regla central del producto: **la mascota es del dueño, el expediente que genera un negocio es de ese negocio, y ningún negocio ve lo clínico de otro.**
+
+### 6.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **Vinculacion** | Núcleo | La relación aceptada entre un dueño y un negocio. | Se inicia desde una sucursal (queda como sucursal de origen), pero aplica a **todo el negocio**. Estados: `vigente`, `retirada`. La crea el dueño al aceptar el consentimiento (UC-08) y la termina el dueño (UC-09). Hay a lo más una vigente por dueño y negocio. |
+| **MascotaVinculada** | Vertical | Qué mascotas del dueño comparte con ese negocio. | El dueño elige cuáles al vincularse y puede agregar o quitar después. Un negocio solo ve las mascotas compartidas. |
+| **Cliente** | Núcleo | Cómo ve el negocio a una persona que atiende: datos de contacto, notas internas, etiquetas y preferencias. | Pertenece al negocio (tenant). Estados: `provisional` (sin cuenta en la app) y `vinculado` (ligado a un `Usuario` con vinculación). Las notas internas nunca las ve el dueño. Se conserva aunque la vinculación se retire, pero el negocio deja de navegarlo. |
+| **InvitacionActivacion** | Núcleo | Invitación que el negocio envía a un cliente provisional para que active sus mascotas en la app. | Código único, correo destino, mascotas incluidas. Estados: `enviada`, `aceptada`, `vencida` (30 días, parámetro), `cancelada`. Se puede reenviar. Se abre por correo o por QR en la sucursal. |
+| **DocumentoLegal** | Núcleo | Cada tipo de texto legal: aviso de privacidad, términos, consentimiento de vinculación, responsiva, etc. | Lo administra la plataforma (UC-30). |
+| **VersionDocumentoLegal** | Núcleo | Cada versión publicada de un documento legal. | Texto completo, número de versión y fecha de publicación. No se edita una versión publicada; se publica otra. |
+| **Aceptacion** | Núcleo | Constancia de que una persona aceptó una versión concreta. | Guarda usuario, versión aceptada, fecha, contexto (registro, vinculación) y, si aplica, negocio y sucursal. Nunca se borra. |
+
+### 6.3 Niveles de visibilidad
+
+Todo registro sobre una mascota lleva **qué negocio lo generó** y **su nivel**. Con eso se decide quién lo ve:
+
+| Nivel | Qué incluye | Dueño y autorizados | Negocio que lo generó | Otro negocio vinculado |
+|---|---|---|---|---|
+| 1 — Perfil | Datos generales de la mascota y los que el dueño decida compartir | Sí | Sí | Sí |
+| 2 — Prevención | Vacunas, desparasitación, tratamientos preventivos y certificados | Sí | Sí | **Sí** |
+| 3 — Clínico | Consultas, diagnósticos, tratamientos, recetas, estudios, procedimientos, cirugías, signos vitales | Sí | Sí | **No** |
+| Interno | Notas internas, costos, márgenes y observaciones comerciales | **No** | Sí | No |
+
+Reglas:
+
+- El dueño ve en la línea de tiempo el nombre del negocio que generó cada evento.
+- Un negocio sin vinculación vigente no ve nada, ni siquiera lo que él mismo generó, mientras la vinculación esté retirada.
+- El nivel lo fija el sistema según el tipo de registro, no quien lo captura.
+
+### 6.4 Ciclo de la vinculación
+
+```mermaid
+stateDiagram-v2
+    [*] --> Vigente : el dueño acepta el consentimiento (UC-08)
+    Vigente --> Retirada : el dueño se desvincula (UC-09)
+    Retirada --> Vigente : el dueño se vuelve a vincular (acepta la versión vigente)
+```
+
+- **Retirada:** el negocio conserva sus registros (obligaciones de conservación), pero no los puede navegar ni ver datos nuevos del dueño.
+- **Nueva vinculación:** el negocio recupera el acceso, incluidos los registros que él generó antes.
+- **Transferencia de una mascota:** deja de estar compartida con los negocios del propietario anterior. Los negocios conservan lo que registraron, pero solo recuperan el acceso si el nuevo propietario se vincula con ellos.
+
+### 6.5 Relaciones
+
+```mermaid
+erDiagram
+    Usuario ||--o{ Vinculacion : "se vincula con"
+    Negocio ||--o{ Vinculacion : "recibe"
+    Sucursal ||--o{ Vinculacion : "es origen de"
+    Vinculacion ||--|{ MascotaVinculada : "comparte"
+    Mascota ||--o{ MascotaVinculada : "compartida en"
+    Vinculacion ||--|| Aceptacion : "se respalda en"
+    Negocio ||--o{ Cliente : "tiene"
+    Cliente }o--o| Usuario : "es (si está vinculado)"
+    Cliente ||--o{ InvitacionActivacion : "recibe"
+    Cliente ||--o{ Mascota : "custodia (si es provisional)"
+    DocumentoLegal ||--|{ VersionDocumentoLegal : "tiene"
+    VersionDocumentoLegal ||--o{ Aceptacion : "aceptada en"
+    Usuario ||--o{ Aceptacion : "otorga"
+```
+
+### 6.6 Clientes y mascotas provisionales
+
+Para que un negocio pueda atender a clientes que todavía no usan la app (UC-47 a UC-49):
+
+```mermaid
+sequenceDiagram
+    participant N as Negocio (app.amiva.pet)
+    participant S as amiva.pet
+    participant D as Dueño (app)
+    N->>S: Registra cliente y mascota provisionales (UC-47)
+    S-->>D: Invitación de activación por correo o QR
+    N->>S: Agenda, registra expediente y vende sobre la mascota provisional
+    D->>S: Abre la invitación, se registra o inicia sesión (UC-01)
+    D->>S: Acepta consentimiento y elige activar o fusionar (UC-48)
+    S->>S: Asigna espacio, crea vinculación, conserva historial
+    S-->>N: El cliente pasa de provisional a vinculado
+```
+
+| Aspecto | Mientras es provisional | Después de activarse |
+|---|---|---|
+| Quién la ve | Solo el negocio que la registró | El dueño y los negocios con los que la comparta |
+| Propietario | Ninguno; la custodia el cliente provisional del negocio | El dueño |
+| Espacios | No ocupa | Ocupa uno del dueño |
+| Nivel 2 para otros negocios | No | Sí |
+| Avisos al cliente | Solo correo | Buzón, push y correo |
+| Campañas | No | Sí, si cumple la audiencia |
+| Servicios para referidos | No cuentan | Cuentan desde la activación de la cuenta |
+
+**Fusión:** si el dueño ya tenía la mascota registrada, el historial del negocio (citas, expediente, vacunas, documentos y ventas) pasa a la mascota existente y la provisional queda como `fusionada`. El microchip ayuda a detectarlo: si coincide, la app sugiere la fusión.
+
+**Varios negocios:** cada negocio tiene su propio cliente provisional de la misma persona. Cada invitación que el dueño acepta suma una vinculación a la misma cuenta.
+
+### 6.7 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | La vinculación es con el negocio; todas sus sucursales atienden al dueño. |
+| 2 | El dueño elige qué mascotas comparte con cada negocio; por defecto, la mascota con la que llega. |
+| 3 | Alergias, condiciones especiales y medicamentos activos se comparten siempre en el nivel 1. |
+| 4 | Con la vinculación retirada, el negocio no ve ni lo que él generó; lo recupera si el dueño se vuelve a vincular. |
+| 5 | Al transferirse, la mascota deja de estar compartida con los negocios del propietario anterior. |
+| 6 | Opción B: el negocio puede registrar clientes y mascotas provisionales, que el dueño activa después desde la app. |
+| 7 | Una nueva versión de un texto legal no invalida las aceptaciones anteriores; si es obligatoria, se pide aceptarla al volver a entrar. |
+
+### 6.8 Decisiones derivadas confirmadas
+
+Surgieron al diseñar la opción B y están aplicadas en el requerimiento y los casos de uso:
+
+1. **Correo del cliente provisional:** si no lo tiene, igual se registra y la invitación se muestra como QR en la sucursal.
+2. **Activar requiere espacio libre**, igual que recibir una transferencia.
+3. **Fusión:** si el dueño ya tenía la mascota, elige fusionarla y el historial del negocio pasa a la existente.
+4. **La invitación vence a los 30 días** (parámetro) y se puede reenviar; la mascota provisional se conserva aunque nunca se active.
+5. **Clientes provisionales:** reciben recordatorios solo por correo y no reciben campañas.
+6. **Citas desde el negocio (UC-49):** el negocio puede agendar citas para cualquier cliente, vinculado o provisional, y nacen confirmadas. Es necesario para clientes sin app y útil para citas por teléfono.
+7. **Referidos:** los servicios anteriores a la activación no cuentan.

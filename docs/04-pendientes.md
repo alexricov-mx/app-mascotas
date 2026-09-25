@@ -1,14 +1,14 @@
 # Pendientes de definición — amiva.pet
 
 **Fecha:** 2026-09-24  
-**Relacionado con:** `docs/02-requerimiento.md` versión 3.8  
+**Relacionado con:** `docs/02-requerimiento.md` versión 3.9  
 **Estado:** pendientes restantes. PEN-28, PEN-29, PEN-30, PEN-31 y PEN-34 se resolvieron y ya están integrados en el requerimiento.
 
 ## PEN-32 — Revisión legal
 
 **Decidido:** `admin.amiva.pet` tendrá una sección para configurar cada documento legal. El desarrollo avanza con textos provisionales.
 
-**Pendiente externo:** revisión de un abogado sobre aviso de privacidad, derechos ARCO, conservación, eliminación, responsabilidades de plataforma y negocios, propiedad de la información y pagos.
+**Pendiente externo:** revisión de un abogado sobre aviso de privacidad, derechos ARCO, conservación, eliminación, responsabilidades de plataforma y negocios, propiedad de la información y pagos. Incluye quién responde por los datos de clientes provisionales que captura un negocio antes de que el dueño acepte, y el envío de la invitación de activación a su correo.
 
 **Impacto:** no bloquea el desarrollo; bloquea el inicio de la operación.
 

@@ -1,7 +1,7 @@
 # Enlaces universales y App Links — material de estudio
 
 **Fecha:** 2026-09-24  
-**Aplicación en amiva.pet:** invitaciones de referidos (sección 11 de `docs/02-requerimiento.md`, UC-01, UC-38, UC-40 y UC-41).  
+**Aplicación en amiva.pet:** invitaciones de referidos (sección 11 de `docs/02-requerimiento.md`, UC-01, UC-38, UC-40 y UC-41), invitaciones de activación de clientes provisionales (sección 6.1, UC-47 y UC-48) y autorizaciones (UC-45).  
 **Tipo:** documento de estudio. Explica el concepto y cómo se usará; los detalles de configuración se confirman al implementar.
 
 ## 1. El problema
@@ -62,6 +62,7 @@ Es el caso difícil: la app **no** está instalada. La persona toca el enlace, v
 |---|---|---|---|
 | `https://amiva.pet/i/{codigo}` | Invitación de usuario final | Sí, pantalla de registro con código | Página que redirige a la tienda según el dispositivo |
 | `https://amiva.pet/n/{codigo}` | Invitación de negocio | **No** | Página "Quiero afiliarme" (UC-41) |
+| `https://amiva.pet/a/{codigo}` | Invitación de activación de un cliente provisional | Sí, registro o inicio de sesión y luego la pantalla de activación (UC-48) | Página que redirige a la tienda según el dispositivo |
 
 La ruta `/n/` se excluye a propósito en `apple-app-site-association` y no se declara en Android. El personal de una veterinaria puede tener instalada la app del dueño, y la invitación de negocio siempre debe abrir la página web.
 
