@@ -2,7 +2,7 @@
 
 **Versión:** 1.0  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.15 y `docs/03-casos-uso-mvp.md` versión 1.14 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.16 y `docs/03-casos-uso-mvp.md` versión 1.15 (aprobados)  
 **Estado:** aprobado completo (bloques 1 a 9) el 2026-09-24. El modelo de datos físico está en `docs/07-modelo-datos.md`.
 
 ## 1. Propósito y alcance
@@ -67,7 +67,7 @@ Consecuencia: la entidad `IdentidadExterna` de la sección 18 del requerimiento 
 | **MiembroNegocio** | Núcleo | La relación de un usuario con un negocio como personal. Equivale a `UsuarioTenant` del requerimiento. | Un usuario puede ser miembro de varios negocios. Estados: `activo`, `desactivado`. Lo crea el administrador de negocio (UC-04) o el de plataforma en el alta (UC-03). Desactivarlo corta el acceso a ese negocio sin afectar su cuenta ni sus otros negocios. |
 | **AsignacionRol** | Núcleo | Qué rol tiene un miembro y dónde: en todo el negocio o en una sucursal concreta. | Un miembro puede tener varias asignaciones (por ejemplo, Veterinario en la sucursal Centro y Recepción en la sucursal Norte). Una asignación de alcance negocio aplica a todas sus sucursales. |
 | **Rol** | Núcleo | Conjunto de permisos con nombre: Administrador de negocio, Recepción, Veterinario, Estilista. | Catálogo definido por la plataforma en el MVP. |
-| **Permiso** | Núcleo | Acción concreta que se puede autorizar, por ejemplo `cita.aceptar`, `venta.cancelar`, `expediente.consultar`. | La matriz rol-permiso es el siguiente paso del plan de trabajo (matriz de roles y permisos). |
+| **Permiso** | Núcleo | Acción concreta que se puede autorizar, por ejemplo `cita.responder`, `venta.cancelar`, `expediente.consultar_clinico`. | La matriz rol-permiso está en `docs/08-matriz-roles-permisos.md`. |
 | **Profesional** | Núcleo | Datos profesionales de un miembro que presta servicios: especialidad y cédula profesional si aplica. | Solo para miembros que atienden citas o firman registros clínicos. Se usa en agenda y expediente. |
 | **UsuarioPlataforma** | Núcleo | Marca a un usuario como administrador de `admin.amiva.pet`. | Separado por completo de los negocios: no es miembro de ningún negocio por serlo. Todas sus acciones se auditan. |
 | **PoliticaNegocio** | Núcleo | Configuración que aplica por igual a todas las sucursales de un negocio. | En el MVP: aceptar productos proporcionados por el dueño (activada por defecto). Cambios auditados. |

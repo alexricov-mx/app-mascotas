@@ -8,12 +8,13 @@ Nació de la app **App-Ventas** (`c:\Apps\App-Ventas`, Flutter, offline). App-Ve
 
 1. `docs/00-contexto-de-trabajo.md`: de dónde viene el proyecto, dónde nos quedamos y cómo retomar.
 2. `docs/01-estrategia-trabajo-paralelo.md`: cómo se organiza el trabajo (repositorios, ramas, documentos por feature).
-3. `docs/02-requerimiento.md`: **única fuente de verdad** del producto (versión 3.15).
+3. `docs/02-requerimiento.md`: **única fuente de verdad** del producto (versión 3.16).
 4. `docs/03-casos-uso-mvp.md`: casos de uso del MVP (aprobados).
 5. `docs/04-pendientes.md`: pendientes vigentes (PEN-32 y PEN-33).
 6. `docs/05-inventario.md`: operación de inventario aprobada; detalla la sección 10 del requerimiento.
 7. `docs/06-modelo-conceptual.md`: modelo conceptual del dominio, aprobado completo (bloques 1 a 9).
 8. `docs/07-modelo-datos.md`: modelo de datos físico en PostgreSQL (tablas, campos, tipos y relaciones), aprobado.
+9. `docs/08-matriz-roles-permisos.md`: permisos de cada rol del negocio, aprobada.
 
 Si algo no está en `docs/02-requerimiento.md`, no se asume: se pregunta al usuario. No se citan ni se reconstruyen documentos anteriores.
 
@@ -27,7 +28,7 @@ Organización de carpetas:
 
 ## Estado actual
 
-Fase de **definición**. El requerimiento está cerrado en su versión 3.15 y la arquitectura base está decidida (sección 15 de `docs/02-requerimiento.md`): PostgreSQL/PostGIS en contenedor dentro del VPS, API ASP.NET Core .NET 10 como monolito modular con cortes verticales por feature (VSA) y único acceso a datos, Keycloak para identidad, Flutter para el negocio (web y tablet) y para el dueño (iOS y Android), Vue 3 + TypeScript + Vite para `admin.amiva.pet` y OVH Object Storage. Hay modelo conceptual y modelo de datos aprobados, pero todavía no hay código de aplicación ni migraciones; solo existe el entorno local en Podman (`infra/dev/compose.yaml`): PostgreSQL con la base `amiva-dev` en el puerto 5433 y Keycloak en el 8080.
+Fase de **definición**. El requerimiento está cerrado en su versión 3.16 y la arquitectura base está decidida (sección 15 de `docs/02-requerimiento.md`): PostgreSQL/PostGIS en contenedor dentro del VPS, API ASP.NET Core .NET 10 como monolito modular con cortes verticales por feature (VSA) y único acceso a datos, Keycloak para identidad, Flutter para el negocio (web y tablet) y para el dueño (iOS y Android), Vue 3 + TypeScript + Vite para `admin.amiva.pet` y OVH Object Storage. Hay modelo conceptual y modelo de datos aprobados, pero todavía no hay código de aplicación ni migraciones; solo existe el entorno local en Podman (`infra/dev/compose.yaml`): PostgreSQL con la base `amiva-dev` en el puerto 5433 y Keycloak en el 8080.
 
 ## Reglas de trabajo
 
@@ -43,7 +44,7 @@ Fase de **definición**. El requerimiento está cerrado en su versión 3.15 y la
 1. ~~Aprobar los casos de uso del MVP~~ (hecho, 2026-09-24).
 2. Modelo conceptual del dominio (`docs/06-modelo-conceptual.md`), por bloques, separando núcleo genérico y vertical de mascotas. Aprobado completo (bloques 1 a 9).
 3. Modelo de datos físico en PostgreSQL (`docs/07-modelo-datos.md`), aprobado. Se adelantó a petición del usuario.
-4. Matriz de roles y permisos.
+4. Matriz de roles y permisos (`docs/08-matriz-roles-permisos.md`), aprobada.
 5. Modelo de privacidad (políticas RLS y niveles de visibilidad sobre las tablas).
 
 No se empieza por las tablas. Los pendientes de `docs/04-pendientes.md` no se resuelven por suposición: si alguno afecta una regla o entidad, se pregunta antes de seguir.

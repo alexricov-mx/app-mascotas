@@ -1108,6 +1108,6 @@ Se calculan y no tienen tabla: espacios de mascota, último peso, disponibilidad
 
 ## 14. Siguientes pasos
 
-1. Matriz de roles y permisos: llena `permiso` y `rol_permiso`.
+1. ~~Matriz de roles y permisos~~: aprobada en `docs/08-matriz-roles-permisos.md`; es el contenido inicial de `permiso` y `rol_permiso`.
 2. Modelo de privacidad: políticas RLS por `negocio_id` y reglas de los niveles de visibilidad sobre `evento_mascota`.
 3. Script de creación (migraciones), índices y datos iniciales (especies, roles, tasas de IVA, tipos de notificación, parámetros), cuando empiece el repositorio del API.

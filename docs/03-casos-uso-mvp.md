@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.14  
+**Versión:** 1.15  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.15  
+**Fuente:** `docs/02-requerimiento.md` versión 3.16  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -27,7 +27,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 ## 3. Reglas transversales
 
-- El API valida autenticación, autorización y aislamiento por tenant.
+- El API valida autenticación, autorización y aislamiento por tenant. Los permisos de cada rol están en `docs/08-matriz-roles-permisos.md`; cuando un caso de uso dice "personal autorizado", se refiere a esa matriz.
 - Ningún cliente accede directamente a PostgreSQL/PostGIS ni a Object Storage.
 - Las operaciones críticas se auditan.
 - El dueño solo ve la información que le corresponde y la línea de tiempo de sus mascotas.
@@ -147,7 +147,7 @@ Si no se responde en 7 días (parámetro), la solicitud vence. El propietario pu
 
 ### UC-12 — Marcar mascota como fallecida
 
-**Actores:** ACT-01 propietario desde la app, o personal con permiso de un negocio vinculado.  
+**Actores:** ACT-01 propietario desde la app, o ACT-04 / ACT-06 de un negocio vinculado.  
 **Resultado:** estado fallecida; el espacio que ocupaba se libera de inmediato y conserva su tipo. Después de un mes la mascota se oculta para el usuario conforme al proceso automático.
 
 ### UC-45 — Autorizar usuario sobre una mascota
@@ -230,7 +230,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 **Actor principal:** ACT-04.  
 **Flujo:** selecciona mascota, captura motivo, diagnóstico, tratamiento, receta, estudios, procedimientos, cirugías, observaciones y signos vitales; si aplica medicamentos, indica el origen de cada uno igual que en UC-15; guarda el registro.
 
-**Resultado:** nuevo registro clínico fechado, asociado a mascota, negocio, sucursal y profesional. Los medicamentos del inventario generan su salida automáticamente en la misma transacción; los proporcionados por el dueño no mueven inventario. La receta queda disponible para el dueño en PDF y el negocio puede imprimirla.
+**Resultado:** nuevo registro clínico fechado, asociado a mascota, negocio, sucursal y profesional. Los medicamentos del inventario generan su salida automáticamente en la misma transacción; los proporcionados por el dueño no mueven inventario. La receta queda disponible para el dueño en PDF y el negocio puede imprimirla (veterinario, recepción o administrador).
 
 **Corrección:** si el registro tiene un error, el veterinario crea un registro de corrección que apunta al original con el motivo; el original no se edita ni se borra.
 
@@ -294,12 +294,12 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 ### UC-21 — Aceptar o rechazar cita
 
-**Actor principal:** ACT-03 o ACT-05 autorizado.  
+**Actor principal:** ACT-03, ACT-04, ACT-05 o ACT-06.  
 **Resultado:** cita confirmada o rechazada con mensaje; dueño notificado.
 
 ### UC-22 — Iniciar, completar o marcar no atendida una cita
 
-**Actor principal:** personal autorizado del negocio.  
+**Actor principal:** ACT-03, ACT-04, ACT-05 o ACT-06.  
 **Resultado:** transición de estado auditada y disponibilidad actualizada. El profesional se puede asignar al iniciar, si no se asignó antes. Pasada la tolerancia sin que llegue la mascota, se marca no atendida. Al completarse registra el precio final y genera sus eventos en la línea de tiempo. Una cita completada cuenta como servicio pagado para referidos (UC-42).
 
 ### UC-23 — Cancelar o reprogramar cita
@@ -318,7 +318,8 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 ### UC-43 — Realizar conteo físico
 
-**Actor principal:** ACT-06.  
+**Actor principal:** ACT-06 inicia y autoriza.  
+**Actor secundario:** ACT-03 captura cantidades.  
 **Flujo:**
 
 1. Inicia un conteo de toda la sucursal o de una categoría.
@@ -336,7 +337,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 ### UC-26 — Registrar venta en POS
 
-**Actor principal:** ACT-03 o ACT-05 autorizado.  
+**Actor principal:** ACT-03, ACT-04, ACT-05 o ACT-06.  
 **Flujo:**
 
 1. Opcionalmente identifica al cliente (vinculado o provisional) y, si aplica, la cita relacionada.
@@ -355,7 +356,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 ### UC-27 — Cancelar venta
 
-**Actor autorizado:** ACT-06 o rol configurado.  
+**Actor autorizado:** solo ACT-06.  
 **Resultado:** venta cancelada una sola vez, movimientos de devolución registrados y reportes actualizados. Una venta cancelada deja de contar como servicio pagado para referidos.
 
 ### UC-28 — Consultar auditoría de ventas

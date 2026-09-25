@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.15  
+**Versión:** 3.16  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -56,7 +56,7 @@ Mascotas, propietarios, usuarios autorizados, especies, razas, expediente clíni
 - **Sistema:** ejecuta procesos automáticos y notificaciones.
 - **Proveedor externo:** identidad, correo, push, mapas, almacenamiento y pagos futuros.
 
-La autorización es granular y aplica mínimo privilegio. Un administrador no obtiene automáticamente acceso a funciones que no correspondan a su rol.
+La autorización es granular y aplica mínimo privilegio. Un administrador no obtiene automáticamente acceso a funciones que no correspondan a su rol: el administrador de negocio no ve ni registra información clínica si no tiene también el rol de veterinario. Una persona puede tener varios roles y sus permisos se suman. La matriz completa está en `docs/08-matriz-roles-permisos.md`.
 
 ## 4. Alta de negocios y usuarios
 
@@ -514,3 +514,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.13 | 2026-09-24 | Tasa de IVA configurable por producto y servicio con desglose en el ticket, ticket en PDF en el MVP, reimpresión registrada y ticket digital para el dueño. |
 | 3.14 | 2026-09-24 | Referidos: código permanente, avance visible sin detalle, solo periodos pagados, cumplido sin beneficio al llegar al tope, anulación, beneficio no reversible, mes gratuito aun en impago y reglas de duplicados. |
 | 3.15 | 2026-09-24 | Reseñas fuera del MVP (R2), tiempo útil de los avisos, bandeja de avisos del personal, preferencias con buzón siempre visible, campañas sin aprobación previa, banner en inicio, tope de 2 campañas por semana, consulta y retención de la auditoría. |
+| 3.16 | 2026-09-24 | Matriz de roles y permisos: el administrador no ve lo clínico sin rol de veterinario, los cuatro roles cobran y atienden citas, solo el administrador cancela ventas y ve costos. |

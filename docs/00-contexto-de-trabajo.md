@@ -19,12 +19,13 @@
 |---|---|
 | `00-contexto-de-trabajo.md` | Este documento. |
 | `01-estrategia-trabajo-paralelo.md` | Organización del trabajo: repositorios, ramas y documentos por feature. |
-| `02-requerimiento.md` | **Única fuente de verdad** del producto (versión 3.15, 2026-09-24). |
-| `03-casos-uso-mvp.md` | Casos de uso del MVP (versión 1.14, aprobados). |
+| `02-requerimiento.md` | **Única fuente de verdad** del producto (versión 3.16, 2026-09-24). |
+| `03-casos-uso-mvp.md` | Casos de uso del MVP (versión 1.15, aprobados). |
 | `04-pendientes.md` | Pendientes vigentes PEN-32 y PEN-33. |
 | `05-inventario.md` | Operación de inventario aprobada; detalla la sección 10 del requerimiento. |
 | `06-modelo-conceptual.md` | Modelo conceptual del dominio, aprobado completo (bloques 1 a 9). |
 | `07-modelo-datos.md` | Modelo de datos físico en PostgreSQL: tablas, campos, tipos y relaciones. Aprobado. |
+| `08-matriz-roles-permisos.md` | Permisos de cada rol del negocio. Aprobada. |
 | `estudio/` | Material de estudio: `01-enlaces-universales.md`. |
 
 **Historial (`analisis/`), solo consulta:**
@@ -92,16 +93,17 @@ Están completas en `docs/02-requerimiento.md`. Las que más condicionan todo lo
 ## 7. Dónde nos quedamos
 
 **Hecho:**
-- Requerimiento cerrado en su versión 3.15 (`docs/02-requerimiento.md`); la 3.1 agrega referidos en el MVP y espacios de mascotas por tipo; la 3.2 resuelve reseñas, archivos, campañas, documentos legales, identidad y ambientes; la 3.3, transferencia de archivos, VSA y Keycloak; la 3.4, reglas de inventario; la 3.5, dinero con decimales; la 3.6, productos proporcionados por el dueño; la 3.7, planes y cobro de la suscripción; la 3.8, usuarios autorizados y buzón; la 3.9, vinculación y clientes sin app; la 3.10, reglas del expediente; la 3.11, reglas de agenda; la 3.12, punto de venta y ticket; la 3.13, tasa de IVA y ticket en PDF; la 3.14, reglas de referidos; la 3.15, notificaciones, campañas, auditoría y reseñas a R2.
+- Requerimiento cerrado en su versión 3.16 (`docs/02-requerimiento.md`); la 3.1 agrega referidos en el MVP y espacios de mascotas por tipo; la 3.2 resuelve reseñas, archivos, campañas, documentos legales, identidad y ambientes; la 3.3, transferencia de archivos, VSA y Keycloak; la 3.4, reglas de inventario; la 3.5, dinero con decimales; la 3.6, productos proporcionados por el dueño; la 3.7, planes y cobro de la suscripción; la 3.8, usuarios autorizados y buzón; la 3.9, vinculación y clientes sin app; la 3.10, reglas del expediente; la 3.11, reglas de agenda; la 3.12, punto de venta y ticket; la 3.13, tasa de IVA y ticket en PDF; la 3.14, reglas de referidos; la 3.15, notificaciones, campañas, auditoría y reseñas a R2; la 3.16, matriz de roles.
 - Estrategia de trabajo en paralelo (`docs/01-estrategia-trabajo-paralelo.md`).
 - Casos de uso del MVP aprobados (`docs/03-casos-uso-mvp.md`, UC-01 a UC-53; UC-31 pasa a R2).
 - Pendientes restantes aislados en `docs/04-pendientes.md`; ninguno cambia la arquitectura base.
 - Operación de inventario aprobada (`docs/05-inventario.md`).
 - Modelo conceptual aprobado completo (`docs/06-modelo-conceptual.md`) y modelo de datos aprobado (`docs/07-modelo-datos.md`, 92 tablas).
+- Matriz de roles y permisos aprobada (`docs/08-matriz-roles-permisos.md`).
 - Entorno local funcionando en Podman: base `amiva-dev` (puerto 5433) y Keycloak (puerto 8080).
 - No se ha escrito código ni se ha tocado App-Ventas.
 
-**Siguiente paso:** matriz de roles y permisos; después, modelo de privacidad (RLS y niveles de visibilidad) y script de creación cuando empiece el repositorio del API. El modelo conceptual y el modelo de datos ya están aprobados.
+**Siguiente paso:** modelo de privacidad (RLS y niveles de visibilidad) y script de creación cuando empiece el repositorio del API. El modelo conceptual y el modelo de datos ya están aprobados.
 
 ## 8. Cómo retomar en una sesión nueva
 
