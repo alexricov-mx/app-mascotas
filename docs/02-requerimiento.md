@@ -1,8 +1,8 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.17  
-**Fecha:** 2026-09-24  
+**Versión:** 3.18  
+**Fecha:** 2026-09-25  
 **Estado:** fuente de verdad vigente del producto.
 
 Este documento reemplaza como referencia de trabajo a `analisis/01-requerimiento.md`, `analisis/02-respuesta-21092026.md` y `analisis/03-requerimiento-2.md`. Los documentos anteriores se conservan como historial. `App-Ventas` no se modifica; se usa como referencia funcional para el punto de venta, inventario y promociones.
@@ -448,6 +448,8 @@ El API es el único componente autorizado para conectarse a PostgreSQL y Object 
 
 El API se organiza con **arquitectura de cortes verticales (VSA, *Vertical Slice Architecture*) por feature**. Cada feature o caso de uso contiene todo lo que necesita: endpoint, validación, reglas y acceso a datos. Las features se agrupan en módulos por dominio dentro del monolito.
 
+El acceso a datos del API usa **Dapper** sobre Npgsql, con SQL escrito a mano dentro de cada feature. El esquema de la base (tablas, dominios, políticas RLS, funciones y datos de catálogo) se crea y evoluciona con **migraciones en SQL puro**, versionadas en el repositorio del API. No se usa EF Core.
+
 La identidad la resuelve **Keycloak** en un contenedor. Integra Google, Facebook y Apple para el usuario final, y usuario y contraseña para el negocio y la plataforma. El API valida los tokens que emite Keycloak.
 
 ### 15.1 Ambientes
@@ -521,3 +523,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.15 | 2026-09-24 | Reseñas fuera del MVP (R2), tiempo útil de los avisos, bandeja de avisos del personal, preferencias con buzón siempre visible, campañas sin aprobación previa, banner en inicio, tope de 2 campañas por semana, consulta y retención de la auditoría. |
 | 3.16 | 2026-09-24 | Matriz de roles y permisos: el administrador no ve lo clínico sin rol de veterinario, los cuatro roles cobran y atienden citas, solo el administrador cancela ventas y ve costos. |
 | 3.17 | 2026-09-24 | Modelo de privacidad: nombre del negocio en eventos de nivel 2, pérdida de acceso del propietario anterior, mascota oculta visible para negocios en solo lectura, auditoría de accesos clínicos por pantalla y plataforma sin acceso a datos operativos. |
+| 3.18 | 2026-09-25 | Acceso a datos del API con Dapper y esquema con migraciones en SQL puro. |

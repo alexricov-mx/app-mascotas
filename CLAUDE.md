@@ -8,7 +8,7 @@ Nació de la app **App-Ventas** (`c:\Apps\App-Ventas`, Flutter, offline). App-Ve
 
 1. `docs/00-contexto-de-trabajo.md`: de dónde viene el proyecto, dónde nos quedamos y cómo retomar.
 2. `docs/01-estrategia-trabajo-paralelo.md`: cómo se organiza el trabajo (repositorios, ramas, documentos por feature).
-3. `docs/02-requerimiento.md`: **única fuente de verdad** del producto (versión 3.17).
+3. `docs/02-requerimiento.md`: **única fuente de verdad** del producto (versión 3.18).
 4. `docs/03-casos-uso-mvp.md`: casos de uso del MVP (aprobados).
 5. `docs/04-pendientes.md`: pendientes vigentes (PEN-32 y PEN-33).
 6. `docs/05-inventario.md`: operación de inventario aprobada; detalla la sección 10 del requerimiento.
@@ -16,6 +16,7 @@ Nació de la app **App-Ventas** (`c:\Apps\App-Ventas`, Flutter, offline). App-Ve
 8. `docs/07-modelo-datos.md`: modelo de datos físico en PostgreSQL (tablas, campos, tipos y relaciones), aprobado.
 9. `docs/08-matriz-roles-permisos.md`: permisos de cada rol del negocio, aprobada.
 10. `docs/09-modelo-privacidad.md`: reglas de aislamiento, acceso a mascotas y visibilidad sobre las tablas, aprobado.
+11. `docs/10-plan-construccion.md`: etapas y features numeradas del MVP, con repositorios y dependencias.
 
 Si algo no está en `docs/02-requerimiento.md`, no se asume: se pregunta al usuario. No se citan ni se reconstruyen documentos anteriores.
 
@@ -29,16 +30,18 @@ Organización de carpetas:
 
 ## Estado actual
 
-**Definición cerrada** el 2026-09-24; sigue planear la construcción. El requerimiento está cerrado en su versión 3.17 y la arquitectura base está decidida (sección 15 de `docs/02-requerimiento.md`): PostgreSQL/PostGIS en contenedor dentro del VPS, API ASP.NET Core .NET 10 como monolito modular con cortes verticales por feature (VSA) y único acceso a datos, Keycloak para identidad, Flutter para el negocio (web y tablet) y para el dueño (iOS y Android), Vue 3 + TypeScript + Vite para `admin.amiva.pet` y OVH Object Storage. Hay modelo conceptual y modelo de datos aprobados, pero todavía no hay código de aplicación ni migraciones; solo existe el entorno local en Podman (`infra/dev/compose.yaml`): PostgreSQL con la base `amiva-dev` en el puerto 5433 y Keycloak en el 8080.
+**Construcción en marcha** desde el 2026-09-25. La definición se cerró el 2026-09-24 y el plan de construcción está en `docs/10-plan-construccion.md`; la siguiente feature es F-001 (cimientos del API) en `app-mascotas-api`. El requerimiento está en su versión 3.18 y la arquitectura base está decidida (sección 15 de `docs/02-requerimiento.md`): PostgreSQL/PostGIS en contenedor dentro del VPS, API ASP.NET Core .NET 10 como monolito modular con cortes verticales por feature (VSA) y único acceso a datos, Keycloak para identidad, Flutter para el negocio (web y tablet) y para el dueño (iOS y Android), Vue 3 + TypeScript + Vite para `admin.amiva.pet` y OVH Object Storage. El acceso a datos del API es Dapper con migraciones en SQL puro (versión 3.18). Hay modelo conceptual y modelo de datos aprobados, pero todavía no hay código de aplicación ni migraciones; existe el entorno local en Podman (`infra/dev/compose.yaml`): PostgreSQL con la base `amiva-dev` en el puerto 5433 y Keycloak en el 8080.
 
 ## Reglas de trabajo
 
-- **No escribir código** hasta que el usuario lo pida. La definición está cerrada; la construcción se planea con el usuario antes de empezar.
+- Este repositorio es **documentación de producto**: aquí no se escribe código. El código vive en los cuatro repositorios `app-mascotas-*` (en `C:\Apps`), cada uno con su propio `CLAUDE.md`.
+- Equipo: Alex (responsable del API, trabaja con esta sesión de Claude) y Juan (responsable del admin, con su propia sesión de Claude en su laptop). Claude escribe código, pruebas y documentos; el responsable revisa, prueba e indica cuándo hacer commit y push.
+- Una sola rama (`main`) en todos los repositorios; commit y push al cerrar cada feature, solo cuando el responsable lo indica (sección 6 de `docs/01-estrategia-trabajo-paralelo.md`).
 - Ir **por partes**, un tema a la vez.
 - Todo en español (documentos y nombres de dominio).
 - Cuando el usuario resuelva un pendiente o tome una decisión: actualizar la sección afectada de `docs/02-requerimiento.md`, quitar el pendiente de su sección 19 y de `docs/04-pendientes.md`, y registrar el cambio en el historial (sección 20).
 - Antes de sobrescribir o eliminar un archivo, confirmar.
-- Cambios globales al equipo (instalaciones, actualizaciones) y `git push`: solo si el usuario lo pide.
+- Cambios globales al equipo (instalaciones, actualizaciones) y `git push`: solo si el usuario lo indica.
 
 ## Orden de trabajo previsto
 
@@ -47,7 +50,8 @@ Organización de carpetas:
 3. Modelo de datos físico en PostgreSQL (`docs/07-modelo-datos.md`), aprobado. Se adelantó a petición del usuario.
 4. Matriz de roles y permisos (`docs/08-matriz-roles-permisos.md`), aprobada.
 5. Modelo de privacidad (`docs/09-modelo-privacidad.md`), aprobado.
-6. Planear la construcción: repositorios, primeras features y script de creación de la base.
+6. ~~Planear la construcción~~ (hecho, 2026-09-25): `docs/10-plan-construccion.md`.
+7. Construir por features, empezando por F-001 en `app-mascotas-api`.
 
 No se empieza por las tablas. Los pendientes de `docs/04-pendientes.md` no se resuelven por suposición: si alguno afecta una regla o entidad, se pregunta antes de seguir.
 

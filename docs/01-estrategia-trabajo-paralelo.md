@@ -1,9 +1,9 @@
 # Estrategia de trabajo paralelo y documentación
 
 **Proyecto:** Plataforma para el Cuidado de Mascotas  
-**Fecha:** 2026-09-22  
-**Versión:** 1.1  
-**Estado:** propuesta de trabajo para los cuatro repositorios del ecosistema, ajustada con las prácticas comprobadas de App-Ventas.
+**Fecha:** 2026-09-25  
+**Versión:** 1.2  
+**Estado:** vigente. La versión 1.2 fija el equipo real (sección 4) y el trabajo en una sola rama con push al cerrar cada feature (sección 6).
 
 ## 1. Propósito
 
@@ -46,42 +46,39 @@ Si el código contradice el requerimiento aprobado, el equipo debe registrar la 
 
 Los documentos anteriores se conservan como historial, pero no deben usarse para recuperar decisiones sustituidas.
 
-## 4. Responsabilidades de los dos desarrolladores
+## 4. Equipo y responsabilidades
 
-La responsabilidad principal evita que un cambio quede sin dueño. La responsabilidad secundaria permite revisión y continuidad.
+El equipo son dos personas, Alex y Juan, y cada uno trabaja con su propia sesión de Claude. Claude escribe el código, las pruebas automáticas y la documentación de cada feature; la persona responsable del repositorio revisa, prueba, resuelve las dudas de producto y decide cuándo se cierra una feature.
 
-### Desarrollador A — Plataforma y API
+| Repositorio | Responsable | Quién construye | Cuándo arranca |
+|---|---|---|---|
+| `app-mascotas-api` | Alex | Claude, en la sesión de Alex | Etapa 0 |
+| `app-mascotas-admin` | Juan | Claude, en la sesión de Juan (su laptop) | R0 |
+| `app-mascotas-negocio` | Por asignar | Por asignar | R0 |
+| `app-mascotas-usuario` | Por asignar | Por asignar | R1b |
 
-Responsable principal de:
+El orden de las etapas y las features está en `docs/10-plan-construccion.md`.
 
-- `app-mascotas-api`.
-- Modelo de dominio compartido.
-- Autenticación, autorización, tenants y permisos.
-- PostgreSQL/PostGIS, migraciones y RLS.
-- Integración con Object Storage.
-- Contratos HTTP, errores y versionado de API.
-- `app-mascotas-admin` como responsable secundario o principal según la feature.
+### Qué hace Claude
 
-### Desarrollador B — Experiencias de usuario
+- Analiza el código real antes de ajustar el plan de cada feature.
+- Escribe el código junto con sus pruebas automáticas, no al final.
+- Escribe los documentos `01` a `04` de cada feature (y `05` cuando aplique).
+- Pregunta al responsable cuando algo no está en el requerimiento; no lo resuelve por suposición.
+- Prepara el commit de cierre, pero solo hace commit y push cuando el responsable lo indica.
 
-Responsable principal de:
+### Qué hace el responsable
 
-- `app-mascotas-usuario`.
-- `app-mascotas-negocio`.
-- Flujos móviles, tablet y web de operación.
-- Estado de sesión y consumo del API en Flutter.
-- Accesibilidad, navegación y experiencia de usuario.
-- `app-mascotas-admin` como responsable secundario cuando una feature requiera coordinar pantallas administrativas.
+- Aprueba el requerimiento y el plan de cada feature antes de construir.
+- Revisa el código, baja los cambios y prueba.
+- Pide ajustes y, cuando todo está bien, indica el commit y el push.
 
-### Reglas compartidas
+### Coordinación entre las dos sesiones
 
-- Cada feature tiene un responsable principal y un revisor.
-- El responsable no aprueba su propio pull request.
-- La persona que modifica un contrato del API debe coordinar a todos los consumidores afectados.
-- Los cambios de dominio, seguridad, privacidad, datos o contratos requieren revisión de ambos desarrolladores.
-- Ningún repositorio debe copiar reglas de negocio críticas que deban vivir en el API.
-
-La asignación puede cambiar por feature, pero debe quedar registrada en su plan.
+- `app-mascotas-api` es la fuente de los contratos HTTP (sección 16). La sesión de Juan construye el admin contra el contrato publicado en el repositorio del API.
+- Este repositorio (`app-mascotas`) es la documentación de producto que comparten ambas sesiones: requerimiento, modelos, estrategia y plan de construcción.
+- Si una sesión necesita un cambio en un repositorio que no es el suyo, lo pide a su responsable; no lo modifica directamente.
+- Ningún repositorio copia reglas de negocio críticas que deban vivir en el API.
 
 ## 5. Estrategia para trabajar en paralelo
 
@@ -125,51 +122,30 @@ Cada plan debe indicar el impacto:
 
 Si una feature solo afecta un repositorio, no se crean documentos artificiales en los demás.
 
-## 6. Ramas y pull requests
+## 6. Ramas y commits
 
-### 6.1 Ramas permanentes
+### 6.1 Una sola rama
 
-Se recomienda conservar el flujo que funcionó en App-Ventas:
+Para no perdernos, cada repositorio trabaja en **una sola rama: `main`**. No hay ramas por feature ni pull requests mientras el equipo sea de dos personas.
 
-- `develop`: integración continua de trabajo terminado y verificable.
-- `main`: rama estable, aceptada para entregas o releases.
-- Ramas cortas de trabajo por feature, corrección o tarea técnica.
+### 6.2 Ciclo de una feature
 
-`develop` no sustituye las pruebas ni debe convertirse en un depósito de cambios incompletos. Una feature solo entra a `develop` cuando supera el checkpoint definido para integración. `main` recibe únicamente cierres aceptados o releases.
+1. Claude construye la feature completa en su equipo, con pruebas y documentos.
+2. El responsable revisa y prueba; si detecta algo, Claude lo ajusta.
+3. Cuando todo está bien, **el responsable indica** el commit y el push.
+4. La otra persona baja los cambios (`git pull`) y prueba lo que le toca.
 
-### 6.2 Convención de ramas
+No se hace push de trabajo incompleto. Cada push deja el repositorio compilable, con las pruebas en verde y con la feature documentada.
 
-```text
-feature/F-001-alta-mascota
-fix/F-001-validacion-fecha-nacimiento
-docs/F-001-plan-alta-mascota
-chore/actualizar-dependencias
-```
+### 6.3 Contenido del commit de cierre
 
-Las ramas de feature deben crearse desde `develop` actualizado y contener un solo propósito. Las ramas de documentación que afecten el requerimiento general pueden salir de `main` o `develop` según el cambio, pero deben integrarse con revisión.
-
-### 6.3 Pull requests
-
-Cada pull request debe incluir:
-
-- Feature o incidencia relacionada.
-- Repositorio afectado.
-- Resumen del cambio.
-- Decisiones relevantes.
-- Pruebas ejecutadas.
-- Riesgos o pendientes.
-- Capturas cuando cambie una interfaz.
-- Referencia al contrato del API si aplica.
-
-Reglas mínimas:
-
-- Un revisor distinto al autor.
-- CI en verde.
+- Mensaje identificable por feature: `F-001: cimientos del API`.
+- Código, pruebas y documentos de la feature en el mismo commit.
 - Sin secretos, bases locales, archivos de credenciales ni binarios innecesarios.
-- Migraciones revisadas antes de integrarse.
-- Cambios incompatibles del API requieren una estrategia de compatibilidad o una nueva versión.
-- El commit de cierre de una feature debe incluir código, pruebas y documentación relacionada.
-- El `push` y la promoción de `develop` a `main` requieren confirmación del responsable del proyecto.
+- Migraciones revisadas por el responsable antes del commit.
+- Un cambio incompatible del API requiere una estrategia de compatibilidad o una nueva versión, y aviso a la otra persona.
+
+Si el equipo crece, se retoma el esquema de `develop`, ramas por feature y pull requests con revisor distinto al autor.
 
 ## 7. Checkpoints de cada feature
 
@@ -588,7 +564,7 @@ La definición de terminado de una feature es:
 - [ ] README actualizado si cambió el conocimiento general.
 - [ ] Commit de cierre propuesto y listo para aprobación.
 
-Claude puede preparar el commit y mostrar el resultado de las pruebas, pero espera confirmación antes de ejecutarlo. Nunca hace `push` sin una solicitud explícita.
+Claude puede preparar el commit y mostrar el resultado de las pruebas, pero espera la indicación del responsable antes de hacer commit y push (sección 6.2).
 
 ## 15. Solicitudes de cambio posteriores
 
@@ -647,16 +623,9 @@ Ejecutar al menos un flujo real entre API, app del usuario, app/web del negocio 
 
 Comprobar criterios de aceptación, pruebas, seguridad, documentación y pendientes. Una feature no se cierra solo porque compila.
 
-## 18. Orden recomendado para iniciar
+## 18. Orden para iniciar
 
-1. Confirmar esta estrategia y nombrar a los dos responsables.
-2. Crear los cuatro repositorios con su `README.md`, `CLAUDE.md` y estructura `docs/`.
-3. Definir el contrato base del API: salud, autenticación, errores, usuario, tenant y permisos.
-4. Preparar la solución Flutter del negocio para web y tablet.
-5. Preparar la app Flutter del usuario.
-6. Preparar el portal Vue 3 + TypeScript + Vite.
-7. Implementar la primera feature vertical pequeña, por ejemplo autenticación y contexto de usuario.
-8. Ejecutar el primer checkpoint transversal y ajustar la metodología antes de crecer.
+El orden de construcción (etapas, features y dependencias) está en `docs/10-plan-construccion.md`. Los cuatro repositorios ya existen en GitHub con su `README.md` inicial; cada uno recibe su `CLAUDE.md` y su estructura `docs/` cuando arranca su primera feature.
 
 ## 19. Lecciones adoptadas de App-Ventas
 
@@ -677,7 +646,7 @@ La diferencia necesaria para AppMascotas es que una feature puede distribuirse e
 
 ## 20. Regla de simplicidad
 
-Con dos desarrolladores, no se deben abrir simultáneamente demasiadas features que crucen los cuatro repositorios. Se recomienda mantener como máximo:
+Con dos personas, no se deben abrir simultáneamente demasiadas features que crucen los cuatro repositorios. Se recomienda mantener como máximo:
 
 - Una feature transversal en integración.
 - Una feature de API o plataforma.

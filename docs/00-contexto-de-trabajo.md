@@ -1,6 +1,6 @@
 # Contexto de trabajo — amiva.pet
 
-**Fecha:** 2026-09-24
+**Fecha:** 2026-09-25
 **Propósito:** que una sesión nueva (o una persona) retome el trabajo sin depender de la conversación anterior. Léelo primero y después sigue el orden de la carpeta `docs/`.
 
 ---
@@ -19,7 +19,7 @@
 |---|---|
 | `00-contexto-de-trabajo.md` | Este documento. |
 | `01-estrategia-trabajo-paralelo.md` | Organización del trabajo: repositorios, ramas y documentos por feature. |
-| `02-requerimiento.md` | **Única fuente de verdad** del producto (versión 3.17, 2026-09-24). |
+| `02-requerimiento.md` | **Única fuente de verdad** del producto (versión 3.18, 2026-09-25). |
 | `03-casos-uso-mvp.md` | Casos de uso del MVP (versión 1.16, aprobados). |
 | `04-pendientes.md` | Pendientes vigentes PEN-32 y PEN-33. |
 | `05-inventario.md` | Operación de inventario aprobada; detalla la sección 10 del requerimiento. |
@@ -27,6 +27,7 @@
 | `07-modelo-datos.md` | Modelo de datos físico en PostgreSQL: tablas, campos, tipos y relaciones. Aprobado. |
 | `08-matriz-roles-permisos.md` | Permisos de cada rol del negocio. Aprobada. |
 | `09-modelo-privacidad.md` | Aislamiento, acceso a mascotas, visibilidad y auditoría de accesos. Aprobado. |
+| `10-plan-construccion.md` | Etapas y features numeradas del MVP, equipo y decisiones técnicas del API. |
 | `estudio/` | Material de estudio: `01-enlaces-universales.md`. |
 
 **Historial (`analisis/`), solo consulta:**
@@ -44,7 +45,9 @@ Si algo no está en `docs/02-requerimiento.md`, se pregunta al usuario. Los docu
 
 ## 3. Reglas de trabajo acordadas
 
-- **Solo revisión y análisis. No escribir código** hasta que el usuario lo pida.
+- Este repositorio es documentación de producto; el código vive en los repositorios `app-mascotas-api`, `app-mascotas-negocio`, `app-mascotas-admin` y `app-mascotas-usuario` (en `C:\Apps`, ya creados en GitHub).
+- Equipo: **Alex** es responsable del API y trabaja con esta sesión de Claude; **Juan** es responsable del admin y trabaja con su propia sesión de Claude. Claude escribe el código, las pruebas y los documentos de cada feature; el responsable revisa, prueba e indica el commit y el push.
+- Una sola rama (`main`) en cada repositorio; push solo al cerrar una feature y cuando el responsable lo indica.
 - Ir **por partes**, un tema a la vez.
 - Todo en español.
 - Cambios grandes o que sobrescriban archivos: confirmar antes. La carpeta está bajo git.
@@ -67,7 +70,7 @@ Desde la versión 3.0 del requerimiento, inventario, promociones y punto de vent
 Decidida en la sección 15 de `docs/02-requerimiento.md`:
 
 - PostgreSQL con PostGIS en contenedor dentro del VPS.
-- API ASP.NET Core .NET 10, monolito modular organizado en cortes verticales por feature (VSA); es el único componente que se conecta a PostgreSQL y a OVH Object Storage, y los archivos pasan por él en streaming.
+- API ASP.NET Core .NET 10, monolito modular organizado en cortes verticales por feature (VSA), con acceso a datos mediante Dapper y migraciones en SQL puro; es el único componente que se conecta a PostgreSQL y a OVH Object Storage, y los archivos pasan por él en streaming.
 - Identidad con Keycloak en contenedor.
 - `app.amiva.pet` (negocio): Flutter Web y Flutter para tablet, mismo proyecto.
 - App del dueño: Flutter para iOS y Android.
@@ -94,7 +97,7 @@ Están completas en `docs/02-requerimiento.md`. Las que más condicionan todo lo
 ## 7. Dónde nos quedamos
 
 **Hecho:**
-- Requerimiento cerrado en su versión 3.17 (`docs/02-requerimiento.md`); la 3.1 agrega referidos en el MVP y espacios de mascotas por tipo; la 3.2 resuelve reseñas, archivos, campañas, documentos legales, identidad y ambientes; la 3.3, transferencia de archivos, VSA y Keycloak; la 3.4, reglas de inventario; la 3.5, dinero con decimales; la 3.6, productos proporcionados por el dueño; la 3.7, planes y cobro de la suscripción; la 3.8, usuarios autorizados y buzón; la 3.9, vinculación y clientes sin app; la 3.10, reglas del expediente; la 3.11, reglas de agenda; la 3.12, punto de venta y ticket; la 3.13, tasa de IVA y ticket en PDF; la 3.14, reglas de referidos; la 3.15, notificaciones, campañas, auditoría y reseñas a R2; la 3.16, matriz de roles; la 3.17, privacidad.
+- Requerimiento en su versión 3.18 (`docs/02-requerimiento.md`); la 3.1 agrega referidos en el MVP y espacios de mascotas por tipo; la 3.2 resuelve reseñas, archivos, campañas, documentos legales, identidad y ambientes; la 3.3, transferencia de archivos, VSA y Keycloak; la 3.4, reglas de inventario; la 3.5, dinero con decimales; la 3.6, productos proporcionados por el dueño; la 3.7, planes y cobro de la suscripción; la 3.8, usuarios autorizados y buzón; la 3.9, vinculación y clientes sin app; la 3.10, reglas del expediente; la 3.11, reglas de agenda; la 3.12, punto de venta y ticket; la 3.13, tasa de IVA y ticket en PDF; la 3.14, reglas de referidos; la 3.15, notificaciones, campañas, auditoría y reseñas a R2; la 3.16, matriz de roles; la 3.17, privacidad; la 3.18, acceso a datos con Dapper y migraciones en SQL puro.
 - Estrategia de trabajo en paralelo (`docs/01-estrategia-trabajo-paralelo.md`).
 - Casos de uso del MVP aprobados (`docs/03-casos-uso-mvp.md`, UC-01 a UC-53; UC-31 pasa a R2).
 - Pendientes restantes aislados en `docs/04-pendientes.md`; ninguno cambia la arquitectura base.
@@ -103,14 +106,15 @@ Están completas en `docs/02-requerimiento.md`. Las que más condicionan todo lo
 - Matriz de roles y permisos aprobada (`docs/08-matriz-roles-permisos.md`).
 - Modelo de privacidad aprobado (`docs/09-modelo-privacidad.md`). **La etapa de definición quedó cerrada el 2026-09-24.**
 - Entorno local funcionando en Podman: base `amiva-dev` (puerto 5433) y Keycloak (puerto 8080).
-- No se ha escrito código ni se ha tocado App-Ventas.
+- Plan de construcción (`docs/10-plan-construccion.md`): etapa 0 (cimientos del API), R0 (fundaciones), R1a (operación del negocio y piloto), R1b (app del dueño) y R1c (cierre del MVP).
+- Los cuatro repositorios de código existen en GitHub, todavía solo con su `README.md`. No se ha escrito código ni se ha tocado App-Ventas.
 
-**Siguiente paso:** planear la construcción con el usuario: repositorios, orden de las primeras features y script de creación de la base.
+**Siguiente paso:** F-001 (cimientos del API) en `app-mascotas-api`. Por confirmar: la herramienta de migraciones (DbUp recomendada) y los responsables de `app-mascotas-negocio` y `app-mascotas-usuario`.
 
 ## 8. Cómo retomar en una sesión nueva
 
 Abre el workspace que incluya esta carpeta y pide, por ejemplo:
 
-> Lee `docs/00-contexto-de-trabajo.md` y los documentos de `docs/` en App-Mascotas. Vamos a continuar el modelo conceptual. No escribas código.
+> Lee `docs/00-contexto-de-trabajo.md` y `docs/10-plan-construccion.md` en App-Mascotas. Vamos a continuar con la siguiente feature del plan.
 
 Si el workspace también incluye `c:\Apps\App-Ventas`, aclara que ese proyecto no se modifica.

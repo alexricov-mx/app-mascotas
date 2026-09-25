@@ -5,6 +5,18 @@
 		},
 		{
 			"path": "."
+		},
+		{
+			"path": "../app-mascotas-admin"
+		},
+		{
+			"path": "../app-mascotas-api"
+		},
+		{
+			"path": "../app-mascotas-negocio"
+		},
+		{
+			"path": "../app-mascotas-usuario"
 		}
 	]
 }
