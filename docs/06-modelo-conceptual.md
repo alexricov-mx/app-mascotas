@@ -1,9 +1,9 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.11  
+**Versión:** 1.0  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.14 y `docs/03-casos-uso-mvp.md` versión 1.13 (aprobados)  
-**Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
+**Fuente:** `docs/02-requerimiento.md` versión 3.15 y `docs/03-casos-uso-mvp.md` versión 1.14 (aprobados)  
+**Estado:** aprobado completo (bloques 1 a 9) el 2026-09-24. El modelo de datos físico está en `docs/07-modelo-datos.md`.
 
 ## 1. Propósito y alcance
 
@@ -28,7 +28,7 @@ Convenciones del documento:
 | 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49, UC-50 | Núcleo | **Aprobado** (2026-09-24) |
 | 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43, UC-51 | Núcleo | **Aprobado** (2026-09-24) |
 | 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | **Aprobado** (2026-09-24) |
-| 9 | Notificaciones, reseñas, campañas y auditoría | UC-31 a UC-33 | Núcleo | Pendiente |
+| 9 | Notificaciones, reseñas, campañas y auditoría | UC-31 (R2), UC-32, UC-33, UC-52, UC-53 | Núcleo | **Aprobado** (2026-09-24) |
 
 Plan, Suscripción y Entitlement se mencionan en el bloque 1 solo en lo que afecta al acceso; su modelo completo es el bloque 2.
 
@@ -263,6 +263,7 @@ Al vencer un periodo, el proceso nocturno:
 | Agenda | Tolerancia para marcar no atendida | Por definir |
 | Notificaciones | Días antes del recordatorio de vacuna | 7 |
 | Notificaciones | Horas antes del recordatorio de cita | 2 |
+| Campañas | Máximo de campañas por dueño por semana (correo o push) | 2 |
 | Ventas | Tasa de IVA por defecto | 16 % |
 | Archivos | Tamaño máximo por tipo de documento | Sección 7 del requerimiento |
 | Reseñas | Retención | Por definir |
@@ -899,3 +900,75 @@ stateDiagram-v2
 | 5 | Un beneficio otorgado no se revierte. |
 | 6 | El negocio en impago recibe el mes gratuito y lo consume en su siguiente periodo por pagar. |
 | 7 | No se usa el propio código; un correo o un RFC ya registrados no pueden ser referidos. |
+
+---
+
+## 11. Bloque 9 — Notificaciones, reseñas, campañas y auditoría
+
+### 11.1 Qué resuelve
+
+- Cómo se avisa a dueños, clientes provisionales y personal: por qué canal, cuándo, y qué pasa si el envío falla.
+- Cómo decide cada dueño qué avisos recibe.
+- Cómo se piden, moderan y publican las reseñas y las respuestas del negocio.
+- Cómo se arma, se dirige y se envía una campaña sin usar datos sensibles.
+- Qué queda registrado en la auditoría y quién la consulta.
+
+### 11.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **TipoNotificacion** | Núcleo | Catálogo de avisos: recordatorio de vacuna, recordatorio de cita, cita confirmada, rechazada, vencida o cancelada, solicitud recibida, beneficio otorgado, invitación de activación, campaña, etc. | Lo administra la plataforma. Define canales permitidos (correo, push, buzón) y cuánto tiempo sigue siendo útil. |
+| **PreferenciaNotificacion** | Núcleo | Qué tipos y canales quiere recibir cada usuario. | El dueño puede apagar todo o configurar por tipo y canal. Las campañas son un tipo aparte que se apaga por separado. |
+| **DispositivoPush** | Núcleo | Dispositivo registrado para recibir push. | Un usuario puede tener varios; se da de baja al cerrar sesión o si el proveedor lo rechaza. |
+| **Notificacion** | Núcleo | Un aviso concreto para un destinatario. | Destinatario (usuario, o correo de un cliente provisional), tipo, canal, contenido, fecha programada y estado: `pendiente`, `enviada`, `fallida`, `descartada`, `leída` (solo en el buzón). No se registra apertura ni entrega. |
+| **ErrorEnvio** | Núcleo | Falla al enviar una notificación. | Canal, proveedor, mensaje de error y fecha. |
+| **Resena** | Núcleo | Opinión de un dueño sobre una sucursal, solicitada por correo después de un servicio. **R2.** | Calificación, comentario, sucursal y cita de origen. Estados: `recibida`, `en revisión`, `publicada`, `oculta`, `retirada`. La publica el administrador de plataforma. Retención configurable. |
+| **RespuestaResena** | Núcleo | Respuesta pública del negocio a una reseña. | Una por reseña; misma moderación; no modifica la reseña. |
+| **Campana** | Núcleo | Mensaje promocional o informativo de un negocio. | Alcance (negocio o sucursal), canales (correo, push, banner), contenido, vigencia, frecuencia, prioridad y estado: `borrador`, `activa`, `inactiva`, `oculta` (por la plataforma), `finalizada`. Si es copia, guarda de cuál. |
+| **CriterioAudiencia** | Núcleo | Cada filtro de la audiencia de una campaña. | Solo atributos permitidos: especie, raza, sexo, edad, sucursal, servicios previos. |
+| **RegistroAuditoria** | Núcleo | Quién hizo qué, cuándo y sobre qué. | Usuario o proceso, acción, entidad afectada, negocio, sucursal, fecha, resumen de antes y después, y origen (app, portal, proceso). Solo se agrega; nunca se edita ni se borra. |
+
+### 11.3 Relaciones
+
+```mermaid
+erDiagram
+    TipoNotificacion ||--o{ Notificacion : "clasifica"
+    TipoNotificacion ||--o{ PreferenciaNotificacion : "se configura en"
+    Usuario ||--o{ PreferenciaNotificacion : "define"
+    Usuario ||--o{ DispositivoPush : "registra"
+    Usuario |o--o{ Notificacion : "recibe"
+    Cliente |o--o{ Notificacion : "recibe por correo (provisional)"
+    Notificacion ||--o{ ErrorEnvio : "puede fallar"
+    Sucursal ||--o{ Resena : "recibe"
+    Cita |o--o| Resena : "origina"
+    Resena ||--o| RespuestaResena : "tiene"
+    Negocio ||--o{ Campana : "crea"
+    Campana ||--o{ CriterioAudiencia : "filtra con"
+    Campana |o--o{ Campana : "es copia de"
+    Campana ||--o{ Notificacion : "genera"
+```
+
+### 11.4 Cómo se envía un aviso
+
+1. Un hecho del sistema (una cita confirmada, una próxima dosis, un beneficio) crea una notificación `pendiente` con su fecha programada.
+2. El proceso de envío revisa las preferencias del destinatario y manda por cada canal permitido. El buzón siempre recibe los avisos del dueño.
+3. Si el proveedor responde con error, se registra y se reintenta mientras el aviso siga siendo útil.
+4. Si se pasa el tiempo útil del tipo (por ejemplo, un recordatorio de cita después de la hora de la cita), la notificación se marca `descartada` y no se envía tarde.
+
+### 11.5 Qué se audita
+
+Las acciones de la sección 13 del requerimiento: vinculaciones, consentimientos, transferencias, autorizaciones, **accesos al expediente clínico**, registros, documentos, datos sensibles, precios, servicios, variantes, suscripciones, inventario, suspensiones, contactos verificados, cancelaciones y citas no atendidas. A eso se suman las acciones de los bloques anteriores: asignación de roles, cambios de políticas y parámetros, activación y fusión de mascotas, correcciones clínicas, cancelaciones de venta, impresiones de ticket, beneficios de referidos, ocultamiento de campañas y moderación de reseñas.
+
+### 11.6 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | Reseñas fuera del MVP; entran en R2. El modelo y las reglas quedan listos. |
+| 2 | Cada tipo de aviso tiene un tiempo útil; si se pasa, se descarta y se registra. |
+| 3 | El personal tiene una bandeja de avisos en `app.amiva.pet` (UC-52). |
+| 4 | El dueño apaga correo y push por tipo o todos; el buzón siempre muestra los avisos; las campañas se apagan aparte. |
+| 5 | Campañas sin aprobación previa; la plataforma puede ocultarlas. |
+| 6 | El banner se muestra en el inicio de la app, por prioridad. |
+| 7 | Máximo 2 campañas por semana por dueño, sumando negocios (parámetro). |
+| 8 | El negocio consulta su auditoría; la plataforma, toda, solo para soporte y auditado (UC-53). |
+| 9 | La retención de la auditoría se define con la revisión legal; mientras tanto no se borra. |

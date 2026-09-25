@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.14  
+**Versión:** 3.15  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -385,11 +385,15 @@ El MVP usa correo, push y notificaciones internas; estas últimas se ven en el b
 
 El dueño puede apagar todas las notificaciones o configurar cada tipo. Se registran errores de envío, sin mensajes atrasados ni registro de apertura o entrega.
 
-Las reseñas se solicitan por correo. El operador de sucursal y la administración de plataforma pueden revisarlas; la publicación requiere acción del administrador de plataforma. La retención es configurable.
+- Cada tipo de aviso tiene un tiempo útil; si no se envió dentro de él (por ejemplo, un recordatorio de cita después de la hora de la cita), se descarta y se registra.
+- El dueño puede apagar el correo y el push por tipo o todos; el buzón de la app siempre muestra sus avisos. Las campañas se apagan por separado.
+- El personal tiene una bandeja de avisos en `app.amiva.pet`: nuevas solicitudes de cita, citas por vencer sin respuesta, stock bajo el mínimo y nuevas vinculaciones.
+
+Las reseñas quedan fuera del MVP y entran en R2. Sus reglas quedan definidas desde ahora: las reseñas se solicitan por correo. El operador de sucursal y la administración de plataforma pueden revisarlas; la publicación requiere acción del administrador de plataforma. La retención es configurable.
 
 El negocio puede publicar una sola respuesta pública por reseña, vinculada a ella y sin editar la reseña original. La respuesta pasa por la misma moderación y el administrador de plataforma puede ocultarla o retirarla por incumplimiento.
 
-Los negocios pueden crear campañas para correo, banners y push. La vigencia, frecuencia y prioridad son configurables. La plataforma puede ocultar campañas inadecuadas.
+Los negocios pueden crear campañas para correo, banners y push. La vigencia, frecuencia y prioridad son configurables. En el MVP no hay flujo de aprobación: el administrador de negocio publica la campaña y la plataforma puede ocultar después las inadecuadas. El banner se muestra en la pantalla de inicio de la app a quienes estén en la audiencia, ordenado por prioridad. Un dueño recibe como máximo 2 campañas por semana por correo o push, sumando todos los negocios (parámetro).
 
 Alcance de una campaña:
 
@@ -406,12 +410,14 @@ Segmentación de la audiencia:
 - Solo se dirigen a dueños vinculados; los clientes provisionales no reciben campañas.
 - No se permite segmentar directamente por diagnóstico, alergias, padecimientos, medicamentos, estado reproductivo ni notas clínicas.
 - Los atributos clínicos solo se usan para recordatorios asistenciales autorizados previamente por el dueño, nunca para promociones comerciales.
-- Se registra quién creó, aprobó, publicó, modificó, copió u ocultó cada campaña.
+- Se registra quién creó, publicó, modificó, copió u ocultó cada campaña.
 - El sistema advierte al administrador cuando la audiencia puede inferirse a partir de datos sensibles.
 
 ## 13. Auditoría y legal
 
-Se auditan vinculaciones, consentimientos, transferencias, autorizaciones, accesos clínicos, registros, documentos, datos sensibles, precios, servicios, variantes, suscripciones, inventario, suspensiones, contactos verificados, cancelaciones y citas no atendidas.
+Se auditan vinculaciones, consentimientos, transferencias, autorizaciones, accesos clínicos, registros, documentos, datos sensibles, precios, servicios, variantes, suscripciones, inventario, suspensiones, contactos verificados, cancelaciones y citas no atendidas. También asignaciones de rol, cambios de políticas y parámetros, activación y fusión de mascotas, correcciones clínicas, cancelaciones de venta, impresiones de ticket, beneficios de referidos, ocultamiento de campañas y moderación de reseñas.
+
+La auditoría solo se agrega; nunca se edita ni se borra. El administrador de negocio consulta la de su negocio; la plataforma consulta toda solo para soporte, y esa consulta también se audita. Su retención se define con la revisión legal; mientras tanto, no se borra.
 
 Desde `admin.amiva.pet` se administran versiones de aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos, responsiva por producto proporcionado por el dueño y documentos legales. Cada aceptación conserva la versión mostrada y su bitácora.
 
@@ -507,3 +513,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.12 | 2026-09-24 | Punto de venta: precios por sucursal, venta de servicios y espacios pagados, medios de pago registrados, corte de caja diario, promociones con vigencia, sin descuentos manuales, folio por sucursal y ticket de venta. |
 | 3.13 | 2026-09-24 | Tasa de IVA configurable por producto y servicio con desglose en el ticket, ticket en PDF en el MVP, reimpresión registrada y ticket digital para el dueño. |
 | 3.14 | 2026-09-24 | Referidos: código permanente, avance visible sin detalle, solo periodos pagados, cumplido sin beneficio al llegar al tope, anulación, beneficio no reversible, mes gratuito aun en impago y reglas de duplicados. |
+| 3.15 | 2026-09-24 | Reseñas fuera del MVP (R2), tiempo útil de los avisos, bandeja de avisos del personal, preferencias con buzón siempre visible, campañas sin aprobación previa, banner en inicio, tope de 2 campañas por semana, consulta y retención de la auditoría. |

@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.13  
+**Versión:** 1.14  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.14  
+**Fuente:** `docs/02-requerimiento.md` versión 3.15  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -176,7 +176,7 @@ El propietario puede retirar la autorización y el autorizado puede renunciar en
 **Flujo:** el usuario abre el buzón, que tiene dos apartados:
 
 - **Solicitudes:** transferencias y autorizaciones recibidas, con botones para aceptar o rechazar; y las que él envió, con su estado y opción de cancelar.
-- **Avisos:** notificaciones internas informativas, como cambios de cita, recordatorios y beneficios de referidos.
+- **Avisos:** notificaciones internas informativas, como cambios de cita, recordatorios y beneficios de referidos. El buzón siempre las muestra, aunque el usuario haya apagado el correo o el push.
 
 **Resultado:** solicitudes respondidas o canceladas y avisos marcados como leídos. Cada solicitud nueva también llega por push si el usuario lo tiene activado.
 
@@ -386,7 +386,10 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 **Actor principal:** ACT-07.  
 **Resultado:** texto activo y versiones históricas disponibles para nuevas aceptaciones y auditoría. Al publicar una versión, el administrador indica si es obligatoria; si lo es, la app pide aceptarla la siguiente vez que el usuario entra, y las aceptaciones anteriores siguen siendo válidas. Hay una sección por documento legal: aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos y responsiva por producto proporcionado por el dueño. El formato de la responsiva se puede descargar e imprimir desde `app.amiva.pet`. El desarrollo usa textos provisionales; los definitivos, revisados por un abogado, se cargan antes de iniciar la operación.
 
-### UC-31 — Administrar reseñas
+### UC-31 — Administrar reseñas (R2, fuera del MVP)
+
+Se conserva descrito para R2; no se construye en el MVP.
+
 
 **Actor principal:** ACT-07.  
 **Actor secundario:** ACT-06, que puede publicar una sola respuesta por reseña.  
@@ -405,14 +408,26 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 **Copiar a otra sucursal:** el administrador copia una campaña a otra sucursal; la copia se crea como borrador independiente.  
 **Reglas:** no se segmenta por diagnóstico, alergias, padecimientos, medicamentos, estado reproductivo ni notas clínicas. El negocio puede tener varias campañas configuradas, pero el número de campañas activas al mismo tiempo no puede superar el límite del plan; para activar otra, primero desactiva una. Se audita quién crea, aprueba, publica, modifica, copia u oculta.  
-**Resultado:** campaña dirigida a una audiencia, con alcance, canal, vigencia, frecuencia y prioridad configurados.
+**Resultado:** campaña dirigida a una audiencia, con alcance, canal, vigencia, frecuencia y prioridad configurados. Se publica sin aprobación previa; la plataforma puede ocultarla. El banner aparece en la pantalla de inicio de la app de quienes estén en la audiencia, por prioridad. Cada dueño recibe como máximo 2 campañas por semana por correo o push, sumando todos los negocios.
+
+### UC-52 — Consultar avisos del personal
+
+**Actores:** ACT-03, ACT-04, ACT-05 y ACT-06.  
+**Superficie:** `app.amiva.pet` / tablet.
+
+**Resultado:** bandeja con los avisos del negocio o de la sucursal activa según el rol: nuevas solicitudes de cita, citas por vencer sin respuesta, stock bajo el mínimo y nuevas vinculaciones. Se marcan como leídos.
+
+### UC-53 — Consultar auditoría
+
+**Actores:** ACT-06 (su negocio) y ACT-07 (toda la plataforma, solo para soporte).  
+**Resultado:** consulta de quién hizo qué, cuándo y sobre qué, con filtros por fecha, usuario, sucursal y tipo de acción. La consulta de la plataforma también queda auditada.
 
 ## 10. Procesos automáticos
 
 ### UC-33 — Enviar recordatorios
 
 **Actor:** ACT-08.  
-**Resultado:** recordatorios de vacunas una semana antes y citas dos horas antes cuando corresponda; a los clientes provisionales, solo por correo. Los errores se registran y no se envían mensajes atrasados.
+**Resultado:** recordatorios de vacunas una semana antes y citas dos horas antes cuando corresponda; a los clientes provisionales, solo por correo. Los errores se registran y se reintenta mientras el aviso siga siendo útil; pasado su tiempo útil se descarta y no se envía tarde. Se respetan las preferencias del destinatario.
 
 ### UC-34 — Aplicar ciclo de suscripción
 
@@ -512,7 +527,7 @@ Al abrir el enlace o escanear el QR: si la app está instalada, se abre en la pa
 - Pagos integrados.
 - Lista de espera operativa.
 - SMS.
-- Reseñas completas si el alcance definitivo cambia.
+- Reseñas y respuestas del negocio (UC-31), en R2.
 - Marketplace B2B.
 - Lotes y caducidades avanzados.
 - Facturación electrónica.

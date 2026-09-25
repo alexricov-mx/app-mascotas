@@ -2,7 +2,7 @@
 
 **Versión:** 1.0  
 **Fecha:** 2026-09-24  
-**Relacionado con:** `docs/02-requerimiento.md` versión 3.14 (sección 10)  
+**Relacionado con:** `docs/02-requerimiento.md` versión 3.15 (sección 10)  
 **Estado:** aprobado. Detalla la sección 10 del requerimiento; si hay diferencia, manda el requerimiento.
 
 ## 1. Propósito
