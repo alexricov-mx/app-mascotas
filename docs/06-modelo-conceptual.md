@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.2  
+**Versión:** 0.3  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.6 y `docs/03-casos-uso-mvp.md` versión 1.5 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.7 y `docs/03-casos-uso-mvp.md` versión 1.6 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -21,7 +21,7 @@ Convenciones del documento:
 | # | Bloque | Casos de uso | Capa | Estado |
 |---|---|---|---|---|
 | 1 | Identidad y acceso | UC-01 a UC-05, UC-44 | Núcleo | **Aprobado** (2026-09-24) |
-| 2 | Suscripciones, planes y parámetros | UC-05, UC-29, UC-34 | Núcleo | Pendiente |
+| 2 | Suscripciones, planes y parámetros | UC-05, UC-29, UC-34 | Núcleo | **Aprobado** (2026-09-24) |
 | 3 | Mascotas, propiedad y espacios | UC-06, UC-11, UC-12, UC-37, UC-39 | Vertical | Pendiente |
 | 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30 | Núcleo + vertical | Pendiente |
 | 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | Pendiente |
@@ -149,3 +149,141 @@ pendiente de verificación ──verifica correo──▶ activo ◀──desblo
 | 5 | El administrador de plataforma no es miembro de ningún negocio ni ve datos operativos, salvo las funciones de soporte que se definan. |
 | 6 | Segundo factor obligatorio para administradores de plataforma; opcional para administradores de negocio en el MVP. |
 | 7 | Un solo realm de Keycloak (`amiva`) para todos, con segundo factor en el cliente `admin`. |
+
+---
+
+## 4. Bloque 2 — Suscripciones, planes y parámetros
+
+### 4.1 Qué resuelve
+
+- Qué plan tiene cada negocio, qué incluye y cuánto cuesta.
+- En qué estado está su suscripción y qué puede hacer en cada estado (operar, solo leer, nada).
+- Qué se le cobra cada periodo, qué pagó y qué meses tiene a favor por referidos.
+- Dónde viven los valores configurables de la plataforma y cómo cambian sin afectar el pasado.
+
+En el MVP **el cobro es manual**: la plataforma genera los cargos, el negocio paga por fuera y el administrador de plataforma registra el pago.
+
+### 4.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **Plan** | Núcleo | Oferta comercial: Básico, Extendido, Tienda Digital. | Estados: `disponible`, `oculto` (existe pero no se ofrece; Tienda Digital hasta que exista el módulo), `retirado` (ya no se vende; quien lo tiene lo conserva). |
+| **PrecioPlan** | Núcleo | Precio mensual del plan y precio de cada sucursal adicional, con vigencia. | Un cambio de precio crea un precio nuevo con fecha de inicio; no modifica cargos ya generados. |
+| **Entitlement** | Núcleo | Algo que el plan habilita o limita. En el MVP: sucursales incluidas, si admite sucursales adicionales y número de campañas activas. | Se define por plan. El API lo consulta para permitir o negar una función. Es la única forma de diferenciar planes; no se escriben reglas "si el plan es X" en el código. |
+| **Suscripcion** | Núcleo | El contrato vigente de un negocio con la plataforma. | Una por negocio. Guarda plan actual, estado y fechas del periodo actual. La prueba se usa una sola vez por RFC. |
+| **CambioSuscripcion** | Núcleo | Historial de la suscripción: cambios de plan y de estado. | Cada cambio guarda estado o plan anterior y nuevo, fecha, motivo y quién lo hizo (usuario o proceso). |
+| **PeriodoFacturacion** | Núcleo | Un mes de servicio de un negocio. | Estados: `abierto`, `por pagar`, `pagado`, `bonificado` (cubierto con un mes a favor). Dos periodos pagados consecutivos es la condición del referido de negocio (bloque 8). |
+| **Cargo** | Núcleo | Cada concepto que se cobra en un periodo. | Tipos: `plan`, `sucursal adicional`, `espacio pagado de mascota`. Guarda importe con dos decimales y el precio vigente al generarse. |
+| **PagoSuscripcion** | Núcleo | Pago registrado manualmente por el administrador de plataforma. | Fecha, importe, medio, referencia y quién lo registró. Un pago puede cubrir uno o varios periodos. |
+| **MovimientoMesAFavor** | Núcleo | Libro de meses gratuitos del negocio: ganados por referidos y consumidos en periodos. | Igual que el inventario: el saldo es la suma de los movimientos y no se edita. Los meses no caducan. |
+| **CargoEspacioMascota** | Vertical | Registro de un espacio pagado vendido por una sucursal (UC-37). | Guarda sucursal, usuario final, fecha e importe vigente. Se incorpora como cargo al periodo del negocio. |
+| **Parametro** | Núcleo | Valor configurable de la plataforma, identificado por una clave. | Tiene tipo (número, días, horas, importe, sí/no, lista). Lo cambia solo el administrador de plataforma. |
+| **VersionParametro** | Núcleo | Cada valor que ha tenido un parámetro. | Guarda valor, vigente desde, quién lo cambió y motivo. Los procesos usan el valor vigente en el momento en que ocurre el hecho. |
+
+Las políticas por negocio (`PoliticaNegocio`, bloque 1) no son parámetros de plataforma: las decide cada negocio.
+
+### 4.3 Relaciones
+
+```mermaid
+erDiagram
+    Plan ||--|{ PrecioPlan : "tiene precios"
+    Plan ||--|{ Entitlement : "habilita"
+    Negocio ||--|| Suscripcion : "tiene"
+    Suscripcion }o--|| Plan : "de"
+    Suscripcion ||--o{ CambioSuscripcion : "registra"
+    Suscripcion ||--o{ PeriodoFacturacion : "se divide en"
+    PeriodoFacturacion ||--o{ Cargo : "incluye"
+    PeriodoFacturacion }o--o{ PagoSuscripcion : "cubierto por"
+    Negocio ||--o{ MovimientoMesAFavor : "acumula"
+    MovimientoMesAFavor }o--o| PeriodoFacturacion : "se consume en"
+    Sucursal ||--o{ CargoEspacioMascota : "vende"
+    CargoEspacioMascota }o--|| Cargo : "se cobra como"
+    Parametro ||--|{ VersionParametro : "tiene valores"
+```
+
+### 4.4 Ciclo de vida de la suscripción
+
+```mermaid
+stateDiagram-v2
+    [*] --> Prueba : alta del negocio (UC-03)
+    Prueba --> Activa : registra pago
+    Prueba --> Gracia : vence la prueba sin pago
+    Activa --> Activa : periodo pagado o bonificado
+    Activa --> Gracia : vence el periodo sin pago
+    Gracia --> Activa : registra pago
+    Gracia --> SoloLectura : pasan los días de gracia
+    SoloLectura --> Activa : registra pago
+    SoloLectura --> SinAcceso : pasan los días de solo lectura
+    SinAcceso --> Activa : registra pago durante el resguardo
+    SinAcceso --> Eliminada : termina el resguardo
+    Eliminada --> [*]
+```
+
+| Estado | Qué puede hacer el negocio | Plazo (parámetro) |
+|---|---|---|
+| Prueba | Todo lo que incluye el plan | 10 días naturales |
+| Activa | Todo lo que incluye el plan | Mientras pague |
+| Gracia | Todo, con aviso de pago pendiente | 2 días |
+| Solo lectura | Consultar; no registrar ni modificar | 5 días |
+| Sin acceso | Nada; los datos se resguardan | 6 meses |
+| Eliminada | Nada; se aplica la eliminación de la sección 7 del requerimiento (UC-36) | — |
+
+Durante `sin acceso` los dueños de mascotas conservan su propia información (carnet, línea de tiempo); lo que se bloquea es la operación del negocio.
+
+### 4.5 Cierre de periodo (UC-34)
+
+Al vencer un periodo, el proceso nocturno:
+
+1. Calcula los cargos: plan, sucursales adicionales y espacios pagados de mascotas vendidos en el periodo.
+2. Si el negocio tiene meses a favor, consume uno y bonifica el cargo del plan.
+3. Si queda algo por cobrar, deja el periodo `por pagar`; si no, lo deja `bonificado`.
+4. Abre el siguiente periodo.
+5. Si un periodo `por pagar` no se paga, la suscripción avanza por gracia, solo lectura y sin acceso.
+
+### 4.6 Catálogo inicial de parámetros
+
+| Grupo | Parámetro | Valor inicial |
+|---|---|---|
+| Suscripción | Días de prueba | 10 |
+| Suscripción | Días de gracia | 2 |
+| Suscripción | Días de solo lectura | 5 |
+| Suscripción | Meses de resguardo | 6 |
+| Mascotas | Espacios base por usuario | 2 |
+| Mascotas | Máximo de espacios por beneficio | 5 |
+| Mascotas | Máximo de espacios pagados | Sin tope |
+| Mascotas | Cargo por espacio pagado | Por definir |
+| Mascotas | Días para ocultar una mascota fallecida | 30 |
+| Mascotas | Años sin actividad para eliminar una mascota | 5 |
+| Referidos | Servicios pagados para el beneficio de usuario | 10 |
+| Referidos | Meses consecutivos pagados del negocio referido | 2 |
+| Agenda | Minutos antes para cancelar o reprogramar | 30 |
+| Agenda | Tolerancia para marcar no atendida | Por definir |
+| Notificaciones | Días antes del recordatorio de vacuna | 7 |
+| Notificaciones | Horas antes del recordatorio de cita | 2 |
+| Archivos | Tamaño máximo por tipo de documento | Sección 7 del requerimiento |
+| Reseñas | Retención | Por definir |
+
+### 4.7 Entitlements iniciales
+
+| Entitlement | Básico | Extendido |
+|---|---|---|
+| Sucursales incluidas | 1 | Configurable |
+| Admite sucursales adicionales con precio | No | Sí |
+| Campañas activas al mismo tiempo | 1 | Configurable |
+
+Todos los valores se configuran por plan desde `admin.amiva.pet`. Si un negocio Básico necesita otra sucursal, cambia a Extendido. El límite de campañas cuenta solo las activas: el negocio puede tener otras configuradas como borrador o inactivas.
+
+### 4.8 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | Básico: una sucursal y una campaña. Extendido: para varias sucursales. Sucursales y campañas son configurables por plan. |
+| 2 | Periodos mensuales en el MVP. |
+| 3 | El mes a favor bonifica solo el cargo del plan. |
+| 4 | Una prueba vencida sin pago sigue el camino del impago. |
+| 5 | Sucursales adicionales: se cobra el mayor número de sucursales activas en el periodo, sin prorrateo. |
+| 6 | Los precios de plan incluyen IVA. |
+| 7 | Se retira el "límite de mascotas por negocio" del requerimiento. |
+| 8 | Todos los parámetros los fija la plataforma; los negocios solo deciden sus políticas. |
+
+Los parámetros marcados "por definir" se configuran más adelante desde `admin.amiva.pet`; no bloquean el modelo.

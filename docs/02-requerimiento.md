@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.6  
+**Versión:** 3.7  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -102,7 +102,6 @@ Un espacio se libera de inmediato cuando su mascota se marca como fallecida o se
 
 Para aceptar una transferencia, el nuevo propietario necesita un espacio libre de cualquier tipo. Si no lo tiene, la app se lo indica y le ofrece invitar usuarios o adquirir un espacio pagado en una sucursal; la solicitud de transferencia sigue vigente mientras tanto.
 
-El límite de mascotas por negocio es configurable desde `admin.amiva.pet`.
 
 ## 6. Vinculación y privacidad
 
@@ -228,9 +227,28 @@ Se incluyen ventas en efectivo. La sucursal puede aceptar tarjeta por sus propio
 
 Planes: Básico, Extendido y Tienda Digital. Los administradores de plataforma configuran precios, sucursales adicionales y límites operativos desde `admin.amiva.pet`.
 
+| Plan | Sucursales | Campañas activas | Nota |
+|---|---|---|---|
+| Básico | 1 (configurable) | 1 (configurable) | Para un negocio con una sola sucursal. |
+| Extendido | Las incluidas en el plan (configurable) más sucursales adicionales con precio | Configurable | Para negocios con varias sucursales. |
+| Tienda Digital | — | — | Oculto hasta que exista el módulo. |
+
+Los planes se distinguen únicamente por lo que habilitan y sus límites, que se configuran por plan.
+
+Cobro de la suscripción:
+
+- Los periodos son mensuales en el MVP.
+- Los precios de plan incluyen IVA y se manejan con dos decimales.
+- Cada periodo cobra el plan, las sucursales adicionales y los espacios pagados de mascotas vendidos por sus sucursales.
+- Las sucursales adicionales se cobran por el mayor número de sucursales activas durante el periodo, sin prorrateo.
+- Un mes gratuito por referido bonifica solo el cargo del plan; las sucursales adicionales y los espacios pagados se cobran igual.
+- El cobro es manual: la plataforma genera los cargos y el administrador de plataforma registra el pago.
+
 No hay límite de usuarios por plan. No se lleva contador de almacenamiento, pero se limitan tamaños y tipos de recursos. Add-ons quedan en backlog. Enterprise es futuro.
 
-Impago: dos días de gracia, cinco días en solo lectura, después sin acceso y seis meses de resguardo antes de la eliminación definida en este documento.
+Impago: dos días de gracia, cinco días en solo lectura, después sin acceso y seis meses de resguardo antes de la eliminación definida en este documento. Una prueba que vence sin pago sigue el mismo camino. Durante el periodo sin acceso, los dueños conservan su propia información.
+
+Todos los parámetros los fija la plataforma; los negocios no los sobrescriben. Lo que decide cada negocio son sus políticas (por ejemplo, aceptar productos proporcionados por el dueño).
 
 Los referidos de usuarios finales y de negocios forman parte del MVP.
 
@@ -286,6 +304,8 @@ Alcance de una campaña:
 - **De sucursal:** aplica solo a una sucursal.
 
 Una campaña se puede copiar manualmente a otra sucursal. La copia es independiente: se crea como borrador y se edita y publica por separado.
+
+El negocio puede tener en su pantalla de campañas todas las que quiera configuradas (borradores o inactivas), pero solo puede tener activas al mismo tiempo las que permita su plan.
 
 Segmentación de la audiencia:
 
@@ -383,3 +403,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.4 | 2026-09-24 | Reglas de inventario aprobadas: unidades de medida sin fracciones, precio con IVA, costo promedio ponderado, descuento automático en aplicaciones clínicas, stock mínimo por sucursal, traspasos en R3 y órdenes de compra sin estado cancelada. |
 | 3.5 | 2026-09-24 | Dinero con decimales: dos para precios y totales, cuatro para el costo unitario. |
 | 3.6 | 2026-09-24 | Vacunas, desparasitantes y medicamentos proporcionados por el dueño: política por negocio, lote y caducidad, responsiva firmada que se sube como documento, sin movimiento de inventario y variante de servicio para cobrar solo la aplicación. |
+| 3.7 | 2026-09-24 | Planes Básico y Extendido con sucursales y campañas configurables, periodos mensuales, IVA incluido, mes a favor solo sobre el plan, sucursales sin prorrateo, prueba vencida como impago, parámetros solo de plataforma, límite de campañas activas (no de configuradas) y retiro del límite de mascotas por negocio. |

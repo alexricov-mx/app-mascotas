@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.5  
+**Versión:** 1.6  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.6  
+**Fuente:** `docs/02-requerimiento.md` versión 3.7  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -76,7 +76,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 7. El sistema crea el negocio, tenant, sucursales, suscripción y accesos.
 
 **Resultado:** negocio habilitado para acceder a `app.amiva.pet`.  
-**Errores:** RFC duplicado, datos incompletos, plan no disponible o alta no autorizada.
+**Errores:** RFC duplicado, datos incompletos, plan no disponible, más sucursales de las que permite el plan o alta no autorizada.
 
 ### UC-04 — Administrar usuarios y roles del negocio
 
@@ -315,7 +315,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 5. Publica la campaña.
 
 **Copiar a otra sucursal:** el administrador copia una campaña a otra sucursal; la copia se crea como borrador independiente.  
-**Reglas:** no se segmenta por diagnóstico, alergias, padecimientos, medicamentos, estado reproductivo ni notas clínicas. Se audita quién crea, aprueba, publica, modifica, copia u oculta.  
+**Reglas:** no se segmenta por diagnóstico, alergias, padecimientos, medicamentos, estado reproductivo ni notas clínicas. El negocio puede tener varias campañas configuradas, pero el número de campañas activas al mismo tiempo no puede superar el límite del plan; para activar otra, primero desactiva una. Se audita quién crea, aprueba, publica, modifica, copia u oculta.  
 **Resultado:** campaña dirigida a una audiencia, con alcance, canal, vigencia, frecuencia y prioridad configurados.
 
 ## 10. Procesos automáticos
@@ -331,9 +331,9 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 **Flujo:**
 
 1. Al vencer un periodo, el sistema revisa si el negocio tiene meses gratuitos a favor por referidos (UC-42).
-2. Si los tiene, consume uno, extiende el periodo sin generar cargo y registra el consumo.
-3. Si no los tiene, genera el cargo del periodo. El cargo incluye los espacios pagados de mascotas registrados por sus sucursales en el periodo (UC-37).
-4. Cambia el estado de la suscripción conforme a fechas, pagos y parámetros: gracia, solo lectura, sin acceso y resguardo.
+2. Genera los cargos del periodo: plan, sucursales adicionales (el mayor número de sucursales activas en el periodo) y espacios pagados de mascotas vendidos por sus sucursales (UC-37).
+3. Si el negocio tiene meses gratuitos a favor, consume uno y bonifica solo el cargo del plan. Si no queda nada por cobrar, el periodo queda bonificado; si queda, queda por pagar.
+4. Cambia el estado de la suscripción conforme a fechas, pagos y parámetros: gracia, solo lectura, sin acceso y resguardo. Una prueba vencida sin pago sigue el mismo camino.
 
 **Resultado:** suscripción en el estado que corresponde, con permisos de operación, lectura o bloqueo aplicados; meses a favor y cargos auditados.
 
