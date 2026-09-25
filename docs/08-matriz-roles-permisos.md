@@ -2,7 +2,7 @@
 
 **Versión:** 1.0  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/03-casos-uso-mvp.md` versión 1.15, bloque 1 de `docs/06-modelo-conceptual.md` y tablas `rol`, `permiso` y `rol_permiso` de `docs/07-modelo-datos.md`  
+**Fuente:** `docs/03-casos-uso-mvp.md` versión 1.16, bloque 1 de `docs/06-modelo-conceptual.md` y tablas `rol`, `permiso` y `rol_permiso` de `docs/07-modelo-datos.md`  
 **Estado:** aprobado el 2026-09-24.
 
 ## 1. Propósito

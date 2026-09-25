@@ -2,7 +2,7 @@
 
 **Versión:** 1.0  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.16 y `docs/03-casos-uso-mvp.md` versión 1.15 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.17 y `docs/03-casos-uso-mvp.md` versión 1.16 (aprobados)  
 **Estado:** aprobado completo (bloques 1 a 9) el 2026-09-24. El modelo de datos físico está en `docs/07-modelo-datos.md`.
 
 ## 1. Propósito y alcance
@@ -372,7 +372,7 @@ stateDiagram-v2
 - **Provisional:** solo la ve el negocio que la registró; no tiene propietario ni ocupa espacios.
 - **Fusionada:** su historial pasó a otra mascota; se conserva solo como referencia.
 - **Fallecida:** el dueño y los negocios vinculados todavía la ven; ya no se agendan citas ni se transfiere.
-- **Oculta:** el dueño ya no la ve; la información se conserva conforme a las reglas de conservación.
+- **Oculta:** el dueño ya no la ve; los negocios que tenían acceso la siguen viendo en solo lectura; la información se conserva conforme a las reglas de conservación.
 - **Eliminada:** se aplican las reglas de eliminación de la sección 7 del requerimiento.
 
 ### 5.6 Relaciones

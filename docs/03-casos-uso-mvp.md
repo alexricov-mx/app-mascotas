@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.15  
+**Versión:** 1.16  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.16  
+**Fuente:** `docs/02-requerimiento.md` versión 3.17  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -30,7 +30,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 - El API valida autenticación, autorización y aislamiento por tenant. Los permisos de cada rol están en `docs/08-matriz-roles-permisos.md`; cuando un caso de uso dice "personal autorizado", se refiere a esa matriz.
 - Ningún cliente accede directamente a PostgreSQL/PostGIS ni a Object Storage.
 - Las operaciones críticas se auditan.
-- El dueño solo ve la información que le corresponde y la línea de tiempo de sus mascotas.
+- El dueño solo ve la información que le corresponde y la línea de tiempo de sus mascotas. Las reglas de visibilidad están en `docs/09-modelo-privacidad.md`.
 - Un negocio solo accede a un dueño y sus mascotas después de una vinculación aceptada, salvo a sus propios clientes y mascotas provisionales (UC-47).
 - Todo lo que el negocio registra (citas, expediente, vacunas, documentos, ventas) puede hacerse sobre una mascota provisional.
 - Los identificadores internos usan prefijo y UUID.
@@ -139,7 +139,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 2. La solicitud llega al buzón del nuevo propietario (UC-46), que la revisa. El sistema valida que tenga un espacio libre de cualquier tipo.
 3. Si no lo tiene, la app se lo indica y le ofrece invitar usuarios (UC-38) o adquirir un espacio pagado en una sucursal (UC-37). La solicitud sigue vigente.
 4. El nuevo propietario acepta y el sistema asigna la mascota a su espacio libre, con el mismo orden de UC-06.
-5. El sistema registra solicitud, aceptación y fechas, retira las autorizaciones anteriores y deja de compartir la mascota con los negocios del propietario anterior. El nuevo propietario ve toda la historia de la mascota, pero no los datos del propietario anterior.
+5. El sistema registra solicitud, aceptación y fechas, retira las autorizaciones anteriores y deja de compartir la mascota con los negocios del propietario anterior. El nuevo propietario ve toda la historia de la mascota, pero no los datos del propietario anterior; el propietario anterior pierde todo acceso a la mascota.
 
 Si no se responde en 7 días (parámetro), la solicitud vence. El propietario puede cancelarla antes.
 
@@ -445,7 +445,7 @@ Se conserva descrito para R2; no se construye en el MVP.
 ### UC-35 — Ocultar mascota fallecida
 
 **Actor:** ACT-08.  
-**Resultado:** después del plazo configurado, la mascota deja de mostrarse al usuario, conservando la información conforme a las reglas de conservación.
+**Resultado:** después del plazo configurado, la mascota deja de mostrarse al usuario, conservando la información conforme a las reglas de conservación. Los negocios que tenían acceso la siguen viendo en solo lectura como historial.
 
 ### UC-36 — Aplicar conservación y eliminación
 

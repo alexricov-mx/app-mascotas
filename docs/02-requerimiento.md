@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.16  
+**Versión:** 3.17  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -136,6 +136,11 @@ Un negocio vinculado puede consultar:
 - **Información generada por el propio negocio.**
 
 Nunca puede consultar el nivel 3 generado por otro negocio. Los servicios de estética los ven solo el dueño y el negocio que los hizo. Al desvincularse, el negocio pierde el acceso a la información del usuario y deja de navegar los registros de esa relación, incluidos los que él mismo generó; los conserva y los recupera si el dueño se vuelve a vincular.
+
+- Cuando un negocio ve un evento de nivel 2 de otro negocio, ve el nombre del negocio que lo generó; fuera de eso, no ve con qué otros negocios está vinculado el dueño.
+- Después de una transferencia, el propietario anterior pierde todo acceso a la mascota, incluido su historial.
+- Una mascota oculta (fallecida hace más de 30 días) ya no la ve el dueño, pero los negocios que tenían acceso la siguen viendo en solo lectura como historial.
+- El aislamiento por negocio y el acceso a mascotas se aplican en la base de datos, además del API. Las reglas completas están en `docs/09-modelo-privacidad.md`.
 
 El dueño consulta vacunas, alergias, padecimientos, recetas, consultas, servicios, citas, documentos y la línea de tiempo con el nombre del negocio que generó cada evento. Las notas internas, costos, márgenes y observaciones comerciales son privadas del negocio.
 
@@ -417,7 +422,7 @@ Segmentación de la audiencia:
 
 Se auditan vinculaciones, consentimientos, transferencias, autorizaciones, accesos clínicos, registros, documentos, datos sensibles, precios, servicios, variantes, suscripciones, inventario, suspensiones, contactos verificados, cancelaciones y citas no atendidas. También asignaciones de rol, cambios de políticas y parámetros, activación y fusión de mascotas, correcciones clínicas, cancelaciones de venta, impresiones de ticket, beneficios de referidos, ocultamiento de campañas y moderación de reseñas.
 
-La auditoría solo se agrega; nunca se edita ni se borra. El administrador de negocio consulta la de su negocio; la plataforma consulta toda solo para soporte, y esa consulta también se audita. Su retención se define con la revisión legal; mientras tanto, no se borra.
+La auditoría solo se agrega; nunca se edita ni se borra. El administrador de negocio consulta la de su negocio; la plataforma consulta toda solo para soporte, y esa consulta también se audita. Los accesos al expediente clínico se registran por pantalla consultada, igual que la descarga de documentos clínicos y la exportación de la línea de tiempo. En el MVP la plataforma no ve datos operativos ni clínicos de ningún negocio, ni para soporte. Su retención se define con la revisión legal; mientras tanto, no se borra.
 
 Desde `admin.amiva.pet` se administran versiones de aviso de privacidad, consentimiento, términos, conservación, eliminación, tratamiento de datos, responsabilidades, pagos, responsiva por producto proporcionado por el dueño y documentos legales. Cada aceptación conserva la versión mostrada y su bitácora.
 
@@ -515,3 +520,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.14 | 2026-09-24 | Referidos: código permanente, avance visible sin detalle, solo periodos pagados, cumplido sin beneficio al llegar al tope, anulación, beneficio no reversible, mes gratuito aun en impago y reglas de duplicados. |
 | 3.15 | 2026-09-24 | Reseñas fuera del MVP (R2), tiempo útil de los avisos, bandeja de avisos del personal, preferencias con buzón siempre visible, campañas sin aprobación previa, banner en inicio, tope de 2 campañas por semana, consulta y retención de la auditoría. |
 | 3.16 | 2026-09-24 | Matriz de roles y permisos: el administrador no ve lo clínico sin rol de veterinario, los cuatro roles cobran y atienden citas, solo el administrador cancela ventas y ve costos. |
+| 3.17 | 2026-09-24 | Modelo de privacidad: nombre del negocio en eventos de nivel 2, pérdida de acceso del propietario anterior, mascota oculta visible para negocios en solo lectura, auditoría de accesos clínicos por pantalla y plataforma sin acceso a datos operativos. |
