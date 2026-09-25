@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.9  
+**Versión:** 1.10  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.10  
+**Fuente:** `docs/02-requerimiento.md` versión 3.11  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -266,7 +266,12 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-18 — Administrar catálogo de servicios
 
 **Actor principal:** ACT-06.  
-**Resultado:** servicio, variante, duración, disponibilidad, precio y reglas de sucursal configurados. Los servicios de aplicación pueden tener la variante "Aplicación con producto del dueño", con su propio precio.
+**Resultado:** servicio con categoría, variante, duración, tiempo adicional, disponibilidad, precio y ajustes por sucursal configurados; opcionalmente, una ventana de cancelación mayor a la de la plataforma. Los servicios de aplicación pueden tener la variante "Aplicación con producto del dueño", con su propio precio.
+
+### UC-50 — Configurar horario y capacidad de sucursal
+
+**Actor principal:** ACT-06.  
+**Resultado:** horario semanal, días especiales (cerrado o con horario distinto) y capacidad de mascotas simultáneas por día, franja horaria y categoría de servicio. Los cambios no afectan citas ya confirmadas; si alguna queda fuera de horario, el sistema la señala para que el negocio la reprograme.
 
 ### UC-19 — Buscar sucursales y servicios
 
@@ -276,14 +281,14 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-20 — Solicitar cita
 
 **Actor principal:** ACT-01 o ACT-02.  
-**Flujo:** selecciona mascota, sucursal, servicio, fecha y horario; envía solicitud.
+**Flujo:** selecciona mascota, sucursal, uno o más servicios, y fecha y horario entre los disponibles, hasta 30 días adelante (parámetro); envía solicitud.
 
-**Resultado:** cita en estado solicitada; negocio notificado.
+**Resultado:** cita en estado solicitada, que aparta capacidad; negocio notificado. Si el negocio no responde antes de la hora, la cita pasa a vencida y el dueño recibe aviso.
 
 ### UC-49 — Agendar cita desde el negocio
 
 **Actor principal:** ACT-03 o ACT-06.  
-**Flujo:** el personal elige cliente (vinculado o provisional), mascota, servicio, fecha y horario, dentro de la capacidad configurada.
+**Flujo:** el personal elige cliente (vinculado o provisional), mascota, uno o más servicios, fecha y horario, dentro de la capacidad configurada.
 
 **Resultado:** cita confirmada. Si el cliente está vinculado, la ve en su app y recibe aviso; si es provisional, recibe aviso por correo.
 
@@ -295,12 +300,12 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-22 — Iniciar, completar o marcar no atendida una cita
 
 **Actor principal:** personal autorizado del negocio.  
-**Resultado:** transición de estado auditada y disponibilidad actualizada. Una cita completada cuenta como servicio pagado para referidos (UC-42).
+**Resultado:** transición de estado auditada y disponibilidad actualizada. El profesional se puede asignar al iniciar, si no se asignó antes. Pasada la tolerancia sin que llegue la mascota, se marca no atendida. Al completarse registra el precio final y genera sus eventos en la línea de tiempo. Una cita completada cuenta como servicio pagado para referidos (UC-42).
 
 ### UC-23 — Cancelar o reprogramar cita
 
 **Actor principal:** ACT-01, ACT-02 o negocio según el caso.  
-**Regla:** se aplica la ventana configurable, inicialmente 30 minutos antes.
+**Reglas:** se aplica la ventana configurable, inicialmente 30 minutos antes, o la ventana mayor del servicio si el negocio la fijó. Si reprograma el dueño, la cita vuelve a solicitada y el negocio debe aceptarla; si reprograma el negocio, queda confirmada. Es la misma cita, con historial.
 
 ## 8. Inventario y ventas
 

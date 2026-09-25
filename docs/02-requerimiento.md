@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.10  
+**Versión:** 3.11  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -231,11 +231,18 @@ Reglas para el producto del dueño:
 
 Toda cita corresponde a una mascota. La que solicita el dueño requiere aprobación del negocio. El negocio también puede registrar citas en nombre de un cliente, vinculado o provisional (por ejemplo, por teléfono o en mostrador); esas nacen confirmadas. Flujo: mascota, servicio, fecha y horario. El negocio acepta o rechaza con mensaje, inicia el servicio y puede marcarla como no atendida.
 
-Estados: solicitada, confirmada, en proceso, completada, rechazada, cancelada y no atendida.
+Estados: solicitada, confirmada, en proceso, completada, rechazada, vencida, cancelada y no atendida.
 
-La capacidad se configura por cantidad de mascotas simultáneas, horario y día. La duración depende del servicio, variantes y tiempos adicionales configurados.
+- Una cita es para una sola mascota y puede incluir varios servicios; su duración es la suma de los servicios, variantes y tiempos adicionales.
+- Una cita solicitada aparta capacidad para que el horario no se sobrevenda. Si el negocio no responde antes de la hora de la cita, pasa a vencida.
+- Si el dueño reprograma, la cita vuelve a solicitada y el negocio debe aceptarla; si reprograma el negocio, queda confirmada. Es la misma cita, con su historial.
+- El dueño puede solicitar citas hasta 30 días adelante (parámetro).
+- En el MVP no hay agenda por profesional: la disponibilidad sale de la capacidad y el profesional se asigna de forma opcional.
+- La cita guarda un precio estimado; el precio final se registra al concluir o en la venta.
 
-El dueño puede cancelar o reprogramar hasta el límite configurable, inicialmente 30 minutos antes. La tolerancia para no atención también es configurable. No existe penalización por inasistencia.
+La capacidad se configura por cantidad de mascotas simultáneas, horario, día y categoría de servicio (por ejemplo, consulta y estética por separado). La sucursal tiene un horario semanal y días especiales (cerrado o con horario distinto). La duración depende del servicio, variantes y tiempos adicionales configurados.
+
+El dueño puede cancelar o reprogramar hasta el límite configurable, inicialmente 30 minutos antes. El negocio puede fijar una ventana mayor en servicios concretos (por ejemplo, 24 horas para cirugías), nunca menor. La tolerancia para no atención también es configurable. No existe penalización por inasistencia.
 
 Vacunas: recordatorio una semana antes. Citas: recordatorio dos horas antes; si se crean con menos de dos horas de anticipación, no se envía recordatorio.
 
@@ -243,7 +250,7 @@ La lista de espera queda para una versión posterior. Cada turno dispone de 10 m
 
 ## 9. Servicios, variantes y precios
 
-El catálogo contiene nombre, descripción, duración, disponibilidad, sucursal, estado publicado y reglas de cancelación. Las variantes permiten matrices de precio y duración por especie, tamaño, raza, peso, duración o condición clínica.
+El catálogo contiene nombre, descripción, categoría (clínico, preventivo, estética u otro), duración, tiempo adicional, disponibilidad, sucursal, estado publicado y, si aplica, una ventana de cancelación mayor a la de la plataforma. Las variantes permiten matrices de precio y duración por especie, tamaño, raza, peso, duración o condición clínica.
 
 El precio y la duración se definen por defecto a nivel de negocio y cada sucursal puede ajustarlos. Los servicios pueden tener precio publicado o no listado.
 
@@ -463,3 +470,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.8 | 2026-09-24 | Usuarios autorizados (permisos, invitación y retiro), buzón de solicitudes y avisos en la app, vencimiento de solicitudes, microchip único, fallecimiento registrado también por el dueño, último peso en la ficha y veterinario habitual. |
 | 3.9 | 2026-09-24 | Reglas de vinculación (por negocio, mascotas elegidas, datos de seguridad, retiro y transferencia), nuevas versiones de textos legales, clientes y mascotas provisionales con invitación de activación y fusión, y citas registradas por el negocio. |
 | 3.10 | 2026-09-24 | Reglas del expediente: eventos de línea de tiempo, correcciones con registro nuevo, peso en nivel 1, estética visible solo para el dueño y quien la hizo, documentos del dueño compartidos, receta en PDF e imprimible, próxima dosis, historia completa tras transferencia y exportación en PDF que no se guarda. |
+| 3.11 | 2026-09-24 | Agenda: capacidad por categoría, varios servicios por cita, estado vencida, reprogramación, anticipación máxima de 30 días, sin agenda por profesional en el MVP, ventana de cancelación mayor por servicio y precio estimado en la cita. |

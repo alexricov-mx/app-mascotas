@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.7  
+**Versión:** 0.8  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.10 y `docs/03-casos-uso-mvp.md` versión 1.9 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.11 y `docs/03-casos-uso-mvp.md` versión 1.10 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -25,7 +25,7 @@ Convenciones del documento:
 | 3 | Mascotas, propiedad y espacios | UC-06, UC-11, UC-12, UC-37, UC-39, UC-45, UC-46 | Vertical | **Aprobado** (2026-09-24) |
 | 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30, UC-47 a UC-49 | Núcleo + vertical | **Aprobado** (2026-09-24) |
 | 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | **Aprobado** (2026-09-24) |
-| 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49 | Núcleo | Pendiente |
+| 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49, UC-50 | Núcleo | **Aprobado** (2026-09-24) |
 | 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43 | Núcleo | Pendiente |
 | 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | Pendiente |
 | 9 | Notificaciones, reseñas, campañas y auditoría | UC-31 a UC-33 | Núcleo | Pendiente |
@@ -258,7 +258,8 @@ Al vencer un periodo, el proceso nocturno:
 | Mascotas | Días de vigencia de una invitación de activación | 30 |
 | Referidos | Servicios pagados para el beneficio de usuario | 10 |
 | Referidos | Meses consecutivos pagados del negocio referido | 2 |
-| Agenda | Minutos antes para cancelar o reprogramar | 30 |
+| Agenda | Minutos antes para cancelar o reprogramar (mínimo; el servicio puede exigir más) | 30 |
+| Agenda | Días máximos de anticipación para solicitar una cita | 30 |
 | Agenda | Tolerancia para marcar no atendida | Por definir |
 | Notificaciones | Días antes del recordatorio de vacuna | 7 |
 | Notificaciones | Horas antes del recordatorio de cita | 2 |
@@ -636,3 +637,96 @@ Un registro clínico **no se edita ni se borra**. Si tiene un error:
 | 7 | La receta se descarga en PDF desde la app y el negocio puede imprimirla. |
 | 8 | El veterinario captura la próxima dosis y el recordatorio sale 7 días antes. |
 | 9 | La exportación de la línea de tiempo es en PDF, se genera al pedirla y no se guarda. |
+
+---
+
+## 8. Bloque 6 — Servicios, agenda y citas
+
+### 8.1 Qué resuelve
+
+- Qué servicios ofrece cada negocio, a qué precio y cuánto duran, con variaciones por sucursal y por tipo de mascota.
+- Cuándo atiende cada sucursal y cuántas mascotas puede atender a la vez.
+- Cómo se pide, se agenda, se atiende y se cancela una cita.
+- Cómo encuentra el dueño sucursales y servicios en el mapa.
+
+### 8.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **Servicio** | Núcleo | Servicio del catálogo del negocio: consulta, vacuna, baño, corte, cirugía, etc. | Nombre, descripción, categoría (clínico, preventivo, estética, otro), duración y precio base, tiempo adicional (preparación o limpieza), estado publicado, si el precio se muestra o es "no listado" y, opcionalmente, una ventana de cancelación mayor a la de la plataforma. Pertenece al negocio. |
+| **VarianteServicio** | Núcleo | Combinación que cambia precio y duración: especie, tamaño, raza, peso, condición clínica. | Un servicio puede no tener variantes o tener varias. Incluye "Aplicación con producto del dueño" (bloque 5). |
+| **ServicioSucursal** | Núcleo | Si una sucursal ofrece un servicio y, si aplica, su precio y duración propios. | Sin ajuste, la sucursal usa los valores del negocio. Equivale a `PrecioSucursal` del requerimiento. |
+| **HorarioSucursal** | Núcleo | Días y horas de atención de la sucursal. | Horario semanal más días especiales (cerrado o con horario distinto). |
+| **ReglaCapacidad** | Núcleo | Cuántas mascotas puede atender la sucursal al mismo tiempo, por día, franja horaria y categoría de servicio. | Ver 8.6. |
+| **Cita** | Núcleo | Atención programada para **una** mascota en una sucursal. | Cliente, mascota, sucursal, servicios, fecha y hora, duración calculada, origen (app del dueño o negocio), quién la solicitó (propietario o autorizado), precio estimado, profesional asignado (opcional) y estado. |
+| **ServicioCita** | Núcleo | Cada servicio incluido en la cita, con la variante aplicada. | Guarda el precio y la duración vigentes al agendar. |
+| **CambioCita** | Núcleo | Historial de estados y reprogramaciones de la cita. | Estado o fecha anterior y nueva, quién, cuándo y mensaje (por ejemplo, el motivo del rechazo). |
+
+Al completarse, la cita genera sus eventos en la línea de tiempo (bloque 5) y puede ligarse a una venta (bloque 7). Una cita completada cuenta para referidos (bloque 8).
+
+### 8.3 Relaciones
+
+```mermaid
+erDiagram
+    Negocio ||--o{ Servicio : "ofrece"
+    Servicio ||--o{ VarianteServicio : "tiene"
+    Servicio ||--o{ ServicioSucursal : "se ajusta en"
+    Sucursal ||--o{ ServicioSucursal : "ofrece"
+    Sucursal ||--|{ HorarioSucursal : "atiende en"
+    Sucursal ||--o{ ReglaCapacidad : "limita con"
+    Sucursal ||--o{ Cita : "agenda"
+    Mascota ||--o{ Cita : "tiene"
+    Cliente ||--o{ Cita : "solicita o recibe"
+    Cita ||--|{ ServicioCita : "incluye"
+    ServicioCita }o--|| Servicio : "de"
+    ServicioCita }o--o| VarianteServicio : "con"
+    Cita ||--o{ CambioCita : "registra"
+    Profesional |o--o{ Cita : "atiende"
+    Cita ||--o{ EventoMascota : "origina"
+```
+
+### 8.4 Ciclo de vida de la cita
+
+```mermaid
+stateDiagram-v2
+    [*] --> Solicitada : el dueño la pide (UC-20)
+    [*] --> Confirmada : el negocio la agenda (UC-49)
+    Solicitada --> Confirmada : el negocio acepta (UC-21)
+    Solicitada --> Rechazada : el negocio rechaza con mensaje
+    Solicitada --> Vencida : llega la hora sin respuesta
+    Solicitada --> Cancelada : el dueño cancela
+    Confirmada --> EnProceso : el negocio la inicia (UC-22)
+    Confirmada --> Cancelada : dueño o negocio cancelan (UC-23)
+    Confirmada --> NoAtendida : pasa la tolerancia sin llegar
+    Confirmada --> Solicitada : el dueño reprograma
+    EnProceso --> Completada : el negocio la concluye
+    Completada --> [*]
+    Rechazada --> [*]
+    Vencida --> [*]
+    Cancelada --> [*]
+    NoAtendida --> [*]
+```
+
+### 8.5 Cómo se calcula la disponibilidad
+
+Para ofrecer horarios al dueño o al personal:
+
+1. Se toma el horario de la sucursal para ese día, incluidos los días especiales.
+2. Se calcula la duración de la cita: suma de los servicios y variantes, más sus tiempos adicionales.
+3. Para cada horario posible, se cuentan las citas `solicitada`, `confirmada` y `en proceso` que se traslapan en la misma categoría.
+4. El horario está disponible si ese número es menor que la capacidad de la regla que aplica.
+
+### 8.6 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | La capacidad se define por categoría de servicio. |
+| 2 | Sin agenda por profesional en el MVP; el profesional se asigna de forma opcional. |
+| 3 | Una cita puede incluir varios servicios para la misma mascota; la duración es la suma. |
+| 4 | Una cita solicitada aparta capacidad; sin respuesta antes de la hora, pasa a `vencida`. |
+| 5 | Si reprograma el dueño, vuelve a `solicitada`; si reprograma el negocio, queda confirmada. Misma cita, con historial. |
+| 6 | La ventana de cancelación de la plataforma es el mínimo; el negocio puede exigir más en servicios concretos. |
+| 7 | Anticipación máxima para solicitar: 30 días, configurable. |
+| 8 | La cita guarda un precio estimado; el final se registra al concluir o en la venta. |
+
+Surgió un caso de uso que faltaba: **UC-50 — Configurar horario y capacidad de sucursal**, porque ningún caso de uso cubría quién define horarios, días especiales y capacidad.
