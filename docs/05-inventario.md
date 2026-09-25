@@ -2,7 +2,7 @@
 
 **Versión:** 1.0  
 **Fecha:** 2026-09-24  
-**Relacionado con:** `docs/02-requerimiento.md` versión 3.11 (sección 10)  
+**Relacionado con:** `docs/02-requerimiento.md` versión 3.13 (sección 10)  
 **Estado:** aprobado. Detalla la sección 10 del requerimiento; si hay diferencia, manda el requerimiento.
 
 ## 1. Propósito
@@ -25,6 +25,7 @@ Describir cómo opera el inventario de amiva.pet siguiendo prácticas estándar,
 | Producto | Artículo que se vende o se consume: nombre, imagen, descripción breve, categoría, unidad de medida, código de barras opcional, precio de venta y estado visible u oculto. Pertenece al negocio. |
 | Unidad de medida | La que se indique para el producto: pieza, mililitro, gramo, dosis, etc. Las cantidades siempre son **enteras** en esa unidad; no hay fracciones. |
 | Precio de venta | Incluye IVA. En pesos MXN con dos decimales. |
+| Tasa de IVA | La de cada producto, elegida del catálogo de tasas de la plataforma (16 % por defecto). |
 | Existencia | Cantidad de un producto en una sucursal. |
 | Stock mínimo | Cantidad por debajo de la cual se genera una alerta de reabasto. Se define **por sucursal**. |
 | Stock máximo | Tope sugerido para compras. Opcional, por sucursal. |
@@ -154,7 +155,7 @@ Cada entrada puede llevar número de lote y fecha de caducidad. Las salidas cons
 | 4 | Método de costeo | Costo promedio ponderado. |
 | 5 | Estado `cancelada` en órdenes de compra | No. Un borrador que no se usa se elimina. |
 | 6 | Unidades de medida | Las que se indiquen por producto, sin fracciones. |
-| 7 | Precio de venta | Incluye IVA. |
+| 7 | Precio de venta | Incluye IVA; cada producto tiene su tasa, configurable. |
 | 8 | Stock mínimo | Por sucursal. |
 | 9 | Decimales en dinero | Sí: dos decimales en precios y totales, cuatro en el costo unitario. Las cantidades siguen enteras. |
 | 10 | Producto proporcionado por el dueño | No mueve inventario. Política por negocio; aplica a vacunas, desparasitantes y medicamentos. |

@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.8  
+**Versión:** 0.10  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.11 y `docs/03-casos-uso-mvp.md` versión 1.10 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.13 y `docs/03-casos-uso-mvp.md` versión 1.12 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -26,7 +26,7 @@ Convenciones del documento:
 | 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30, UC-47 a UC-49 | Núcleo + vertical | **Aprobado** (2026-09-24) |
 | 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | **Aprobado** (2026-09-24) |
 | 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49, UC-50 | Núcleo | **Aprobado** (2026-09-24) |
-| 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43 | Núcleo | Pendiente |
+| 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43, UC-51 | Núcleo | **Aprobado** (2026-09-24) |
 | 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | Pendiente |
 | 9 | Notificaciones, reseñas, campañas y auditoría | UC-31 a UC-33 | Núcleo | Pendiente |
 
@@ -62,8 +62,8 @@ Consecuencia: la entidad `IdentidadExterna` de la sección 18 del requerimiento 
 |---|---|---|---|
 | **Usuario** | Núcleo | Una persona con cuenta en el sistema. Única en toda la plataforma. | Se liga 1 a 1 con una cuenta de Keycloak. Correo único y verificado. Estados: `pendiente de verificación`, `activo`, `bloqueado`, `eliminado` (lógico). Una misma persona puede ser dueño de mascotas y, además, personal de uno o varios negocios, con la misma cuenta. |
 | **PerfilUsuarioFinal** | Vertical | Datos de la persona como dueño o usuario autorizado: nombre visible, teléfono, preferencias de notificación. | Se crea al registrarse en la app móvil (UC-01). Se liga a los espacios de mascotas y al código de invitación. |
-| **Negocio** | Núcleo | La empresa cliente de la plataforma, identificada por RFC. **Es el tenant.** | RFC único. Lo da de alta solo el administrador de plataforma (UC-03). Toda la información operativa lleva su identificador (`negocioId`) como llave de aislamiento (RLS). Tiene políticas de negocio (UC-44). |
-| **Sucursal** | Núcleo | Ubicación física donde opera el negocio. | Pertenece a un solo negocio. Tiene ubicación geográfica (PostGIS), horarios y estado (`activa`, `inactiva`). Es la unidad de inventario, agenda y ventas. |
+| **Negocio** | Núcleo | La empresa cliente de la plataforma, identificada por RFC. **Es el tenant.** | RFC único. Tiene logo y pie de ticket configurable. Lo da de alta solo el administrador de plataforma (UC-03). Toda la información operativa lleva su identificador (`negocioId`) como llave de aislamiento (RLS). Tiene políticas de negocio (UC-44). |
+| **Sucursal** | Núcleo | Ubicación física donde opera el negocio. | Pertenece a un solo negocio. Tiene dirección, teléfono, ubicación geográfica (PostGIS), horarios y estado (`activa`, `inactiva`). Es la unidad de inventario, agenda y ventas. |
 | **MiembroNegocio** | Núcleo | La relación de un usuario con un negocio como personal. Equivale a `UsuarioTenant` del requerimiento. | Un usuario puede ser miembro de varios negocios. Estados: `activo`, `desactivado`. Lo crea el administrador de negocio (UC-04) o el de plataforma en el alta (UC-03). Desactivarlo corta el acceso a ese negocio sin afectar su cuenta ni sus otros negocios. |
 | **AsignacionRol** | Núcleo | Qué rol tiene un miembro y dónde: en todo el negocio o en una sucursal concreta. | Un miembro puede tener varias asignaciones (por ejemplo, Veterinario en la sucursal Centro y Recepción en la sucursal Norte). Una asignación de alcance negocio aplica a todas sus sucursales. |
 | **Rol** | Núcleo | Conjunto de permisos con nombre: Administrador de negocio, Recepción, Veterinario, Estilista. | Catálogo definido por la plataforma en el MVP. |
@@ -263,6 +263,7 @@ Al vencer un periodo, el proceso nocturno:
 | Agenda | Tolerancia para marcar no atendida | Por definir |
 | Notificaciones | Días antes del recordatorio de vacuna | 7 |
 | Notificaciones | Horas antes del recordatorio de cita | 2 |
+| Ventas | Tasa de IVA por defecto | 16 % |
 | Archivos | Tamaño máximo por tipo de documento | Sección 7 del requerimiento |
 | Reseñas | Retención | Por definir |
 
@@ -653,7 +654,7 @@ Un registro clínico **no se edita ni se borra**. Si tiene un error:
 
 | Entidad | Capa | Qué es | Reglas principales |
 |---|---|---|---|
-| **Servicio** | Núcleo | Servicio del catálogo del negocio: consulta, vacuna, baño, corte, cirugía, etc. | Nombre, descripción, categoría (clínico, preventivo, estética, otro), duración y precio base, tiempo adicional (preparación o limpieza), estado publicado, si el precio se muestra o es "no listado" y, opcionalmente, una ventana de cancelación mayor a la de la plataforma. Pertenece al negocio. |
+| **Servicio** | Núcleo | Servicio del catálogo del negocio: consulta, vacuna, baño, corte, cirugía, etc. | Nombre, descripción, categoría (clínico, preventivo, estética, otro), duración y precio base, tasa de IVA, tiempo adicional (preparación o limpieza), estado publicado, si el precio se muestra o es "no listado" y, opcionalmente, una ventana de cancelación mayor a la de la plataforma. Pertenece al negocio. |
 | **VarianteServicio** | Núcleo | Combinación que cambia precio y duración: especie, tamaño, raza, peso, condición clínica. | Un servicio puede no tener variantes o tener varias. Incluye "Aplicación con producto del dueño" (bloque 5). |
 | **ServicioSucursal** | Núcleo | Si una sucursal ofrece un servicio y, si aplica, su precio y duración propios. | Sin ajuste, la sucursal usa los valores del negocio. Equivale a `PrecioSucursal` del requerimiento. |
 | **HorarioSucursal** | Núcleo | Días y horas de atención de la sucursal. | Horario semanal más días especiales (cerrado o con horario distinto). |
@@ -730,3 +731,101 @@ Para ofrecer horarios al dueño o al personal:
 | 8 | La cita guarda un precio estimado; el final se registra al concluir o en la venta. |
 
 Surgió un caso de uso que faltaba: **UC-50 — Configurar horario y capacidad de sucursal**, porque ningún caso de uso cubría quién define horarios, días especiales y capacidad.
+
+---
+
+## 9. Bloque 7 — Inventario, promociones y ventas
+
+### 9.1 Qué resuelve
+
+- Qué productos vende o consume cada negocio y cuántos hay en cada sucursal.
+- Cómo se mueve el inventario y cuánto vale.
+- Cómo se arman las promociones.
+- Cómo se cobra en el punto de venta, cómo se cancela una venta y cómo se audita.
+
+La operación de inventario ya está aprobada en `docs/05-inventario.md`; este bloque la traduce a entidades y agrega la venta.
+
+### 9.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **Producto** | Núcleo | Artículo del catálogo del negocio. | Nombre, imagen, descripción breve, categoría, unidad de medida, código de barras opcional, precio con IVA (dos decimales), tasa de IVA y estado visible u oculto. |
+| **CategoriaProducto** | Núcleo | Agrupación de productos del negocio. | Se usa en el POS, en consultas y en conteos cíclicos. |
+| **ProductoSucursal** | Núcleo | Un producto en una sucursal. | Existencia, stock mínimo y máximo, costo promedio (cuatro decimales) y, si aplica, precio propio de la sucursal. La existencia solo cambia con movimientos. |
+| **MovimientoInventario** | Núcleo | Entrada o salida de un producto en una sucursal. | Tipo (tabla de `05-inventario.md`), cantidad entera, costo unitario, existencia resultante, motivo, usuario, fecha y origen (venta, cancelación, evento clínico, cita, conteo). No se edita ni se borra. |
+| **ConteoFisico** | Núcleo | Conteo de toda la sucursal o de una categoría (UC-43). | Estados: `en captura`, `autorizado`. Al autorizar genera los ajustes. |
+| **ConteoDetalle** | Núcleo | Por producto: existencia teórica, cantidad contada y diferencia. | |
+| **Promocion** | Núcleo | Paquete de productos con precio propio. | Nombre, imagen, precio con IVA, estado y vigencia opcional (desde y hasta). Es del negocio; su disponibilidad en cada sucursal se calcula con la existencia de sus componentes. |
+| **ComponentePromocion** | Núcleo | Producto y cantidad que forman la promoción. | Cambiar componentes no altera ventas pasadas. |
+| **Venta** | Núcleo | Cobro realizado en el POS de una sucursal. | Folio consecutivo por sucursal, sucursal, usuario, fecha, cliente opcional (vinculado o provisional), cita opcional, total, recibido y cambio. Estados: `registrada`, `cancelada`. Se guarda en una transacción con sus detalles, pagos y movimientos. |
+| **TasaIVA** | Núcleo | Catálogo de tasas de IVA (16 %, 8 %, 0 %, etc.). | Lo administra la plataforma; 16 % por defecto. Cada producto y servicio usa una. |
+| **VentaDetalle** | Núcleo | Cada renglón de la venta. | Tipo (ver 9.5), referencia, cantidad, precio unitario, importe, tasa de IVA e IVA calculado, tal como se cobraron. En promociones guarda también sus componentes al momento de la venta. |
+| **PagoVenta** | Núcleo | Cómo se pagó la venta. | Medio (efectivo, tarjeta con terminal propia, transferencia) e importe. Solo se registra; no se procesa. |
+| **CorteCaja** | Núcleo | Resumen del día de una sucursal y de cada usuario (UC-51). | Número de ventas y cancelaciones y total por medio de pago. Se calcula a partir de las ventas; no se edita. |
+| **ImpresionTicket** | Núcleo | Cada vez que se genera o imprime el ticket de una venta. | Original, copia o cancelada; quién y cuándo. El PDF se genera al pedirlo. |
+| **CancelacionVenta** | Núcleo | La cancelación de una venta (UC-27). | Una sola por venta. Motivo, usuario, fecha y los movimientos de devolución que generó. |
+
+### 9.3 Relaciones
+
+```mermaid
+erDiagram
+    Negocio ||--o{ Producto : "vende"
+    CategoriaProducto ||--o{ Producto : "agrupa"
+    Producto ||--o{ ProductoSucursal : "se maneja en"
+    Sucursal ||--o{ ProductoSucursal : "tiene"
+    ProductoSucursal ||--o{ MovimientoInventario : "registra"
+    Sucursal ||--o{ ConteoFisico : "realiza"
+    ConteoFisico ||--|{ ConteoDetalle : "incluye"
+    TasaIVA ||--o{ Producto : "aplica a"
+    Negocio ||--o{ Promocion : "ofrece"
+    Promocion ||--|{ ComponentePromocion : "se compone de"
+    ComponentePromocion }o--|| Producto : "usa"
+    Sucursal ||--o{ Venta : "cobra"
+    Venta ||--|{ VentaDetalle : "incluye"
+    Venta ||--|{ PagoVenta : "se paga con"
+    Venta ||--o| CancelacionVenta : "puede tener"
+    Venta }o--o| Cliente : "de"
+    Venta }o--o| Cita : "cobra"
+    VentaDetalle ||--o{ MovimientoInventario : "genera"
+```
+
+### 9.4 Reglas de la venta
+
+1. El personal arma la venta en el POS; el API vuelve a validar precios, existencias y permisos al confirmar.
+2. Si un precio cambió entre que se armó y se confirmó la venta, se rechaza y se muestra el precio nuevo.
+3. Cada venta lleva una llave única desde el cliente para que un doble envío no la registre dos veces.
+4. Productos y componentes de promociones generan salidas de inventario; si falta existencia, la venta no se registra.
+5. La cancelación genera devoluciones exactas de lo que salió y deja de contar para referidos.
+
+### 9.5 Tipos de renglón de una venta
+
+| Tipo | De dónde sale | Mueve inventario |
+|---|---|---|
+| Producto | Catálogo | Sí, salida del producto |
+| Promoción | Catálogo | Sí, salida de cada componente |
+| Servicio | Cita que se cobra o catálogo (incluye "Aplicación con producto del dueño") | No; lo aplicado en consulta ya descontó en el expediente |
+| Espacio pagado de mascota | UC-37 | No; genera el `CargoEspacioMascota` del bloque 2 |
+
+### 9.6 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | El precio lo fija el negocio y cada sucursal puede ajustarlo. |
+| 2 | Una venta incluye productos, promociones, servicios y espacios pagados de mascota. |
+| 3 | Se registra el medio de pago (efectivo, tarjeta con terminal propia, transferencia) sin procesarlo. |
+| 4 | Corte de caja diario por sucursal y por usuario (nuevo UC-51). |
+| 5 | Promociones del negocio con vigencia opcional; disponibilidad por componentes. |
+| 6 | Sin descuentos manuales en el MVP. |
+| 7 | Folio consecutivo por sucursal para el ticket. |
+
+### 9.7 Ticket de venta: decisiones confirmadas
+
+El contenido está en la sección 10.1 del requerimiento.
+
+| # | Decisión |
+|---|---|
+| 1 | Cada producto y servicio tiene su tasa de IVA, del catálogo de la plataforma (16 % por defecto). El ticket desglosa subtotal, IVA por tasa y total. |
+| 2 | Leyenda "Este ticket no es un comprobante fiscal" y pie de página configurable por el negocio. |
+| 3 | En el MVP el ticket se genera en PDF y se imprime con cualquier impresora; la térmica directa queda para después. |
+| 4 | Reimpresión marcada "Copia" o "Cancelada"; cada impresión queda registrada. |
+| 5 | El dueño vinculado ve la venta y su ticket en la app; al provisional se le puede enviar el PDF por correo. |

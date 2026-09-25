@@ -19,11 +19,11 @@
 |---|---|
 | `00-contexto-de-trabajo.md` | Este documento. |
 | `01-estrategia-trabajo-paralelo.md` | Organización del trabajo: repositorios, ramas y documentos por feature. |
-| `02-requerimiento.md` | **Única fuente de verdad** del producto (versión 3.11, 2026-09-24). |
-| `03-casos-uso-mvp.md` | Casos de uso del MVP (versión 1.10, aprobados). |
+| `02-requerimiento.md` | **Única fuente de verdad** del producto (versión 3.13, 2026-09-24). |
+| `03-casos-uso-mvp.md` | Casos de uso del MVP (versión 1.12, aprobados). |
 | `04-pendientes.md` | Pendientes vigentes PEN-32 y PEN-33. |
 | `05-inventario.md` | Operación de inventario aprobada; detalla la sección 10 del requerimiento. |
-| `06-modelo-conceptual.md` | Modelo conceptual del dominio por bloques; bloques 1 a 6 aprobados. |
+| `06-modelo-conceptual.md` | Modelo conceptual del dominio por bloques; bloques 1 a 7 aprobados. |
 | `estudio/` | Material de estudio: `01-enlaces-universales.md`. |
 
 **Historial (`analisis/`), solo consulta:**
@@ -91,15 +91,15 @@ Están completas en `docs/02-requerimiento.md`. Las que más condicionan todo lo
 ## 7. Dónde nos quedamos
 
 **Hecho:**
-- Requerimiento cerrado en su versión 3.11 (`docs/02-requerimiento.md`); la 3.1 agrega referidos en el MVP y espacios de mascotas por tipo; la 3.2 resuelve reseñas, archivos, campañas, documentos legales, identidad y ambientes; la 3.3, transferencia de archivos, VSA y Keycloak; la 3.4, reglas de inventario; la 3.5, dinero con decimales; la 3.6, productos proporcionados por el dueño; la 3.7, planes y cobro de la suscripción; la 3.8, usuarios autorizados y buzón; la 3.9, vinculación y clientes sin app; la 3.10, reglas del expediente; la 3.11, reglas de agenda.
+- Requerimiento cerrado en su versión 3.13 (`docs/02-requerimiento.md`); la 3.1 agrega referidos en el MVP y espacios de mascotas por tipo; la 3.2 resuelve reseñas, archivos, campañas, documentos legales, identidad y ambientes; la 3.3, transferencia de archivos, VSA y Keycloak; la 3.4, reglas de inventario; la 3.5, dinero con decimales; la 3.6, productos proporcionados por el dueño; la 3.7, planes y cobro de la suscripción; la 3.8, usuarios autorizados y buzón; la 3.9, vinculación y clientes sin app; la 3.10, reglas del expediente; la 3.11, reglas de agenda; la 3.12, punto de venta y ticket; la 3.13, tasa de IVA y ticket en PDF.
 - Estrategia de trabajo en paralelo (`docs/01-estrategia-trabajo-paralelo.md`).
-- Casos de uso del MVP aprobados (`docs/03-casos-uso-mvp.md`, UC-01 a UC-50).
+- Casos de uso del MVP aprobados (`docs/03-casos-uso-mvp.md`, UC-01 a UC-51).
 - Pendientes restantes aislados en `docs/04-pendientes.md`; ninguno cambia la arquitectura base.
 - Operación de inventario aprobada (`docs/05-inventario.md`).
 - Entorno local funcionando en Podman: base `amiva-dev` (puerto 5433) y Keycloak (puerto 8080).
 - No se ha escrito código ni se ha tocado App-Ventas.
 
-**Siguiente paso:** continuar el modelo conceptual con el bloque 7 (inventario, promociones y ventas); los bloques 1 a 6 ya están aprobados. Después: matriz de roles y permisos → modelo de privacidad → modelo de datos físico en PostgreSQL. No se empieza por tablas.
+**Siguiente paso:** continuar el modelo conceptual con el bloque 8 (referidos); los bloques 1 a 7 ya están aprobados. Después: matriz de roles y permisos → modelo de privacidad → modelo de datos físico en PostgreSQL. No se empieza por tablas.
 
 ## 8. Cómo retomar en una sesión nueva
 

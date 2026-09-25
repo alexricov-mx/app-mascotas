@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.10  
+**Versión:** 1.12  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.11  
+**Fuente:** `docs/02-requerimiento.md` versión 3.13  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -68,9 +68,9 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 **Superficie:** `admin.amiva.pet`.  
 **Flujo:**
 
-1. El administrador captura empresa, RFC y datos generales.
+1. El administrador captura empresa, RFC, datos generales y logo.
 2. Selecciona plan y activa la prueba de 10 días.
-3. Registra una o más sucursales con ubicación.
+3. Registra una o más sucursales con ubicación, dirección y teléfono.
 4. Configura el usuario inicial del negocio.
 5. Si el alta viene de una solicitud de afiliación (UC-41), la selecciona y el sistema liga al negocio que invitó.
 6. El sistema valida RFC único y límites.
@@ -266,7 +266,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-18 — Administrar catálogo de servicios
 
 **Actor principal:** ACT-06.  
-**Resultado:** servicio con categoría, variante, duración, tiempo adicional, disponibilidad, precio y ajustes por sucursal configurados; opcionalmente, una ventana de cancelación mayor a la de la plataforma. Los servicios de aplicación pueden tener la variante "Aplicación con producto del dueño", con su propio precio.
+**Resultado:** servicio con categoría, tasa de IVA, variante, duración, tiempo adicional, disponibilidad, precio y ajustes por sucursal configurados; opcionalmente, una ventana de cancelación mayor a la de la plataforma. Los servicios de aplicación pueden tener la variante "Aplicación con producto del dueño", con su propio precio.
 
 ### UC-50 — Configurar horario y capacidad de sucursal
 
@@ -312,13 +312,13 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-24 — Administrar productos e inventario
 
 **Actor principal:** ACT-06.  
-**Flujo:** el administrador crea productos con unidad de medida y precio con IVA; por sucursal define existencia inicial, stock mínimo y costo; registra entradas manuales, consumo interno (con liga opcional a una cita o servicio), mermas y caducidades.
-**Resultado:** productos con imagen, precio, descripción, existencia y visibilidad por sucursal; las existencias se modifican mediante movimientos y el costo promedio ponderado se recalcula con cada entrada. Consulta de existencias, kardex y valuación.
+**Flujo:** el administrador crea productos con unidad de medida, precio con IVA y tasa de IVA; por sucursal define existencia inicial, stock mínimo y costo; registra entradas manuales, consumo interno (con liga opcional a una cita o servicio), mermas y caducidades.  
+**Resultado:** productos con imagen, precio, descripción, existencia y visibilidad por sucursal; las existencias se modifican mediante movimientos y el costo promedio ponderado se recalcula con cada entrada. Consulta de existencias, kardex y valuación.  
 **Errores:** existencia negativa, cantidad no entera o permiso insuficiente.
 
 ### UC-43 — Realizar conteo físico
 
-**Actor principal:** ACT-06.
+**Actor principal:** ACT-06.  
 **Flujo:**
 
 1. Inicia un conteo de toda la sucursal o de una categoría.
@@ -332,7 +332,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-25 — Administrar promociones compuestas
 
 **Actor principal:** ACT-06.  
-**Resultado:** promoción compuesta por productos y cantidades; disponibilidad calculada por componentes; cambios posteriores no alteran ventas históricas.
+**Resultado:** promoción del negocio compuesta por productos y cantidades, con precio con IVA y vigencia opcional; disponibilidad en cada sucursal calculada por componentes; cambios posteriores no alteran ventas históricas.
 
 ### UC-26 — Registrar venta en POS
 
@@ -340,17 +340,18 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 **Flujo:**
 
 1. Opcionalmente identifica al cliente (vinculado o provisional) y, si aplica, la cita relacionada.
-2. Selecciona productos y promociones con imágenes grandes.
+2. Selecciona productos, promociones y servicios con imágenes grandes; si cobra una cita, sus servicios se cargan solos.
 3. Ajusta cantidades dentro de existencias disponibles.
 4. Consulta total.
-5. Captura monto recibido.
+5. Captura monto recibido y medio de pago (efectivo, tarjeta con terminal propia o transferencia).
 6. El sistema calcula cambio.
 7. Confirma la venta.
 8. El API valida nuevamente productos, precios, existencias y permisos dentro de una transacción.
-9. Guarda venta, detalles, pagos y movimientos de inventario.
+9. Guarda venta, detalles, pagos y movimientos de inventario con un folio consecutivo de la sucursal.
+10. Genera el ticket en PDF con el IVA desglosado por tasa y lo imprime (sección 10.1 del requerimiento). Si el cliente está vinculado, también lo ve en su app.
 
 **Resultado:** venta registrada y existencias actualizadas. Una venta asociada a un usuario cuenta como un servicio pagado para referidos, sin importar cuántos productos incluya; si está ligada a una cita, cuenta junto con ella como uno solo (UC-42).  
-**Errores:** existencia insuficiente, precio cambiado, producto desactivado, monto insuficiente, doble envío o sucursal no autorizada.
+**Errores:** existencia insuficiente, precio cambiado (se muestra el nuevo), producto desactivado, promoción fuera de vigencia, monto insuficiente, doble envío o sucursal no autorizada.
 
 ### UC-27 — Cancelar venta
 
@@ -360,7 +361,12 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-28 — Consultar auditoría de ventas
 
 **Actores:** ACT-06 y ACT-07 según permisos.  
-**Resultado:** consulta de ventas, fechas, montos, productos o promociones afectados, usuario, sucursal y estado.
+**Resultado:** consulta de ventas, fechas, montos, productos o promociones afectados, usuario, sucursal y estado. Permite reimprimir el ticket, marcado como "Copia", o como "Cancelada" si la venta se canceló.
+
+### UC-51 — Consultar e imprimir corte de caja
+
+**Actores:** ACT-03 (su propio corte) y ACT-06 (el de la sucursal).  
+**Resultado:** resumen del día por sucursal y por usuario: número de ventas, cancelaciones y total por medio de pago. Se puede imprimir en la misma impresora del ticket.
 
 ### UC-44 — Configurar políticas del negocio
 
@@ -373,7 +379,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-29 — Configurar parámetros
 
 **Actor principal:** ACT-07.  
-**Resultado:** límites, plazos, precios de planes, tamaños de archivos, textos legales y otros parámetros quedan versionados y auditados. Incluye los límites de espacios de mascotas por tipo (base, por beneficio y pagado, este último con o sin tope), el cargo del espacio pagado y los servicios requeridos para el beneficio de referido.
+**Resultado:** límites, plazos, precios de planes, tamaños de archivos, textos legales y otros parámetros quedan versionados y auditados. Incluye el catálogo de tasas de IVA (16 % por defecto) y los límites de espacios de mascotas por tipo (base, por beneficio y pagado, este último con o sin tope), el cargo del espacio pagado y los servicios requeridos para el beneficio de referido.
 
 ### UC-30 — Administrar textos y consentimientos
 
@@ -440,7 +446,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 1. El personal identifica al usuario final.
 2. El sistema muestra sus espacios por tipo y valida el límite de espacios pagados, si está configurado.
-3. El personal registra el cargo configurado, cobrado en efectivo por la sucursal.
+3. El personal cobra el cargo configurado en el POS (UC-26), como un renglón de la venta.
 4. El sistema agrega un espacio pagado al usuario y registra el cargo para la facturación del negocio con la plataforma.
 
 **Resultado:** el usuario tiene un espacio pagado más para registrar una mascota (UC-06 o UC-07).  

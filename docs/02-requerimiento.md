@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.11  
+**Versión:** 3.13  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -267,7 +267,7 @@ El inventario se administra por sucursal. Las existencias solo cambian mediante 
 Reglas de inventario:
 
 - Cada producto tiene su unidad de medida (pieza, mililitro, gramo, dosis, etc.); las cantidades son enteras, sin fracciones.
-- El precio de venta incluye IVA.
+- El precio de venta incluye IVA. Cada producto y servicio tiene su tasa de IVA, elegida de un catálogo de tasas que administra la plataforma (16 % por defecto; por ejemplo, también 8 % o 0 %).
 - El dinero se maneja en pesos MXN con decimales: precios, totales, pagos y cambio con dos decimales; el costo unitario con cuatro, para productos que se manejan en unidades pequeñas (por ejemplo, mililitros).
 - El costo se calcula con costo promedio ponderado.
 - Las vacunas, desparasitantes y medicamentos aplicados en consulta descuentan inventario automáticamente al registrarse. Si el producto lo proporciona el dueño, no se mueve inventario (sección 7.1).
@@ -281,7 +281,33 @@ Los productos tienen cantidad, imagen, precio, descripción breve y estado visib
 
 El POS debe permitir productos y promociones con imágenes grandes, sumar y restar cantidades, mostrar total, registrar cuánto se recibe, calcular cambio, indicar agotados y consultar auditoría de ventas. Las operaciones críticas son transaccionales y conservan trazabilidad.
 
-Se incluyen ventas en efectivo. La sucursal puede aceptar tarjeta por sus propios medios, pero el procesamiento de tarjetas no se integra en el MVP. Ecommerce, carrito multi-negocio, pagos integrados y comisión de venta quedan para una evolución posterior. La Tienda Digital no se muestra hasta que exista el módulo.
+Reglas del punto de venta:
+
+- El precio de productos y servicios lo fija el negocio y cada sucursal puede ajustarlo.
+- Una venta puede incluir productos, promociones, servicios (de una cita o del catálogo) y espacios pagados de mascota.
+- Las promociones son del negocio, con vigencia opcional; su disponibilidad en cada sucursal depende de la existencia de sus componentes.
+- Cada venta tiene un folio consecutivo por sucursal para el ticket (por ejemplo, `VE-00001`), además de su identificador interno.
+- No hay descuentos manuales en el MVP.
+- Cada sucursal tiene un corte de caja diario, por sucursal y por usuario: ventas, cancelaciones y total por medio de pago.
+- Al cobrar se imprime un ticket (sección 10.1).
+
+Se incluyen ventas en efectivo. La sucursal puede aceptar tarjeta o transferencia por sus propios medios; el sistema registra el medio de pago para cuadrar la caja, pero el procesamiento de tarjetas no se integra en el MVP. Ecommerce, carrito multi-negocio, pagos integrados y comisión de venta quedan para una evolución posterior. La Tienda Digital no se muestra hasta que exista el módulo.
+
+### 10.1 Ticket de venta
+
+Contenido:
+
+- Logo y nombre del negocio.
+- Sucursal: nombre, dirección y teléfono.
+- Folio, fecha y hora de la venta y quién cobró.
+- Cliente y mascota, si la venta los tiene; fecha y hora de la cita, si la venta la cobra.
+- Por renglón: descripción, cantidad, precio unitario e importe. Los servicios muestran su variante; las promociones, sus componentes.
+- Subtotal sin IVA, IVA desglosado por tasa y total; importe recibido, cambio y medio de pago. Como los precios incluyen IVA, el IVA de cada renglón se calcula a partir de su precio y su tasa.
+- Leyenda "Este ticket no es un comprobante fiscal" y un pie de página que configura el negocio.
+
+En el MVP el ticket se genera en PDF y se imprime desde la tablet o la computadora con cualquier impresora; la impresión directa en impresora térmica queda para después. Se puede reimprimir marcado como "Copia"; el de una venta cancelada se imprime marcado como "Cancelada". Cada impresión queda registrada.
+
+Si el cliente está vinculado, la venta y su ticket aparecen en su app; si es provisional y tiene correo, se le puede enviar el PDF.
 
 ## 11. Suscripciones, planes y referidos
 
@@ -471,3 +497,5 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.9 | 2026-09-24 | Reglas de vinculación (por negocio, mascotas elegidas, datos de seguridad, retiro y transferencia), nuevas versiones de textos legales, clientes y mascotas provisionales con invitación de activación y fusión, y citas registradas por el negocio. |
 | 3.10 | 2026-09-24 | Reglas del expediente: eventos de línea de tiempo, correcciones con registro nuevo, peso en nivel 1, estética visible solo para el dueño y quien la hizo, documentos del dueño compartidos, receta en PDF e imprimible, próxima dosis, historia completa tras transferencia y exportación en PDF que no se guarda. |
 | 3.11 | 2026-09-24 | Agenda: capacidad por categoría, varios servicios por cita, estado vencida, reprogramación, anticipación máxima de 30 días, sin agenda por profesional en el MVP, ventana de cancelación mayor por servicio y precio estimado en la cita. |
+| 3.12 | 2026-09-24 | Punto de venta: precios por sucursal, venta de servicios y espacios pagados, medios de pago registrados, corte de caja diario, promociones con vigencia, sin descuentos manuales, folio por sucursal y ticket de venta. |
+| 3.13 | 2026-09-24 | Tasa de IVA configurable por producto y servicio con desglose en el ticket, ticket en PDF en el MVP, reimpresión registrada y ticket digital para el dueño. |
