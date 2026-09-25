@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.7  
+**Versión:** 3.8  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -48,7 +48,7 @@ Mascotas, propietarios, usuarios autorizados, especies, razas, expediente clíni
 ## 3. Actores y permisos
 
 - **Dueño principal:** único propietario principal de una mascota.
-- **Usuario autorizado:** familiar o cuidador con cuenta propia; puede llevar y recoger mascotas según la autorización.
+- **Usuario autorizado:** familiar o cuidador con cuenta propia; puede ver la ficha, el carnet y la línea de tiempo, llevar y recoger a la mascota y solicitar, cancelar o reprogramar citas. No edita datos de la mascota, no vincula negocios, no autoriza a otros, no transfiere y no exporta.
 - **Profesional:** veterinario, estilista u otro prestador.
 - **Recepción:** acepta y registra citas y realiza ventas autorizadas.
 - **Administrador de negocio:** configura usuarios, sucursales, catálogo, precios, inventario, operación y reseñas desde `app.amiva.pet`.
@@ -78,9 +78,24 @@ El usuario agrega sus mascotas, busca sucursales en el mapa y solicita vinculars
 
 ## 5. Mascotas, propiedad y límites
 
-Una mascota tiene un propietario principal y cero o más usuarios autorizados. No existen propietarios secundarios. La transferencia requiere que el propietario actual la inicie y que el nuevo propietario la acepte; se conserva la historia.
+Una mascota tiene un propietario principal y cero o más usuarios autorizados. No existen propietarios secundarios. La transferencia requiere que el propietario actual la inicie y que el nuevo propietario la acepte; se conserva la historia. Al transferirse, se retiran las autorizaciones anteriores.
+
+El propietario autoriza a otra persona compartiendo una invitación (enlace o QR) o con el correo de una cuenta existente; la otra persona acepta desde su app. El propietario puede retirar la autorización y el autorizado puede renunciar en cualquier momento. Una mascota autorizada no ocupa espacio del autorizado.
+
+Las solicitudes de transferencia y de autorización vencen si no se responden en 7 días (parámetro); quien las envió puede cancelarlas antes.
+
+La app del dueño tiene un **buzón** con dos apartados:
+
+- **Solicitudes:** lo que espera una respuesta del usuario (transferencias y autorizaciones recibidas) y el estado de las que él envió, con opción de cancelarlas.
+- **Avisos:** notificaciones internas informativas (citas, recordatorios, beneficios de referidos).
 
 Datos: nombre, fotografía, especie, raza, sexo, estado reproductivo, fecha de nacimiento, edad calculada, peso, color, características físicas, señas particulares, microchip, alergias, condiciones especiales, medicamentos activos, dieta y veterinario habitual.
+
+- La raza siempre admite "Otra" o "Mestizo" con texto libre.
+- El microchip, si se captura, no puede repetirse en otra mascota activa.
+- La ficha muestra el último peso registrado, por el dueño o en una consulta; el historial de peso vive en el expediente.
+- El veterinario habitual se elige entre los negocios vinculados o se captura como texto libre si no está en la plataforma.
+- El fallecimiento lo puede registrar el propietario desde la app o el personal autorizado de un negocio vinculado.
 
 Especies iniciales: perro, gato, ave, roedor, reptil y otro.
 
@@ -288,7 +303,7 @@ Un proceso automático nocturno revisa las condiciones de los referidos pendient
 
 ## 12. Notificaciones, reseñas y campañas
 
-El MVP usa correo, push y notificaciones internas. WhatsApp queda fuera. No hay chat directo negocio-dueño en el MVP.
+El MVP usa correo, push y notificaciones internas; estas últimas se ven en el buzón de la app (sección 5). WhatsApp queda fuera. No hay chat directo negocio-dueño en el MVP.
 
 El dueño puede apagar todas las notificaciones o configurar cada tipo. Se registran errores de envío, sin mensajes atrasados ni registro de apertura o entrega.
 
@@ -404,3 +419,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.5 | 2026-09-24 | Dinero con decimales: dos para precios y totales, cuatro para el costo unitario. |
 | 3.6 | 2026-09-24 | Vacunas, desparasitantes y medicamentos proporcionados por el dueño: política por negocio, lote y caducidad, responsiva firmada que se sube como documento, sin movimiento de inventario y variante de servicio para cobrar solo la aplicación. |
 | 3.7 | 2026-09-24 | Planes Básico y Extendido con sucursales y campañas configurables, periodos mensuales, IVA incluido, mes a favor solo sobre el plan, sucursales sin prorrateo, prueba vencida como impago, parámetros solo de plataforma, límite de campañas activas (no de configuradas) y retiro del límite de mascotas por negocio. |
+| 3.8 | 2026-09-24 | Usuarios autorizados (permisos, invitación y retiro), buzón de solicitudes y avisos en la app, vencimiento de solicitudes, microchip único, fallecimiento registrado también por el dueño, último peso en la ficha y veterinario habitual. |

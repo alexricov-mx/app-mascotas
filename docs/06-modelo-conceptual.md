@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.3  
+**Versión:** 0.4  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.7 y `docs/03-casos-uso-mvp.md` versión 1.6 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.8 y `docs/03-casos-uso-mvp.md` versión 1.7 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -22,7 +22,7 @@ Convenciones del documento:
 |---|---|---|---|---|
 | 1 | Identidad y acceso | UC-01 a UC-05, UC-44 | Núcleo | **Aprobado** (2026-09-24) |
 | 2 | Suscripciones, planes y parámetros | UC-05, UC-29, UC-34 | Núcleo | **Aprobado** (2026-09-24) |
-| 3 | Mascotas, propiedad y espacios | UC-06, UC-11, UC-12, UC-37, UC-39 | Vertical | Pendiente |
+| 3 | Mascotas, propiedad y espacios | UC-06, UC-11, UC-12, UC-37, UC-39, UC-45, UC-46 | Vertical | **Aprobado** (2026-09-24) |
 | 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30 | Núcleo + vertical | Pendiente |
 | 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | Pendiente |
 | 6 | Servicios, agenda y citas | UC-18 a UC-23 | Núcleo | Pendiente |
@@ -254,6 +254,7 @@ Al vencer un periodo, el proceso nocturno:
 | Mascotas | Cargo por espacio pagado | Por definir |
 | Mascotas | Días para ocultar una mascota fallecida | 30 |
 | Mascotas | Años sin actividad para eliminar una mascota | 5 |
+| Mascotas | Días de vigencia de una solicitud de transferencia o autorización | 7 |
 | Referidos | Servicios pagados para el beneficio de usuario | 10 |
 | Referidos | Meses consecutivos pagados del negocio referido | 2 |
 | Agenda | Minutos antes para cancelar o reprogramar | 30 |
@@ -287,3 +288,123 @@ Todos los valores se configuran por plan desde `admin.amiva.pet`. Si un negocio 
 | 8 | Todos los parámetros los fija la plataforma; los negocios solo deciden sus políticas. |
 
 Los parámetros marcados "por definir" se configuran más adelante desde `admin.amiva.pet`; no bloquean el modelo.
+
+---
+
+## 5. Bloque 3 — Mascotas, propiedad y espacios
+
+### 5.1 Qué resuelve
+
+- Qué es una mascota y qué datos la describen.
+- Quién es su propietario principal y quién más puede actuar por ella.
+- Cómo cambia de propietario sin perder su historia.
+- Cuántas mascotas puede tener cada usuario (espacios base, por beneficio y pagados) y cómo se liberan.
+- Qué pasa cuando una mascota fallece.
+
+La mascota **pertenece al dueño, no al negocio**: existe una sola vez en toda la plataforma y la ven los negocios con los que el dueño se vincula (bloque 4). Lo que cada negocio registra de ella es del negocio (bloque 5).
+
+### 5.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **Mascota** | Vertical | El animal. Entidad central de la plataforma. | Datos de la sección 5 del requerimiento: nombre, fotografía, especie, raza, sexo, estado reproductivo, fecha de nacimiento (la edad se calcula), color, características físicas, señas particulares, microchip, alergias, condiciones especiales, medicamentos activos, dieta y veterinario habitual. Estados en 5.5. Guarda el tipo de espacio que ocupa con su propietario actual. |
+| **Especie** | Vertical | Catálogo: perro, gato, ave, roedor, reptil, otro. | Lo administra la plataforma. |
+| **Raza** | Vertical | Catálogo de razas por especie. | Lo administra la plataforma. Siempre existe la opción "Otra" o "Mestizo" con texto libre. |
+| **Propiedad** | Vertical | Quién es el propietario principal de una mascota y desde cuándo. | Siempre hay exactamente un propietario vigente. Al transferir, la propiedad anterior se cierra con fecha y se abre una nueva; nunca se borra. |
+| **Autorizacion** | Vertical | Permiso que el propietario da a otro usuario (familiar o cuidador) sobre una mascota. | El autorizado tiene cuenta propia. Lo que puede hacer se define en 5.4. Estados: `pendiente`, `vigente`, `rechazada`, `cancelada`, `vencida`, `retirada` (por el propietario o por renuncia). Una mascota puede tener cero o más autorizados. Se retiran todas al transferir la mascota. |
+| **TransferenciaPropiedad** | Vertical | Solicitud para pasar una mascota a otro usuario (UC-11). | Estados: `solicitada`, `aceptada`, `rechazada`, `cancelada`, `vencida` (7 días sin respuesta, parámetro). La inicia el propietario; la acepta el nuevo propietario solo si tiene un espacio libre. Al aceptarse se cierran la propiedad y las autorizaciones anteriores. |
+| **Fallecimiento** | Vertical | Registro de la muerte de una mascota (UC-12). | Lo registra el propietario desde la app o el personal de un negocio vinculado. Guarda fecha, quién lo registró y, si fue un negocio, cuál. Libera el espacio de inmediato. A los 30 días (parámetro) la mascota se oculta para el dueño. |
+| **Espacios del usuario** | Vertical | Cuántas mascotas puede tener un usuario, por tipo. | Ver 5.3. No es una lista de registros: se calcula. |
+
+### 5.3 Cómo se calculan los espacios
+
+En lugar de guardar un registro por cada espacio, la capacidad se **calcula** a partir de hechos que ya existen:
+
+| Tipo | Capacidad | Viene de |
+|---|---|---|
+| Base | Valor vigente del parámetro "espacios base" (2) | Bloque 2 |
+| Por beneficio | Número de beneficios de referido otorgados al usuario, hasta el máximo (5) | Bloque 8 |
+| Pagado | Número de espacios pagados vendidos al usuario (`CargoEspacioMascota`) | Bloque 2 |
+
+- **Ocupados** de un tipo = mascotas **activas** del usuario que ocupan ese tipo.
+- **Libres** = capacidad − ocupados.
+- Una mascota fallecida o transferida deja de ser activa para ese usuario, así que su espacio se libera **sin ningún paso adicional**.
+- Al registrar o recibir una mascota se asigna el primer tipo con espacio libre: base, beneficio, pagado.
+
+Ventajas: no hay registros de espacios que se desincronicen, y si la plataforma sube el parámetro de espacios base, todos los usuarios ganan la diferencia de inmediato. Si lo baja, nadie pierde mascotas ya registradas; solo no podrá agregar más hasta tener espacio libre.
+
+La entidad `EspacioMascota` de la sección 18 del requerimiento queda como este cálculo, no como tabla.
+
+### 5.4 Qué puede hacer cada persona con una mascota
+
+| Acción | Propietario | Autorizado |
+|---|---|---|
+| Ver ficha, carnet y línea de tiempo | Sí | Sí |
+| Llevar y recoger en la sucursal | Sí | Sí |
+| Solicitar, cancelar y reprogramar citas | Sí | Sí |
+| Editar datos de la mascota | Sí | No |
+| Vincular o desvincular negocios | Sí | No |
+| Dar o retirar autorizaciones | Sí | No |
+| Transferir la propiedad | Sí | No |
+| Exportar la línea de tiempo | Sí | No |
+
+### 5.5 Ciclo de vida de la mascota
+
+```mermaid
+stateDiagram-v2
+    [*] --> Activa : registro (UC-06) o vinculación (UC-07)
+    Activa --> Activa : transferencia aceptada (cambia de propietario)
+    Activa --> Fallecida : se registra el fallecimiento (UC-12)
+    Fallecida --> Oculta : pasan 30 días (UC-35)
+    Activa --> Eliminada : 5 años sin actividad (UC-36)
+    Oculta --> Eliminada : conservación cumplida (UC-36)
+    Eliminada --> [*]
+```
+
+- **Fallecida:** el dueño y los negocios vinculados todavía la ven; ya no se agendan citas ni se transfiere.
+- **Oculta:** el dueño ya no la ve; la información se conserva conforme a las reglas de conservación.
+- **Eliminada:** se aplican las reglas de eliminación de la sección 7 del requerimiento.
+
+### 5.6 Relaciones
+
+```mermaid
+erDiagram
+    Usuario ||--o{ Propiedad : "es propietario en"
+    Mascota ||--|{ Propiedad : "tiene historial de"
+    Usuario ||--o{ Autorizacion : "recibe"
+    Mascota ||--o{ Autorizacion : "concede"
+    Mascota ||--o{ TransferenciaPropiedad : "puede tener"
+    Usuario ||--o{ TransferenciaPropiedad : "envía o recibe"
+    Mascota ||--o| Fallecimiento : "puede tener"
+    Mascota }o--|| Especie : "es de"
+    Mascota }o--o| Raza : "es de"
+    Raza }o--|| Especie : "pertenece a"
+```
+
+### 5.7 Autorizaciones y buzón
+
+El requerimiento definía al usuario autorizado, pero ningún caso de uso decía cómo se autoriza. Se agregan:
+
+- **UC-45 — Autorizar usuario sobre una mascota:** el propietario invita por enlace, QR o correo de una cuenta existente; la persona acepta desde su buzón; cualquiera de los dos puede terminar la autorización. La mascota autorizada no ocupa espacio del autorizado.
+- **UC-46 — Consultar buzón:** sección de la app con dos apartados.
+
+| Apartado | Contenido | Acciones |
+|---|---|---|
+| Solicitudes recibidas | Transferencias y autorizaciones que esperan respuesta | Aceptar o rechazar |
+| Solicitudes enviadas | Transferencias y autorizaciones que el usuario envió, con su estado | Cancelar mientras estén pendientes |
+| Avisos | Notificaciones internas informativas (bloque 9) | Marcar como leído |
+
+El buzón **no es una entidad nueva**: muestra las `TransferenciaPropiedad` y `Autorizacion` pendientes del usuario, y sus `Notificacion` internas. Así, cualquier tipo de solicitud que se agregue después aparece ahí sin rediseñar la pantalla.
+
+### 5.8 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | Los espacios se calculan a partir de parámetros, beneficios y espacios pagados; no se guardan como registros. |
+| 2 | El autorizado ve la ficha, lleva y recoge y gestiona citas; no edita, no vincula, no autoriza, no transfiere y no exporta. |
+| 3 | Se agrega UC-45 para autorizar usuarios, más el buzón (UC-46) para solicitudes y avisos. |
+| 4 | El fallecimiento lo registra el propietario o el personal de un negocio vinculado. |
+| 5 | El microchip no se repite entre mascotas activas. |
+| 6 | Las solicitudes de transferencia y autorización vencen a los 7 días (parámetro) y se pueden cancelar antes. |
+| 7 | La ficha muestra el último peso; el historial vive en el expediente. |
+| 8 | El veterinario habitual se elige entre negocios vinculados o se captura como texto libre. |

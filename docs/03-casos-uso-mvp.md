@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.6  
+**Versión:** 1.7  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.7  
+**Fuente:** `docs/02-requerimiento.md` versión 3.8  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -101,7 +101,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 3. El sistema guarda la mascota y la asigna al espacio encontrado.
 
 **Resultado:** mascota asociada al propietario principal y ocupando un espacio de un tipo.  
-**Errores:** sin espacios disponibles, datos inválidos o usuario bloqueado. Si no hay espacios, la app indica cómo obtener más: invitar usuarios (UC-38) o adquirir un espacio pagado en una sucursal (UC-37).
+**Errores:** sin espacios disponibles, datos inválidos, microchip ya registrado en otra mascota activa o usuario bloqueado. Si no hay espacios, la app indica cómo obtener más: invitar usuarios (UC-38) o adquirir un espacio pagado en una sucursal (UC-37).
 
 ### UC-07 — Registrar mascota durante una vinculación
 
@@ -125,7 +125,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 ### UC-10 — Consultar ficha y línea de tiempo
 
-**Actores:** ACT-01, ACT-03, ACT-04, ACT-05 y ACT-06 según permisos.  
+**Actores:** ACT-01, ACT-02, ACT-03, ACT-04, ACT-05 y ACT-06 según permisos.  
 **Resultado:** cada actor recibe únicamente los datos permitidos por rol, tenant, vinculación y nivel de visibilidad.
 
 ### UC-11 — Transferir propiedad de mascota
@@ -135,17 +135,49 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 **Flujo:**
 
 1. El propietario inicia la transferencia.
-2. El nuevo propietario revisa la solicitud. El sistema valida que tenga un espacio libre de cualquier tipo.
+2. La solicitud llega al buzón del nuevo propietario (UC-46), que la revisa. El sistema valida que tenga un espacio libre de cualquier tipo.
 3. Si no lo tiene, la app se lo indica y le ofrece invitar usuarios (UC-38) o adquirir un espacio pagado en una sucursal (UC-37). La solicitud sigue vigente.
 4. El nuevo propietario acepta y el sistema asigna la mascota a su espacio libre, con el mismo orden de UC-06.
-5. El sistema registra solicitud, aceptación y fechas.
+5. El sistema registra solicitud, aceptación y fechas, y retira las autorizaciones anteriores.
+
+Si no se responde en 7 días (parámetro), la solicitud vence. El propietario puede cancelarla antes.
 
 **Resultado:** nuevo propietario principal, mascota en uno de sus espacios y conservación de la historia. El espacio que ocupaba la mascota se libera de inmediato para el propietario anterior y conserva su tipo.
 
 ### UC-12 — Marcar mascota como fallecida
 
-**Actor autorizado:** personal con permiso definido por el negocio.  
+**Actores:** ACT-01 propietario desde la app, o personal con permiso de un negocio vinculado.  
 **Resultado:** estado fallecida; el espacio que ocupaba se libera de inmediato y conserva su tipo. Después de un mes la mascota se oculta para el usuario conforme al proceso automático.
+
+### UC-45 — Autorizar usuario sobre una mascota
+
+**Actor principal:** ACT-01 propietario.  
+**Actor secundario:** ACT-02 persona autorizada.
+
+**Flujo:**
+
+1. El propietario elige la mascota y la opción "Autorizar a alguien".
+2. Comparte una invitación por enlace o QR, o captura el correo de una cuenta existente.
+3. Si la persona no tiene cuenta, se registra primero (UC-01).
+4. La invitación aparece en el buzón de la persona (UC-46) y la acepta o rechaza.
+5. El sistema crea la autorización y la audita.
+
+El propietario puede retirar la autorización y el autorizado puede renunciar en cualquier momento. La invitación vence a los 7 días (parámetro).
+
+**Resultado:** la persona puede ver la ficha, el carnet y la línea de tiempo, llevar y recoger a la mascota y gestionar sus citas. La mascota no ocupa espacio del autorizado.  
+**Errores:** invitación vencida o cancelada, o la persona ya está autorizada.
+
+### UC-46 — Consultar buzón
+
+**Actores:** ACT-01 y ACT-02.  
+**Superficie:** app móvil.
+
+**Flujo:** el usuario abre el buzón, que tiene dos apartados:
+
+- **Solicitudes:** transferencias y autorizaciones recibidas, con botones para aceptar o rechazar; y las que él envió, con su estado y opción de cancelar.
+- **Avisos:** notificaciones internas informativas, como cambios de cita, recordatorios y beneficios de referidos.
+
+**Resultado:** solicitudes respondidas o canceladas y avisos marcados como leídos. Cada solicitud nueva también llega por push si el usuario lo tiene activado.
 
 ### UC-13 — Agregar, consultar y eliminar documento
 
@@ -187,8 +219,8 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 ### UC-17 — Consultar y exportar historia
 
-**Actor principal:** ACT-01.  
-**Resultado:** el usuario consulta la línea de tiempo, carnet y documentos permitidos; puede exportar su línea de tiempo como imagen.
+**Actores:** ACT-01; ACT-02 solo consulta.  
+**Resultado:** el usuario consulta la línea de tiempo, carnet y documentos permitidos; el propietario puede exportar la línea de tiempo como imagen.
 
 ## 7. Servicios y agenda
 
@@ -204,7 +236,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 ### UC-20 — Solicitar cita
 
-**Actor principal:** ACT-01.  
+**Actor principal:** ACT-01 o ACT-02.  
 **Flujo:** selecciona mascota, sucursal, servicio, fecha y horario; envía solicitud.
 
 **Resultado:** cita en estado solicitada; negocio notificado.
@@ -221,7 +253,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 
 ### UC-23 — Cancelar o reprogramar cita
 
-**Actor principal:** ACT-01 o negocio según el caso.  
+**Actor principal:** ACT-01, ACT-02 o negocio según el caso.  
 **Regla:** se aplica la ventana configurable, inicialmente 30 minutos antes.
 
 ## 8. Inventario y ventas
