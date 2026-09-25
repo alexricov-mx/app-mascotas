@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.6  
+**Versión:** 0.7  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.9 y `docs/03-casos-uso-mvp.md` versión 1.8 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.10 y `docs/03-casos-uso-mvp.md` versión 1.9 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -24,7 +24,7 @@ Convenciones del documento:
 | 2 | Suscripciones, planes y parámetros | UC-05, UC-29, UC-34 | Núcleo | **Aprobado** (2026-09-24) |
 | 3 | Mascotas, propiedad y espacios | UC-06, UC-11, UC-12, UC-37, UC-39, UC-45, UC-46 | Vertical | **Aprobado** (2026-09-24) |
 | 4 | Vinculación, privacidad y consentimientos | UC-07 a UC-10, UC-30, UC-47 a UC-49 | Núcleo + vertical | **Aprobado** (2026-09-24) |
-| 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | Pendiente |
+| 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | **Aprobado** (2026-09-24) |
 | 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49 | Núcleo | Pendiente |
 | 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43 | Núcleo | Pendiente |
 | 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | Pendiente |
@@ -544,3 +544,95 @@ Surgieron al diseñar la opción B y están aplicadas en el requerimiento y los 
 5. **Clientes provisionales:** reciben recordatorios solo por correo y no reciben campañas.
 6. **Citas desde el negocio (UC-49):** el negocio puede agendar citas para cualquier cliente, vinculado o provisional, y nacen confirmadas. Es necesario para clientes sin app y útil para citas por teléfono.
 7. **Referidos:** los servicios anteriores a la activación no cuentan.
+
+---
+
+## 7. Bloque 5 — Expediente, prevención y documentos
+
+### 7.1 Qué resuelve
+
+- Qué registra cada negocio sobre una mascota: consultas, signos vitales, recetas, estudios, procedimientos, cirugías, vacunas, desparasitaciones, servicios de estética y documentos.
+- Cómo se arma la línea de tiempo y el carnet que ve el dueño.
+- Cómo se corrige un registro sin perder lo que decía antes.
+- Dónde viven los archivos y quién los puede ver.
+
+Todo lo de este bloque **pertenece al negocio que lo generó** (lleva su `negocioId`) y se muestra según los niveles del bloque 4. Aplica igual a mascotas activas y provisionales.
+
+### 7.2 Idea central: todo es un evento
+
+Cada cosa que le pasa a una mascota es un **evento** con fecha, mascota, quién lo generó (negocio y sucursal, o el dueño), profesional, nivel de visibilidad y, si aplica, la cita que lo originó. Cada tipo de evento agrega su propio detalle.
+
+Así la línea de tiempo es simplemente la lista de eventos visibles para quien la consulta, ordenada por fecha, y agregar un tipo de evento nuevo no cambia la línea de tiempo.
+
+### 7.3 Entidades
+
+| Entidad | Capa | Qué es | Nivel | Reglas principales |
+|---|---|---|---|---|
+| **EventoMascota** | Vertical | Base común de todo lo que se registra. | El de su tipo | Fecha, mascota, origen (negocio y sucursal, o dueño), profesional, cita de origen y estado (`vigente`, `corregido`). |
+| **Consulta** | Vertical | Atención clínica: motivo, diagnóstico, tratamiento y observaciones. | 3 | La registra un veterinario (UC-14). Puede incluir signos vitales, recetas, estudios, procedimientos y aplicaciones. |
+| **SignosVitales** | Vertical | Peso, temperatura, frecuencia cardiaca y respiratoria, condición corporal. | 3; el peso, 1 | Normalmente dentro de una consulta. |
+| **Receta** | Vertical | Medicamentos indicados, con dosis, frecuencia y duración. | 3 | El dueño la ve y la descarga en PDF; el negocio puede imprimirla. |
+| **Estudio** | Vertical | Estudio de laboratorio o de imagen: qué se pidió y su resultado. | 3 | En el MVP el resultado se adjunta como documento; la integración con laboratorios es R6. |
+| **Procedimiento** | Vertical | Procedimiento o cirugía: tipo, descripción y observaciones. | 3 | |
+| **AplicacionPreventiva** | Vertical | Vacuna, desparasitación o tratamiento preventivo aplicado. | 2 | Producto del inventario o del dueño (sección 7.1 del requerimiento), lote, caducidad, fecha de aplicación y fecha de la próxima dosis. Genera el recordatorio (UC-33). |
+| **Certificado** | Vertical | Certificado de vacunación, de salud o de viaje emitido por el negocio. | 2 | Se adjunta como documento firmado. |
+| **ServicioNoClinico** | Vertical | Baño, estética u otro servicio sin carácter clínico. | Como 3 | Inicio, conclusión y observaciones (UC-16). Lo ven el dueño y el negocio que lo hizo. |
+| **NotaInterna** | Vertical | Observación privada del personal sobre la mascota o el cliente. | Interno | Nunca la ve el dueño ni otro negocio. |
+| **EventoDelDueno** | Vertical | Lo que registra el propio dueño: peso en casa, fallecimiento, notas personales. | 1 | No pertenece a ningún negocio. |
+| **Documento** | Núcleo | Archivo en Object Storage referenciado desde el dominio. | El del registro al que se liga | Tipo (fotografía, receta, estudio, documento firmado, responsiva, exportación), tamaño, formato y quién lo subió. Eliminación lógica, solo por quien lo subió. Reemplazarlo crea una versión nueva. |
+
+### 7.4 Relaciones
+
+```mermaid
+erDiagram
+    Mascota ||--o{ EventoMascota : "tiene"
+    Negocio ||--o{ EventoMascota : "genera"
+    Sucursal ||--o{ EventoMascota : "registra en"
+    Profesional ||--o{ EventoMascota : "firma"
+    Cita |o--o{ EventoMascota : "origina"
+    EventoMascota ||--o| Consulta : "es"
+    EventoMascota ||--o| AplicacionPreventiva : "es"
+    EventoMascota ||--o| ServicioNoClinico : "es"
+    EventoMascota ||--o| Certificado : "es"
+    EventoMascota ||--o| NotaInterna : "es"
+    EventoMascota ||--o| EventoDelDueno : "es"
+    Consulta ||--o{ SignosVitales : "incluye"
+    Consulta ||--o{ Receta : "incluye"
+    Consulta ||--o{ Estudio : "incluye"
+    Consulta ||--o{ Procedimiento : "incluye"
+    Consulta ||--o{ AplicacionPreventiva : "puede incluir"
+    EventoMascota ||--o{ Documento : "adjunta"
+    EventoMascota |o--o| EventoMascota : "corrige a"
+```
+
+### 7.5 Correcciones
+
+Un registro clínico **no se edita ni se borra**. Si tiene un error:
+
+1. El profesional crea un registro de corrección que apunta al original y explica el motivo.
+2. El original queda en estado `corregido`.
+3. El dueño y los demás negocios ven solo la versión vigente.
+4. El negocio que lo generó y la auditoría ven ambas versiones.
+
+### 7.6 Vistas que se arman a partir de los eventos
+
+| Vista | Qué muestra | Quién la ve |
+|---|---|---|
+| **Línea de tiempo** | Todos los eventos visibles para quien consulta, por fecha, con el negocio que generó cada uno | Dueño, autorizados y negocios vinculados, cada quien según su nivel |
+| **Carnet** | Solo aplicaciones preventivas (nivel 2) con próximas dosis | Dueño, autorizados y negocios vinculados |
+| **Expediente del negocio** | Todo lo que generó ese negocio, más el nivel 1 y 2 de los demás | Personal del negocio según su rol |
+| **Exportación** | La línea de tiempo del dueño en PDF | Solo el propietario; se genera al pedirla y no se guarda |
+
+### 7.7 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | Todo es un evento con una base común y un detalle por tipo. |
+| 2 | El peso se comparte en el nivel 1; los demás signos vitales son nivel 3. |
+| 3 | Los servicios de estética los ven solo el dueño y el negocio que los hizo. |
+| 4 | Los documentos que sube el dueño los ven los negocios con los que comparte la mascota. |
+| 5 | Los registros clínicos no se editan ni se borran; se corrigen con un registro nuevo. |
+| 6 | Tras una transferencia, el nuevo propietario ve toda la historia de la mascota, sin datos del propietario anterior. |
+| 7 | La receta se descarga en PDF desde la app y el negocio puede imprimirla. |
+| 8 | El veterinario captura la próxima dosis y el recordatorio sale 7 días antes. |
+| 9 | La exportación de la línea de tiempo es en PDF, se genera al pedirla y no se guarda. |

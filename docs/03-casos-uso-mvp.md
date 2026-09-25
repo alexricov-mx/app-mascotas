@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.8  
+**Versión:** 1.9  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.9  
+**Fuente:** `docs/02-requerimiento.md` versión 3.10  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -139,7 +139,7 @@ Este documento traduce el requerimiento vigente a comportamientos observables de
 2. La solicitud llega al buzón del nuevo propietario (UC-46), que la revisa. El sistema valida que tenga un espacio libre de cualquier tipo.
 3. Si no lo tiene, la app se lo indica y le ofrece invitar usuarios (UC-38) o adquirir un espacio pagado en una sucursal (UC-37). La solicitud sigue vigente.
 4. El nuevo propietario acepta y el sistema asigna la mascota a su espacio libre, con el mismo orden de UC-06.
-5. El sistema registra solicitud, aceptación y fechas, retira las autorizaciones anteriores y deja de compartir la mascota con los negocios del propietario anterior.
+5. El sistema registra solicitud, aceptación y fechas, retira las autorizaciones anteriores y deja de compartir la mascota con los negocios del propietario anterior. El nuevo propietario ve toda la historia de la mascota, pero no los datos del propietario anterior.
 
 Si no se responde en 7 días (parámetro), la solicitud vence. El propietario puede cancelarla antes.
 
@@ -220,7 +220,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 
 **Actores:** ACT-03, ACT-04, ACT-05, ACT-06 y ACT-01 según permisos.  
 **Reglas:** solo se aceptan `JPEG`, `PNG`, `WEBP` y `PDF`, con el tamaño máximo configurado para cada tipo de documento. El archivo viaja por streaming a través del API, que valida el tipo por su contenido y los permisos en cada descarga; las fotografías generan miniatura (sección 7 del requerimiento).  
-**Resultado:** documento referenciado en el dominio, protegido por el API y con eliminación lógica auditada. Incluye la responsiva firmada por producto proporcionado por el dueño (UC-15).  
+**Resultado:** documento referenciado en el dominio, protegido por el API y con eliminación lógica auditada. Incluye la responsiva firmada por producto proporcionado por el dueño (UC-15). Los documentos que sube el dueño los ven los negocios con los que comparte la mascota.  
 **Errores:** tipo no permitido, tamaño excedido o permiso insuficiente.
 
 ## 6. Expediente y prevención
@@ -230,7 +230,9 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 **Actor principal:** ACT-04.  
 **Flujo:** selecciona mascota, captura motivo, diagnóstico, tratamiento, receta, estudios, procedimientos, cirugías, observaciones y signos vitales; si aplica medicamentos, indica el origen de cada uno igual que en UC-15; guarda el registro.
 
-**Resultado:** nuevo registro clínico fechado, asociado a mascota, negocio, sucursal y profesional. Los medicamentos del inventario generan su salida automáticamente en la misma transacción; los proporcionados por el dueño no mueven inventario.
+**Resultado:** nuevo registro clínico fechado, asociado a mascota, negocio, sucursal y profesional. Los medicamentos del inventario generan su salida automáticamente en la misma transacción; los proporcionados por el dueño no mueven inventario. La receta queda disponible para el dueño en PDF y el negocio puede imprimirla.
+
+**Corrección:** si el registro tiene un error, el veterinario crea un registro de corrección que apunta al original con el motivo; el original no se edita ni se borra.
 
 ### UC-15 — Registrar vacuna o prevención
 
@@ -244,7 +246,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
    1. Captura nombre comercial, laboratorio, lote y caducidad. En vacunas, lote y caducidad son obligatorios.
    2. Confirma la revisión del producto: empaque sellado, caducidad vigente y conservación declarada por el dueño.
    3. Sube la responsiva firmada por el dueño (UC-13).
-5. Captura fecha y datos de aplicación y guarda.
+5. Captura fecha y datos de aplicación y la fecha de la próxima dosis, y guarda.
 
 **Resultado:** aplicación registrada; se programa recordatorio si corresponde. Del inventario: se descuenta automáticamente en la misma transacción. Del dueño: no se mueve inventario y el carnet y la línea de tiempo muestran "Proporcionado por el dueño", con lote y caducidad.  
 **Errores:** existencia insuficiente del producto elegido; producto del dueño caducado; falta lote o caducidad en vacuna; falta la responsiva; el negocio no acepta productos del dueño.
@@ -252,12 +254,12 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 ### UC-16 — Registrar servicio no clínico
 
 **Actor principal:** ACT-05.  
-**Resultado:** evento de baño, estética u otro servicio, con inicio y conclusión cuando aplique.
+**Resultado:** evento de baño, estética u otro servicio, con inicio y conclusión cuando aplique. Lo ven el dueño y el negocio que lo hizo; otros negocios no.
 
 ### UC-17 — Consultar y exportar historia
 
 **Actores:** ACT-01; ACT-02 solo consulta.  
-**Resultado:** el usuario consulta la línea de tiempo, carnet y documentos permitidos; el propietario puede exportar la línea de tiempo como imagen.
+**Resultado:** el usuario consulta la línea de tiempo, carnet y documentos permitidos; el propietario puede exportar la línea de tiempo en PDF, que se genera al pedirlo y no se guarda.
 
 ## 7. Servicios y agenda
 

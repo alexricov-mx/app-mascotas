@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.9  
+**Versión:** 3.10  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -131,11 +131,11 @@ Se registra el texto mostrado, su versión, usuario, negocio, sucursal, fecha, r
 
 Un negocio vinculado puede consultar:
 
-- **Nivel 1:** perfil básico y datos que el dueño decida compartir.
+- **Nivel 1:** perfil básico, último peso, alergias, condiciones especiales, medicamentos activos y datos que el dueño decida compartir, incluidos los documentos que él mismo sube.
 - **Nivel 2:** vacunas, desparasitación, tratamientos preventivos y certificados.
 - **Información generada por el propio negocio.**
 
-Nunca puede consultar el nivel 3 generado por otro negocio. Al desvincularse, el negocio pierde el acceso a la información del usuario y deja de navegar los registros de esa relación, incluidos los que él mismo generó; los conserva y los recupera si el dueño se vuelve a vincular.
+Nunca puede consultar el nivel 3 generado por otro negocio. Los servicios de estética los ven solo el dueño y el negocio que los hizo. Al desvincularse, el negocio pierde el acceso a la información del usuario y deja de navegar los registros de esa relación, incluidos los que él mismo generó; los conserva y los recupera si el dueño se vuelve a vincular.
 
 El dueño consulta vacunas, alergias, padecimientos, recetas, consultas, servicios, citas, documentos y la línea de tiempo con el nombre del negocio que generó cada evento. Las notas internas, costos, márgenes y observaciones comerciales son privadas del negocio.
 
@@ -165,6 +165,17 @@ Reglas:
 
 Las veterinarias registran consultas, motivo, diagnóstico, tratamiento, medicamentos, recetas, estudios, procedimientos, cirugías, observaciones y signos vitales. Las estéticas registran servicios no clínicos, como baño y estética.
 
+Reglas del expediente:
+
+- Cada registro es un evento de la línea de tiempo con fecha, mascota, negocio y sucursal que lo generó (o el dueño), profesional, nivel de visibilidad y, si aplica, la cita que lo originó.
+- Un registro clínico no se edita ni se borra. Un error se corrige con un registro nuevo que apunta al original; el dueño y los demás negocios ven la versión vigente, y el negocio que lo generó y la auditoría ven ambas.
+- El peso se comparte en el nivel 1 (la ficha muestra el último); los demás signos vitales son nivel 3.
+- La receta la ve el dueño en la app y la descarga en PDF; el negocio también puede imprimirla.
+- Al registrar una vacuna o desparasitación, el veterinario captura la fecha de la próxima dosis; el recordatorio sale 7 días antes (parámetro).
+- En el MVP los resultados de estudios se adjuntan como documentos; la integración con laboratorios es R6.
+- Después de una transferencia, el nuevo propietario ve toda la historia de la mascota, pero no los datos del propietario anterior.
+- El propietario puede exportar la línea de tiempo en PDF. Se genera al pedirla y no se guarda.
+
 Los documentos pueden agregarse, actualizarse y eliminarse. La eliminación es lógica, se audita y solo puede ejecutarla el negocio que subió el documento.
 
 Tipos y tamaños aceptados en el MVP (parámetros configurables desde `admin.amiva.pet`):
@@ -175,7 +186,7 @@ Tipos y tamaños aceptados en el MVP (parámetros configurables desde `admin.ami
 | Recetas, tickets y notas | 15 MB |
 | Estudios clínicos | 25 MB |
 | Documentos firmados | 25 MB |
-| Exportaciones generadas por el sistema | 50 MB |
+| Exportaciones generadas por el sistema (PDF que no se guarda; tamaño máximo generado) | 50 MB |
 
 Se aceptan `JPEG`, `PNG`, `WEBP` y `PDF`. Se rechazan ejecutables, archivos comprimidos y formatos editables.
 
@@ -451,3 +462,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.7 | 2026-09-24 | Planes Básico y Extendido con sucursales y campañas configurables, periodos mensuales, IVA incluido, mes a favor solo sobre el plan, sucursales sin prorrateo, prueba vencida como impago, parámetros solo de plataforma, límite de campañas activas (no de configuradas) y retiro del límite de mascotas por negocio. |
 | 3.8 | 2026-09-24 | Usuarios autorizados (permisos, invitación y retiro), buzón de solicitudes y avisos en la app, vencimiento de solicitudes, microchip único, fallecimiento registrado también por el dueño, último peso en la ficha y veterinario habitual. |
 | 3.9 | 2026-09-24 | Reglas de vinculación (por negocio, mascotas elegidas, datos de seguridad, retiro y transferencia), nuevas versiones de textos legales, clientes y mascotas provisionales con invitación de activación y fusión, y citas registradas por el negocio. |
+| 3.10 | 2026-09-24 | Reglas del expediente: eventos de línea de tiempo, correcciones con registro nuevo, peso en nivel 1, estética visible solo para el dueño y quien la hizo, documentos del dueño compartidos, receta en PDF e imprimible, próxima dosis, historia completa tras transferencia y exportación en PDF que no se guarda. |
