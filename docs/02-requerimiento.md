@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.13  
+**Versión:** 3.14  
 **Fecha:** 2026-09-24  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -347,7 +347,7 @@ Cada usuario final y cada negocio tiene un enlace de invitación personal, que t
 
 La pantalla de registro de la app siempre incluye el campo "Código de quien te invitó". Si la persona abre la app desde el enlace, el campo llega lleno; si instaló la app desde la tienda, puede escribirlo o pegarlo. A quien se registra solo se le muestra el nombre visible de quien lo invitó, sin correo ni otros datos.
 
-Una cuenta solo puede tener un referidor, se asigna al registrarse y no cambia después. No se permiten auto-referidos ni duplicados.
+Una cuenta solo puede tener un referidor, se asigna al registrarse y no cambia después. No se permiten auto-referidos ni duplicados: no se puede usar el propio código, y un correo o un RFC ya registrados no pueden ser referidos. Cada usuario y cada negocio tiene un solo código de invitación, que no cambia.
 
 ### Referidos de usuarios finales
 
@@ -371,6 +371,13 @@ El negocio referido se afilia como mínimo al plan Básico y lo mantiene pagado 
 ### Evaluación de beneficios
 
 Un proceso automático nocturno revisa las condiciones de los referidos pendientes y otorga los beneficios. Cada otorgamiento se audita y se notifica al beneficiario.
+
+- Quien invita ve el nombre visible de cada referido y su avance (por ejemplo, 6 de 10 servicios), pero no qué servicios ni en qué negocios. El negocio ve los negocios que invitó y su estado.
+- Al negocio referido solo le cuentan los periodos pagados; no cuentan la prueba ni los periodos bonificados.
+- Cuando quien invita ya tiene el máximo de beneficios, los nuevos referidos se siguen registrando como cumplidos sin beneficio.
+- Un referido que se elimina o se bloquea antes de cumplir queda anulado.
+- Un beneficio otorgado no se revierte, aunque después se cancele una venta o el referido se dé de baja.
+- El negocio que invita recibe el mes gratuito aunque esté en impago; lo consume en su siguiente periodo por pagar.
 
 ## 12. Notificaciones, reseñas y campañas
 
@@ -499,3 +506,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.11 | 2026-09-24 | Agenda: capacidad por categoría, varios servicios por cita, estado vencida, reprogramación, anticipación máxima de 30 días, sin agenda por profesional en el MVP, ventana de cancelación mayor por servicio y precio estimado en la cita. |
 | 3.12 | 2026-09-24 | Punto de venta: precios por sucursal, venta de servicios y espacios pagados, medios de pago registrados, corte de caja diario, promociones con vigencia, sin descuentos manuales, folio por sucursal y ticket de venta. |
 | 3.13 | 2026-09-24 | Tasa de IVA configurable por producto y servicio con desglose en el ticket, ticket en PDF en el MVP, reimpresión registrada y ticket digital para el dueño. |
+| 3.14 | 2026-09-24 | Referidos: código permanente, avance visible sin detalle, solo periodos pagados, cumplido sin beneficio al llegar al tope, anulación, beneficio no reversible, mes gratuito aun en impago y reglas de duplicados. |

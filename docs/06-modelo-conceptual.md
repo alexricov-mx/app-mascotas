@@ -1,8 +1,8 @@
 # Modelo conceptual del dominio — amiva.pet
 
-**Versión:** 0.10  
+**Versión:** 0.11  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.13 y `docs/03-casos-uso-mvp.md` versión 1.12 (aprobados)  
+**Fuente:** `docs/02-requerimiento.md` versión 3.14 y `docs/03-casos-uso-mvp.md` versión 1.13 (aprobados)  
 **Estado:** en construcción por bloques. Cada bloque se revisa y aprueba antes de pasar al siguiente.
 
 ## 1. Propósito y alcance
@@ -27,7 +27,7 @@ Convenciones del documento:
 | 5 | Expediente, prevención y documentos | UC-13 a UC-17 | Vertical | **Aprobado** (2026-09-24) |
 | 6 | Servicios, agenda y citas | UC-18 a UC-23, UC-49, UC-50 | Núcleo | **Aprobado** (2026-09-24) |
 | 7 | Inventario, promociones y ventas | UC-24 a UC-28, UC-43, UC-51 | Núcleo | **Aprobado** (2026-09-24) |
-| 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | Pendiente |
+| 8 | Referidos | UC-38, UC-40 a UC-42 | Núcleo | **Aprobado** (2026-09-24) |
 | 9 | Notificaciones, reseñas, campañas y auditoría | UC-31 a UC-33 | Núcleo | Pendiente |
 
 Plan, Suscripción y Entitlement se mencionan en el bloque 1 solo en lo que afecta al acceso; su modelo completo es el bloque 2.
@@ -829,3 +829,73 @@ El contenido está en la sección 10.1 del requerimiento.
 | 3 | En el MVP el ticket se genera en PDF y se imprime con cualquier impresora; la térmica directa queda para después. |
 | 4 | Reimpresión marcada "Copia" o "Cancelada"; cada impresión queda registrada. |
 | 5 | El dueño vinculado ve la venta y su ticket en la app; al provisional se le puede enviar el PDF por correo. |
+
+---
+
+## 10. Bloque 8 — Referidos
+
+### 10.1 Qué resuelve
+
+- Cómo invita un usuario o un negocio y cómo se sabe quién invitó a quién.
+- Cómo se sigue el avance de cada referido hasta que cumple la condición.
+- Qué beneficio se otorga, a quién y cuándo.
+
+Las reglas de negocio ya están en la sección 11 del requerimiento; este bloque las traduce a entidades. Los beneficios se consumen en otros bloques: el espacio por beneficio en el bloque 3 y el mes gratuito en el bloque 2.
+
+### 10.2 Entidades
+
+| Entidad | Capa | Qué es | Reglas principales |
+|---|---|---|---|
+| **CodigoInvitacion** | Núcleo | Código personal de invitación de un usuario o de un negocio. Es lo que llevan el enlace y el QR. | Uno por cuenta; no cambia. Distinto de la invitación de activación (bloque 4) y de la de autorización (bloque 3). |
+| **ReferidoUsuario** | Vertical | Relación entre el usuario que invitó y el que se registró con su código. | Se crea al activar la cuenta del referido (UC-01). Un usuario tiene a lo más un referidor, que no cambia. Guarda los servicios pagados contados hasta la última evaluación. Estados en 10.4. |
+| **SolicitudAfiliacion** | Núcleo | Contacto de un negocio invitado desde la página "Quiero afiliarme" (UC-41). | Datos de contacto y código del negocio que invitó. Estados: `nueva`, `en contacto`, `dada de alta`, `descartada`. La atiende el administrador de plataforma. |
+| **ReferidoNegocio** | Núcleo | Relación entre el negocio que invitó y el negocio dado de alta a partir de la solicitud. | Se crea en el alta (UC-03). Guarda cuántos periodos pagados consecutivos lleva el negocio referido. Estados en 10.4. |
+| **BeneficioReferido** | Núcleo | Beneficio otorgado por un referido cumplido. | Tipo: `espacio de mascota` (usuario) o `mes gratuito` (negocio). Cada referido otorga a lo más un beneficio. El mes gratuito genera un `MovimientoMesAFavor` (bloque 2); el espacio suma capacidad por beneficio (bloque 3). No se revierte. |
+
+### 10.3 Relaciones
+
+```mermaid
+erDiagram
+    Usuario ||--o| CodigoInvitacion : "tiene"
+    Negocio ||--o| CodigoInvitacion : "tiene"
+    Usuario ||--o{ ReferidoUsuario : "invita"
+    Usuario ||--o| ReferidoUsuario : "fue invitado en"
+    CodigoInvitacion ||--o{ SolicitudAfiliacion : "origina"
+    SolicitudAfiliacion ||--o| ReferidoNegocio : "se convierte en"
+    Negocio ||--o{ ReferidoNegocio : "invita"
+    Negocio ||--o| ReferidoNegocio : "fue invitado en"
+    ReferidoUsuario ||--o| BeneficioReferido : "otorga"
+    ReferidoNegocio ||--o| BeneficioReferido : "otorga"
+    BeneficioReferido ||--o| MovimientoMesAFavor : "genera"
+```
+
+### 10.4 Ciclo de un referido
+
+```mermaid
+stateDiagram-v2
+    [*] --> EnSeguimiento : el referido activa su cuenta o su negocio se da de alta
+    EnSeguimiento --> Cumplido : alcanza la condición (proceso nocturno, UC-42)
+    EnSeguimiento --> CumplidoSinBeneficio : alcanza la condición, pero quien invitó ya tiene el máximo de beneficios
+    EnSeguimiento --> Anulado : el referido se elimina o se bloquea antes de cumplir
+    Cumplido --> [*]
+    CumplidoSinBeneficio --> [*]
+    Anulado --> [*]
+```
+
+| Condición | Usuario referido | Negocio referido |
+|---|---|---|
+| Qué cuenta | Citas completadas y ventas asociadas no canceladas, en cualquier negocio, desde la activación de su cuenta. Una venta ligada a una cita cuenta con ella como uno. | Periodos pagados consecutivos en plan Básico o superior. |
+| Cuántos | 10 (parámetro) | 2 (parámetro) |
+| Beneficio para quien invitó | Un espacio de mascota por beneficio, hasta 5 (parámetro) | Un mes gratuito de su plan, sin límite |
+
+### 10.5 Decisiones confirmadas
+
+| # | Decisión |
+|---|---|
+| 1 | Un código de invitación permanente por usuario y por negocio. |
+| 2 | Quien invita ve nombre y avance de cada referido, sin detalle de servicios ni negocios; el negocio ve los negocios invitados y su estado. |
+| 3 | Al llegar al tope, los nuevos referidos quedan como cumplidos sin beneficio. |
+| 4 | Al negocio referido solo le cuentan periodos pagados; no la prueba ni los bonificados. |
+| 5 | Un beneficio otorgado no se revierte. |
+| 6 | El negocio en impago recibe el mes gratuito y lo consume en su siguiente periodo por pagar. |
+| 7 | No se usa el propio código; un correo o un RFC ya registrados no pueden ser referidos. |

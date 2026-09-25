@@ -1,7 +1,7 @@
 # Pendientes de definición — amiva.pet
 
 **Fecha:** 2026-09-24  
-**Relacionado con:** `docs/02-requerimiento.md` versión 3.13  
+**Relacionado con:** `docs/02-requerimiento.md` versión 3.14  
 **Estado:** pendientes restantes. PEN-28, PEN-29, PEN-30, PEN-31 y PEN-34 se resolvieron y ya están integrados en el requerimiento.
 
 ## PEN-32 — Revisión legal

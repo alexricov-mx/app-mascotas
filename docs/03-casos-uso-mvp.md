@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.12  
+**Versión:** 1.13  
 **Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.13  
+**Fuente:** `docs/02-requerimiento.md` versión 3.14  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -459,7 +459,7 @@ El negocio puede reenviar la invitación; vence a los 30 días (parámetro).
 **Flujo:**
 
 1. El usuario abre la sección.
-2. El sistema muestra su código QR y su enlace de invitación personal, con el avance de sus referidos y los beneficios obtenidos.
+2. El sistema muestra su código QR y su enlace de invitación personal, que no cambian, y la lista de sus referidos con nombre visible y avance (por ejemplo, 6 de 10 servicios), sin detallar qué servicios ni en qué negocios, además de los beneficios obtenidos.
 3. El usuario envía la invitación por correo, copia la imagen del QR o copia el enlace.
 
 Al abrir el enlace o escanear el QR: si la app está instalada, se abre en la pantalla de registro con el código lleno (UC-01); si no, se abre App Store o Google Play.
@@ -475,7 +475,7 @@ Al abrir el enlace o escanear el QR: si la app está instalada, se abre en la pa
 
 **Actor principal:** ACT-06.  
 **Superficie:** `app.amiva.pet`, sección "Invitar otras veterinarias y estéticas".  
-**Flujo:** igual que UC-38. El enlace abre la página "Quiero afiliarme" en `amiva.pet` (UC-41). La sección muestra los negocios invitados, su estado y los meses gratuitos obtenidos, consumidos y disponibles.
+**Flujo:** igual que UC-38. El enlace abre la página "Quiero afiliarme" en `amiva.pet` (UC-41). La sección muestra los negocios invitados, su estado (solicitud, en seguimiento, cumplido o anulado) y los meses gratuitos obtenidos, consumidos y disponibles.
 
 **Resultado:** invitación compartida.
 
@@ -488,10 +488,10 @@ Al abrir el enlace o escanear el QR: si la app está instalada, se abre en la pa
 1. El prospecto abre el enlace de invitación.
 2. La página muestra el nombre visible del negocio que invita y el formulario de contacto.
 3. El prospecto captura sus datos y envía la solicitud.
-4. El sistema guarda la solicitud con el negocio que invitó y avisa a la administración de plataforma.
+4. El sistema guarda la solicitud con el negocio que invitó y avisa a la administración de plataforma, que la atiende (en contacto, dada de alta o descartada).
 
 **Resultado:** solicitud de afiliación pendiente en `admin.amiva.pet`, lista para el alta (UC-03).  
-**Errores:** enlace inválido o datos incompletos. Un enlace inválido no impide enviar la solicitud; solo no se registra el referido.
+**Errores:** enlace inválido, datos incompletos o RFC ya registrado. Un enlace inválido no impide enviar la solicitud; solo no se registra el referido. Un RFC ya registrado no puede ser referido.
 
 ### UC-42 — Evaluar referidos y otorgar beneficios
 
@@ -499,10 +499,10 @@ Al abrir el enlace o escanear el QR: si la app está instalada, se abre en la pa
 **Flujo:**
 
 1. Para cada usuario final referido, cuenta los servicios pagados desde la activación de su cuenta: citas completadas y eventos de venta asociados no cancelados, en cualquier negocio. Una venta cuenta como uno sin importar sus productos; una venta ligada a una cita cuenta junto con ella como uno.
-2. Si alcanza el número configurado, inicialmente diez, otorga un espacio por beneficio al usuario que refirió, salvo que ya tenga el máximo configurado, inicialmente cinco.
-3. Para cada negocio referido, revisa si está en plan Básico o superior y tiene dos meses consecutivos pagados.
-4. Si cumple, otorga un mes gratuito al negocio que refirió.
-5. Cada referido otorga su beneficio una sola vez. El sistema audita y notifica cada otorgamiento.
+2. Si alcanza el número configurado, inicialmente diez, otorga un espacio por beneficio al usuario que refirió. Si ya tiene el máximo configurado, inicialmente cinco, el referido queda como cumplido sin beneficio.
+3. Para cada negocio referido, revisa si está en plan Básico o superior y tiene dos periodos consecutivos pagados; no cuentan la prueba ni los periodos bonificados.
+4. Si cumple, otorga un mes gratuito al negocio que refirió, aunque esté en impago; lo consume en su siguiente periodo por pagar.
+5. Cada referido otorga su beneficio una sola vez y no se revierte. Un referido eliminado o bloqueado antes de cumplir queda anulado. El sistema audita y notifica cada otorgamiento.
 
 **Resultado:** beneficios otorgados y referidos marcados como cumplidos.
 
