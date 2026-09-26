@@ -2,8 +2,8 @@
 
 **Proyecto:** Plataforma para el Cuidado de Mascotas  
 **Fecha:** 2026-09-25  
-**Versión:** 1.2  
-**Estado:** vigente. La versión 1.2 fija el equipo real (sección 4) y el trabajo en una sola rama con push al cerrar cada feature (sección 6).
+**Versión:** 1.3  
+**Estado:** vigente. La versión 1.2 fija el equipo real (sección 4) y el trabajo en una sola rama con push al cerrar cada feature (sección 6); la 1.3, la estructura autosuficiente de cada repositorio (sección 8), preparada en los cuatro repositorios.
 
 ## 1. Propósito
 
@@ -54,8 +54,8 @@ El equipo son dos personas, Alex y Juan, y cada uno trabaja con su propia sesió
 |---|---|---|---|
 | `app-mascotas-api` | Alex | Claude, en la sesión de Alex | Etapa 0 |
 | `app-mascotas-admin` | Juan | Claude, en la sesión de Juan (su laptop) | R0 |
-| `app-mascotas-negocio` | Por asignar | Por asignar | R0 |
-| `app-mascotas-usuario` | Por asignar | Por asignar | R1b |
+| `app-mascotas-negocio` | Por asignar (Alex o Juan); mientras tanto aprueba Alex | Claude | R0 |
+| `app-mascotas-usuario` | Por asignar; mientras tanto aprueba Alex | Claude | R1b |
 
 El orden de las etapas y las features está en `docs/10-plan-construccion.md`.
 
@@ -218,23 +218,28 @@ El cierre debe distinguir entre:
 
 ## 8. Estructura documental por repositorio
 
-Cada repositorio debe tener esta estructura inicial:
+Cada repositorio tiene esta estructura (creada en los cuatro repositorios el 2026-09-25):
 
 ```text
 README.md
-CLAUDE.md
+CLAUDE.md                     instrucciones completas para construir en ese repositorio
 /docs/
   arquitectura.md
-  decisiones/
-  contratos/
+  decisiones.md               registro de decisiones técnicas
+  contratos/                  solo en el API: contrato base y OpenAPI exportado
+  referencia/                 copias de los documentos de producto que el repositorio necesita
   features/
-    F-001-alta-mascota/
-      01-requerimiento.md
+    README.md                 índice con orden, dependencias y estado
+    _plantillas/              02, 03, 04 y 05 para copiar al empezar una feature
+    F-001-cimientos-api/
+      01-requerimiento.md     escrito de antemano y autosuficiente
       02-analisis-situacion.md
       03-plan-ejecucion.md
       04-construido.md
       05-verificacion.md (cuando la feature sea transversal o requiera un cierre separado)
 ```
+
+**Autosuficiencia:** quien construye en un repositorio lee solo sus documentos (más el contrato del API, en los clientes). `docs/referencia/` guarda copias con la versión de su fuente; si la fuente cambia en `app-mascotas`, se actualizan la copia y los `01-requerimiento.md` de las features no construidas.
 
 El formato base probado en App-Ventas es de cuatro documentos: `01-requerimiento.md`, `02-analisis-situacion.md`, `03-plan-ejecucion.md` y `04-construido.md`. El quinto documento, `05-verificacion.md`, se usa cuando la feature cruza repositorios, tiene una aceptación transversal o necesita evidencias separadas del resumen de construcción.
 
@@ -625,7 +630,7 @@ Comprobar criterios de aceptación, pruebas, seguridad, documentación y pendien
 
 ## 18. Orden para iniciar
 
-El orden de construcción (etapas, features y dependencias) está en `docs/10-plan-construccion.md`. Los cuatro repositorios ya existen en GitHub con su `README.md` inicial; cada uno recibe su `CLAUDE.md` y su estructura `docs/` cuando arranca su primera feature.
+El orden de construcción (etapas, features y dependencias) está en `docs/10-plan-construccion.md`. Los cuatro repositorios ya existen en GitHub con su `CLAUDE.md`, su estructura `docs/` y el requerimiento de cada una de sus features (sección 8).
 
 ## 19. Lecciones adoptadas de App-Ventas
 

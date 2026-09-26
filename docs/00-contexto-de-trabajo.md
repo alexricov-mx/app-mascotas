@@ -107,9 +107,9 @@ Están completas en `docs/02-requerimiento.md`. Las que más condicionan todo lo
 - Modelo de privacidad aprobado (`docs/09-modelo-privacidad.md`). **La etapa de definición quedó cerrada el 2026-09-24.**
 - Entorno local funcionando en Podman: base `amiva-dev` (puerto 5433) y Keycloak (puerto 8080).
 - Plan de construcción (`docs/10-plan-construccion.md`): etapa 0 (cimientos del API), R0 (fundaciones), R1a (operación del negocio y piloto), R1b (app del dueño) y R1c (cierre del MVP).
-- Los cuatro repositorios de código existen en GitHub, todavía solo con su `README.md`. No se ha escrito código ni se ha tocado App-Ventas.
+- Los cuatro repositorios de código existen en GitHub. Los cuatro quedaron preparados para construir (2026-09-25): `CLAUDE.md`, README, arquitectura, decisiones, copias de referencia, plantillas y el `01-requerimiento.md` de cada una de sus features (sección 6 de `docs/10-plan-construccion.md`). No se ha escrito código ni se ha tocado App-Ventas.
 
-**Siguiente paso:** F-001 (cimientos del API) en `app-mascotas-api`. Por confirmar: la herramienta de migraciones (DbUp recomendada) y los responsables de `app-mascotas-negocio` y `app-mascotas-usuario`.
+**Siguiente paso:** F-001 (cimientos del API) en `app-mascotas-api`. Migraciones con DbUp (confirmado). Por asignar: responsables de `app-mascotas-negocio` (Alex o Juan) y `app-mascotas-usuario`. Las decisiones pendientes por feature están en la sección 7 de `docs/10-plan-construccion.md`.
 
 ## 8. Cómo retomar en una sesión nueva
 
