@@ -39,7 +39,7 @@
 | `03-pendientes-22092026.md` | Revisión de la versión 1.1 contra las respuestas. |
 | `03-requerimiento-2.md` | Versión 2.2 consolidada. |
 
-El entorno local de desarrollo está en `infra/dev/` (PostgreSQL 18 + PostGIS y Keycloak en Podman, base `amiva-dev`). Los datos de OVH por llenar están en `infra/ovh/ficha-configuracion.md`.
+El entorno local de desarrollo está en `app-mascotas-api/infra/dev/` (PostgreSQL 18 + PostGIS y Keycloak en Podman, base `amiva-dev`, realm `amiva-dev`). Los datos de OVH por llenar están en `infra/ovh/ficha-configuracion.md`.
 
 Si algo no está en `docs/02-requerimiento.md`, se pregunta al usuario. Los documentos de `analisis/` no se citan como fuente ni se actualizan.
 

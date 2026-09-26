@@ -456,7 +456,7 @@ La identidad la resuelve **Keycloak** en un contenedor. Integra Google, Facebook
 
 | Ambiente | Base de datos | Estado |
 |---|---|---|
-| Desarrollo | PostgreSQL 18 + PostGIS y Keycloak en Podman, en el equipo del desarrollador. Base `amiva-dev`, definida en `infra/dev/compose.yaml`. | Disponible |
+| Desarrollo | PostgreSQL 18 + PostGIS y Keycloak en Podman, en el equipo del desarrollador. Base `amiva-dev` y realm `amiva-dev`, definidos en `app-mascotas-api/infra/dev/`. | Disponible |
 | Staging | Por configurar. Dominio, base y apps de prueba propios. | Pendiente |
 | Producción | PostgreSQL + PostGIS y Keycloak en contenedores dentro del VPS de OVH, en Canadá. | Pendiente |
 
