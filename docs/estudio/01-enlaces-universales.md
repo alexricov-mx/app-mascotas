@@ -63,6 +63,7 @@ Es el caso difícil: la app **no** está instalada. La persona toca el enlace, v
 | `https://amiva.pet/i/{codigo}` | Invitación de usuario final | Sí, pantalla de registro con código | Página que redirige a la tienda según el dispositivo |
 | `https://amiva.pet/n/{codigo}` | Invitación de negocio | **No** | Página "Quiero afiliarme" (UC-41) |
 | `https://amiva.pet/a/{codigo}` | Invitación de activación de un cliente provisional | Sí, registro o inicio de sesión y luego la pantalla de activación (UC-48) | Página que redirige a la tienda según el dispositivo |
+| `https://amiva.pet/c/{codigo}` | Invitación de autorización sobre una mascota ("cuidar") | Sí, registro o inicio de sesión y luego aceptar o rechazar la autorización (UC-45) | Página que redirige a la tienda según el dispositivo |
 
 La ruta `/n/` se excluye a propósito en `apple-app-site-association` y no se declara en Android. El personal de una veterinaria puede tener instalada la app del dueño, y la invitación de negocio siempre debe abrir la página web.
 
@@ -131,3 +132,17 @@ Conviene conocerlos para no confundirlos con errores:
 - Flutter: *Deep linking* (docs.flutter.dev) y el paquete `app_links` en pub.dev.
 
 Los identificadores `TEAMID` y `pet.amiva.app` de este documento son ejemplos; los reales se definen al crear las apps en las tiendas.
+
+## 9. Invitación de autorización (`/c/`)
+
+Agregada el 2026-09-25 (requerimiento 3.19):
+
+- El código es de **un solo uso** y vence a los 7 días (parámetro), a diferencia del código de referido, que es permanente.
+- Si la invitación fue por correo, solo esa cuenta la acepta; si fue por enlace o QR, la acepta la primera cuenta que llegue, y el propietario ve quién fue y puede retirarla.
+- Abrir el enlace no da acceso a nada: siempre se acepta con sesión iniciada. El propietario puede cancelarla mientras esté pendiente.
+- Si quien acepta se registra en ese momento, el campo "Código de quien te invitó" llega con el código del propietario; la persona puede borrarlo.
+- Ruta separada de `/i/` y `/a/` porque tiene otro significado y otro vencimiento; así un código nunca se interpreta mal.
+
+## 10. Desarrollo local
+
+Sin dominio verificado ni cuentas de las tiendas, la app acepta además un esquema propio solo de desarrollo con las mismas rutas (`amivadev://i/{codigo}`, `amivadev://a/{codigo}`, `amivadev://c/{codigo}`). No se incluye en producción.

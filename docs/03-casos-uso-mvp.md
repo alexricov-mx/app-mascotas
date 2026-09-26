@@ -1,8 +1,8 @@
 # Casos de uso del MVP — amiva.pet
 
-**Versión:** 1.16  
-**Fecha:** 2026-09-24  
-**Fuente:** `docs/02-requerimiento.md` versión 3.17  
+**Versión:** 1.17  
+**Fecha:** 2026-09-25  
+**Fuente:** `docs/02-requerimiento.md` versión 3.19  
 **Estado:** aprobado el 2026-09-24. Base para el modelo conceptual.
 
 ## 1. Propósito
@@ -158,8 +158,8 @@ Si no se responde en 7 días (parámetro), la solicitud vence. El propietario pu
 **Flujo:**
 
 1. El propietario elige la mascota y la opción "Autorizar a alguien".
-2. Comparte una invitación por enlace o QR, o captura el correo de una cuenta existente.
-3. Si la persona no tiene cuenta, se registra primero (UC-01).
+2. Comparte una invitación por enlace (`https://amiva.pet/c/{codigo}`) o QR, o captura el correo de una cuenta existente. El código es de un solo uso.
+3. Si la persona no tiene cuenta, se registra primero (UC-01); el código de referido del propietario llega prellenado y la persona puede borrarlo.
 4. La invitación aparece en el buzón de la persona (UC-46) y la acepta o rechaza.
 5. El sistema crea la autorización y la audita.
 

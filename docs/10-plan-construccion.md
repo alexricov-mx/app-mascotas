@@ -2,7 +2,7 @@
 
 **Versión:** 1.1  
 **Fecha:** 2026-09-25  
-**Fuente:** `docs/02-requerimiento.md` versión 3.18 y `docs/03-casos-uso-mvp.md` versión 1.16  
+**Fuente:** `docs/02-requerimiento.md` versión 3.19 y `docs/03-casos-uso-mvp.md` versión 1.17  
 **Estado:** aprobado para arrancar. La versión 1.1 reordena R0 y R1a por dependencias reales, confirma DbUp y deja preparados los repositorios del API, del negocio y del admin. La forma de trabajar está en `docs/01-estrategia-trabajo-paralelo.md`.
 
 ## 1. Propósito
@@ -141,7 +141,6 @@ Cada `01-requerimiento.md` termina con las preguntas que su responsable debe con
 | F-013 | **Medicamentos aplicados en consulta** (el modelo de datos no tiene dónde guardarlos); quién corrige; librería de PDF |
 | F-016 | Varios medios de pago en una venta; cobrar citas no completadas; redondeo del IVA |
 | F-019 | Identificador de la app; ¿prototipo visual de la app del dueño antes de construir? (iOS se prueba en la Mac de Juan; las cuentas de las tiendas se tramitan antes de staging: por ahora todo es desarrollo local) |
-| F-024 | Ruta del enlace de invitación de autorización (el estudio de enlaces no la define) |
 | F-028 | Qué repositorio construye la página pública `amiva.pet` (también sirve las páginas de `/i/` y `/a/` que redirigen a las tiendas) |
 
 ## 8. Dependencias externas

@@ -1,7 +1,7 @@
 # Plataforma para el Cuidado de Mascotas — Requerimientos
 
 **Nombre del producto:** amiva.pet  
-**Versión:** 3.18  
+**Versión:** 3.19  
 **Fecha:** 2026-09-25  
 **Estado:** fuente de verdad vigente del producto.
 
@@ -80,7 +80,7 @@ El usuario agrega sus mascotas, busca sucursales en el mapa y solicita vinculars
 
 Una mascota tiene un propietario principal y cero o más usuarios autorizados. No existen propietarios secundarios. La excepción es la mascota provisional, que registra un negocio para un cliente que todavía no usa la app y no tiene propietario hasta que el dueño la activa (sección 6.1). La transferencia requiere que el propietario actual la inicie y que el nuevo propietario la acepte; se conserva la historia. Al transferirse, se retiran las autorizaciones anteriores.
 
-El propietario autoriza a otra persona compartiendo una invitación (enlace o QR) o con el correo de una cuenta existente; la otra persona acepta desde su app. El propietario puede retirar la autorización y el autorizado puede renunciar en cualquier momento. Una mascota autorizada no ocupa espacio del autorizado.
+El propietario autoriza a otra persona compartiendo una invitación (enlace `https://amiva.pet/c/{codigo}` o QR) o con el correo de una cuenta existente; la otra persona acepta desde su app, siempre con sesión iniciada. El código es de un solo uso: si la invitación fue por correo, solo esa cuenta la acepta; si fue por enlace o QR, la acepta la primera cuenta que llegue y el propietario ve quién fue y puede retirarla. Si quien acepta se registra en ese momento, el propietario queda propuesto como su referidor (el campo de código llega lleno y la persona puede borrarlo). El propietario puede retirar la autorización y el autorizado puede renunciar en cualquier momento. Una mascota autorizada no ocupa espacio del autorizado.
 
 Las solicitudes de transferencia y de autorización vencen si no se responden en 7 días (parámetro); quien las envió puede cancelarlas antes.
 
@@ -350,7 +350,7 @@ Cada usuario final y cada negocio tiene un enlace de invitación personal, que t
 - **App del dueño:** sección "Invitar y obtener beneficios".
 - **`app.amiva.pet`:** sección "Invitar otras veterinarias y estéticas".
 
-La pantalla de registro de la app siempre incluye el campo "Código de quien te invitó". Si la persona abre la app desde el enlace, el campo llega lleno; si instaló la app desde la tienda, puede escribirlo o pegarlo. A quien se registra solo se le muestra el nombre visible de quien lo invitó, sin correo ni otros datos.
+La pantalla de registro de la app siempre incluye el campo "Código de quien te invitó". Si la persona abre la app desde el enlace (o desde una invitación de autorización, sección 5), el campo llega lleno; si instaló la app desde la tienda, puede escribirlo o pegarlo. A quien se registra solo se le muestra el nombre visible de quien lo invitó, sin correo ni otros datos.
 
 Una cuenta solo puede tener un referidor, se asigna al registrarse y no cambia después. No se permiten auto-referidos ni duplicados: no se puede usar el propio código, y un correo o un RFC ya registrados no pueden ser referidos. Cada usuario y cada negocio tiene un solo código de invitación, que no cambia.
 
@@ -524,3 +524,4 @@ Estos pendientes no deben resolverse por suposición durante el diseño del mode
 | 3.16 | 2026-09-24 | Matriz de roles y permisos: el administrador no ve lo clínico sin rol de veterinario, los cuatro roles cobran y atienden citas, solo el administrador cancela ventas y ve costos. |
 | 3.17 | 2026-09-24 | Modelo de privacidad: nombre del negocio en eventos de nivel 2, pérdida de acceso del propietario anterior, mascota oculta visible para negocios en solo lectura, auditoría de accesos clínicos por pantalla y plataforma sin acceso a datos operativos. |
 | 3.18 | 2026-09-25 | Acceso a datos del API con Dapper y esquema con migraciones en SQL puro. |
+| 3.19 | 2026-09-25 | Enlace de invitación de autorización (`/c/{codigo}`, un solo uso, aceptación con sesión) y referidor propuesto al registrarse desde una autorización. |

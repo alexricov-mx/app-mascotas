@@ -8,7 +8,7 @@ Nació de la app **App-Ventas** (`c:\Apps\App-Ventas`, Flutter, offline). App-Ve
 
 1. `docs/00-contexto-de-trabajo.md`: de dónde viene el proyecto, dónde nos quedamos y cómo retomar.
 2. `docs/01-estrategia-trabajo-paralelo.md`: cómo se organiza el trabajo (repositorios, ramas, documentos por feature).
-3. `docs/02-requerimiento.md`: **única fuente de verdad** del producto (versión 3.18).
+3. `docs/02-requerimiento.md`: **única fuente de verdad** del producto (versión 3.19).
 4. `docs/03-casos-uso-mvp.md`: casos de uso del MVP (aprobados).
 5. `docs/04-pendientes.md`: pendientes vigentes (PEN-32 y PEN-33).
 6. `docs/05-inventario.md`: operación de inventario aprobada; detalla la sección 10 del requerimiento.
@@ -30,7 +30,7 @@ Organización de carpetas:
 
 ## Estado actual
 
-**Construcción en marcha** desde el 2026-09-25. La definición se cerró el 2026-09-24 y el plan de construcción está en `docs/10-plan-construccion.md`; la siguiente feature es F-001 (cimientos del API) en `app-mascotas-api`. El requerimiento está en su versión 3.18 y la arquitectura base está decidida (sección 15 de `docs/02-requerimiento.md`): PostgreSQL/PostGIS en contenedor dentro del VPS, API ASP.NET Core .NET 10 como monolito modular con cortes verticales por feature (VSA) y único acceso a datos, Keycloak para identidad, Flutter para el negocio (web y tablet) y para el dueño (iOS y Android), Vue 3 + TypeScript + Vite para `admin.amiva.pet` y OVH Object Storage. El acceso a datos del API es Dapper con migraciones en SQL puro con DbUp (versión 3.18). Los repositorios `app-mascotas-api`, `app-mascotas-negocio`, `app-mascotas-admin` y `app-mascotas-usuario` están preparados para construir con su propio `CLAUDE.md`, documentos de referencia y el `01-requerimiento.md` de cada feature (sección 6 del plan); si se cambia un documento de producto aquí, se actualizan esas copias. Hay modelo conceptual y modelo de datos aprobados, pero todavía no hay código de aplicación ni migraciones; existe el entorno local en Podman (`infra/dev/compose.yaml`): PostgreSQL con la base `amiva-dev` en el puerto 5433 y Keycloak en el 8080.
+**Construcción en marcha** desde el 2026-09-25. La definición se cerró el 2026-09-24 y el plan de construcción está en `docs/10-plan-construccion.md`; la siguiente feature es F-001 (cimientos del API) en `app-mascotas-api`. El requerimiento está en su versión 3.19 y la arquitectura base está decidida (sección 15 de `docs/02-requerimiento.md`): PostgreSQL/PostGIS en contenedor dentro del VPS, API ASP.NET Core .NET 10 como monolito modular con cortes verticales por feature (VSA) y único acceso a datos, Keycloak para identidad, Flutter para el negocio (web y tablet) y para el dueño (iOS y Android), Vue 3 + TypeScript + Vite para `admin.amiva.pet` y OVH Object Storage. El acceso a datos del API es Dapper con migraciones en SQL puro con DbUp (versión 3.19). Los repositorios `app-mascotas-api`, `app-mascotas-negocio`, `app-mascotas-admin` y `app-mascotas-usuario` están preparados para construir con su propio `CLAUDE.md`, documentos de referencia y el `01-requerimiento.md` de cada feature (sección 6 del plan); si se cambia un documento de producto aquí, se actualizan esas copias. Hay modelo conceptual y modelo de datos aprobados, pero todavía no hay código de aplicación ni migraciones; existe el entorno local en Podman (`infra/dev/compose.yaml`): PostgreSQL con la base `amiva-dev` en el puerto 5433 y Keycloak en el 8080.
 
 ## Reglas de trabajo
 
